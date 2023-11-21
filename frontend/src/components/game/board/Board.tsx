@@ -6,7 +6,7 @@ interface BoardProps {
     boardUuid: string;
 }
 
-export function Board({ boardUuid }: BoardProps) {
+export default function Board({ boardUuid }: BoardProps) {
     const { isLoading, isError, data: imageUrl } = useBoardImage(boardUuid!);
 
     if (isLoading) return <Loader>Loading Game Details...</Loader>;
@@ -20,7 +20,7 @@ export function Board({ boardUuid }: BoardProps) {
         backgroundSize: 'contain',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        width: '100vw',
+        width: 'auto',
         height: '100vh'
     };
 
