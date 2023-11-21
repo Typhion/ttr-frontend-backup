@@ -15,11 +15,14 @@ export default function WagonCardPile({cardCount, onClick}: WagonCardPileProps) 
                 vertical: 'top',
                 horizontal: 'right',
             }}
+            sx={{
+                width: 180,
+                margin: 'auto'
+            }}
         >
             <Card onClick={onClick} sx={{ width: '100%', cursor: 'pointer' }}>
                 <CardMedia
                     component="img"
-                    height="140"
                     image={cardBackImage}
                     alt="Card back"
                 />

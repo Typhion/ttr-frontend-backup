@@ -21,7 +21,7 @@ export default function Board({ boardUuid }: BoardProps) {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         width: 'auto',
-        height: '100vh'
+        height: '80vh'
     };
 
     return (
