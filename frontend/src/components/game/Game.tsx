@@ -6,6 +6,7 @@ import Board from "./board/Board.tsx";
 import WagonCardPile from "./board/WagonCardPile.tsx";
 import {useGameState} from "../../hooks/useGameState.ts";
 import FaceUpWagonCards from "./board/FaceUpWagonCards.tsx";
+import PlayerIcon from "./board/PlayerIcon.tsx";
 
 export default function Game() {
     const {uuid} = useParams<{ uuid: string }>();
@@ -43,6 +44,13 @@ export default function Game() {
             </Grid>
             <Grid item xs={2}>
                 {/* Right Column */}
+                <Grid container direction="column" alignItems="center" justifyContent="space-evenly" style={{height: '80vh'}}>
+                    {gameState.players.map((playerState, index) => (
+                        <Grid item key={index}>
+                            <PlayerIcon playerState={playerState} />
+                        </Grid>
+                    ))}
+                </Grid>
             </Grid>
             <Grid item xs={12} sx={{
                 backgroundColor: theme => theme.palette.secondary.main,
