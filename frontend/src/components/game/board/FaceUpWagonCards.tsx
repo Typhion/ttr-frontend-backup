@@ -9,7 +9,7 @@ export default function FaceUpWagonCards({ faceUpWagonCards }: FaceupWagonCardsP
         <div style={{
             display: 'flex',
             flexDirection: 'column',
-            width: 180,
+            width: '50%',
             overflow: 'hidden',
             margin: 'auto'
         }}>

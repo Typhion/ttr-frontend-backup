@@ -18,6 +18,10 @@ export default function Game() {
         return <Alert severity="error">Unable to load this game's details.</Alert>;
     }
 
+    if (gameState.lastUsedWagonCard === null) {
+        gameState.lastUsedWagonCard = 'back';
+    }
+
     return (
         <Grid container spacing={2}>
             <Grid item xs={2} sx={{
@@ -28,6 +32,8 @@ export default function Game() {
                 height: '80vh'
             }}>
                 {/* Left Column */}
+                <WagonCardPile cardCount={gameState.usedWagonCardPileSize} cardColor={gameState.lastUsedWagonCard} onClick={() => {
+                }}/>
                 <WagonCardPile cardCount={gameState.wagonCardPileSize} onClick={() => {
                 }}/>
                 <FaceUpWagonCards faceUpWagonCards={gameState.faceUpWagonCards} />

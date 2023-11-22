@@ -31,7 +31,7 @@ export default function FaceUpWagonCard({cardColor, onClick}: FaceUpWagonCardPro
 
     if (color in cardImages) {
         return (
-            <Card onClick={onClick} sx={{width: 180, cursor: 'pointer'}}>
+            <Card onClick={onClick} sx={{width: '100%', cursor: 'pointer'}}>
                 <CardMedia
                     component="img"
                     image={cardImages[color]}
