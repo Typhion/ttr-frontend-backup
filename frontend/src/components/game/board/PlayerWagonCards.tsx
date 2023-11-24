@@ -34,8 +34,8 @@ export default function PlayerWagonCards({wagonCards, onClick}: PlayerWagonCards
             <Box style={{
                 display: 'flex',
                 flexDirection: 'row',
-                width: '50%',
                 margin: 'auto',
+                width: '95%',
                 paddingTop: '2rem',
                 justifyContent: 'center',
             }}>
