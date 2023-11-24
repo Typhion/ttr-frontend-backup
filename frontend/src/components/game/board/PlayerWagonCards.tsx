@@ -36,7 +36,7 @@ export default function PlayerWagonCards({wagonCards, onClick}: PlayerWagonCards
                 flexDirection: 'row',
                 margin: 'auto',
                 width: '95%',
-                paddingTop: '2rem',
+                paddingTop: '8vh',
                 justifyContent: 'center',
             }}>
                 {Object.entries(wagonCards).map(([cardColor, count], index) => {
@@ -44,27 +44,25 @@ export default function PlayerWagonCards({wagonCards, onClick}: PlayerWagonCards
 
                     if (count > 0) {
                         return (
-                            <div style={{height: '100%'}} key={index}>
-                                <Badge
-                                    key={index}
-                                    badgeContent={count}
-                                    color="primary"
-                                    overlap={'circular'}
-                                    showZero
+                            <Badge
+                                key={index}
+                                badgeContent={count}
+                                color="primary"
+                                overlap={'circular'}
+                                showZero
+                            >
+                                <Card
+                                    onClick={onClick}
+                                    sx={{cursor: 'pointer', transform: 'rotate(90deg)', width: '14vh'}}
                                 >
-                                    <Card
-                                        onClick={onClick}
-                                        sx={{height: '100%', cursor: 'pointer', transform: 'rotate(90deg)'}}
-                                    >
-                                        <CardMedia
-                                            component="img"
-                                            image={cardImages[color]}
-                                            alt="FaceUpWagonCard"
-                                            style={{height: '100%'}}
-                                        />
-                                    </Card>
-                                </Badge>
-                            </div>
+                                    <CardMedia
+                                        component="img"
+                                        image={cardImages[color]}
+                                        alt="FaceUpWagonCard"
+                                        style={{width: '100%'}}
+                                    />
+                                </Card>
+                            </Badge>
                         );
                     }
                 })}
