@@ -8,6 +8,7 @@ import {useGameState} from "../../hooks/useGameState.ts";
 import FaceUpWagonCards from "./board/FaceUpWagonCards.tsx";
 import PlayerWagonCards from "./board/PlayerWagonCards.tsx";
 import PlayerIcon from "./board/PlayerIcon.tsx";
+import PlayerInformation from "./board/PlayerInformation";
 
 export default function Game() {
     const {uuid} = useParams<{ uuid: string }>();
@@ -58,12 +59,21 @@ export default function Game() {
             </Grid>
             <Grid item xs={12} sx={{
                 backgroundColor: theme => theme.palette.secondary.main,
-                height: '20vh'
+                height: '20vh',
+                position: 'relative', // Make the container relative for absolute positioning
             }}>
                 {/* Large Bottom Bar */}
-                <PlayerWagonCards wagonCards={gameState.privateGameState.wagonCards}
-                                  onClick={() => console.log("temp")}/>
+                <Grid container direction="row">
+                    <Grid item xs={2}></Grid>
+                    <Grid item xs={8}>
+                        <PlayerWagonCards  wagonCards={gameState.privateGameState.wagonCards}
+                                          onClick={() => console.log("temp")}/>
+                    </Grid>
+                    <Grid item xs={2} sx={{ bottom: 0, right: 0}}>
+                        <PlayerInformation playerState={gameState.players[0]}/>
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
-    )
+    );
 }
