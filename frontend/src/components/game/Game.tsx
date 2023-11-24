@@ -6,12 +6,15 @@ import Board from "./board/Board.tsx";
 import WagonCardPile from "./board/WagonCardPile.tsx";
 import {useGameState} from "../../hooks/useGameState.ts";
 import FaceUpWagonCards from "./board/FaceUpWagonCards.tsx";
+import PlayerWagonCards from "./board/PlayerWagonCards.tsx";
 import PlayerIcon from "./board/PlayerIcon.tsx";
 
 export default function Game() {
     const {uuid} = useParams<{ uuid: string }>();
     const {isLoading: isLoadingGame, isError: isErrorGame, data: game} = useGame(uuid!);
-    const {isLoading, isError, data: gameState} = useGameState(uuid!);
+    const {isLoading, isError, data: gameState} = useGameState(uuid ?? '', game?.players[0] ?? '');
+    // the above is only temporary, maybe get id from session later.
+    // this method also throws a CORS error because it doesn't immediately get the value for playerid
 
     if (isLoadingGame || isLoading) return <Loader>Loading Game Details...</Loader>;
 
@@ -33,11 +36,12 @@ export default function Game() {
                 height: '80vh'
             }}>
                 {/* Left Column */}
-                <WagonCardPile cardCount={gameState.usedWagonCardPileSize} cardColor={gameState.lastUsedWagonCard} onClick={() => {
-                }}/>
+                <WagonCardPile cardCount={gameState.usedWagonCardPileSize} cardColor={gameState.lastUsedWagonCard}
+                               onClick={() => {
+                               }}/>
                 <WagonCardPile cardCount={gameState.wagonCardPileSize} onClick={() => {
                 }}/>
-                <FaceUpWagonCards faceUpWagonCards={gameState.faceUpWagonCards} />
+                <FaceUpWagonCards faceUpWagonCards={gameState.faceUpWagonCards}/>
             </Grid>
             <Grid item xs={8}>
                 <Board boardUuid={game.board}/>
@@ -57,6 +61,8 @@ export default function Game() {
                 height: '20vh'
             }}>
                 {/* Large Bottom Bar */}
+                <PlayerWagonCards wagonCards={gameState.privateGameState.wagonCards}
+                                  onClick={() => console.log("temp")}/>
             </Grid>
         </Grid>
     )
