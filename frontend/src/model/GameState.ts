@@ -7,6 +7,7 @@ export type GameState = {
     lastUsedWagonCard?: string;
     players: PlayerState[];
     privateGameState: PrivateGameState;
+    cities: City[];
 }
 
 
@@ -38,3 +39,9 @@ export type TempRouteCard = {
     endCity: string;
     connectionSize: number;
 };
+
+export type City = {
+    id: string;
+    x: number;
+    y: number;
+}

@@ -35,7 +35,7 @@ function GameContent({gameId, playerId, boardId}: { gameId: string, playerId: st
     }
 
     return (
-        <Grid container spacing={2}>
+        <Grid container>
             <Grid item xs={2} sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -58,7 +58,10 @@ function GameContent({gameId, playerId, boardId}: { gameId: string, playerId: st
                                   gameId={gameId}/>
             </Grid>
             <Grid item xs={8}>
-                <Board boardUuid={boardId}/>
+                <Board
+                    boardUuid={boardId}
+                    cities={gameState.cities}
+                />
             </Grid>
             <Grid item xs={2}>
                 {/* Right Column */}
@@ -74,7 +77,6 @@ function GameContent({gameId, playerId, boardId}: { gameId: string, playerId: st
             <Grid item xs={12} sx={{
                 backgroundColor: theme => theme.palette.secondary.main,
                 height: '20vh',
-                position: 'relative', // Make the container relative for absolute positioning
             }}>
                 {/* Large Bottom Bar */}
                 <Grid container direction="row">
@@ -83,7 +85,7 @@ function GameContent({gameId, playerId, boardId}: { gameId: string, playerId: st
                         <PlayerWagonCards wagonCards={gameState.privateGameState.wagonCards}
                                           onClick={() => console.log("clicked wagon cards")}/>
                     </Grid>
-                    <Grid item xs={2} sx={{bottom: 0, right: 0}}>
+                    <Grid item xs={2}>
                         <PlayerInformation playerState={gameState.players[0]}/>
                     </Grid>
                 </Grid>
