@@ -6,14 +6,16 @@ export function useGameState(uuid: string, playerId: string) {
         isLoading,
         isError,
         data: gameState,
+        refetch
     } = useQuery({
         queryKey: ['gameState', uuid, playerId],
-        queryFn: () => getGameState(uuid, playerId)
+        queryFn: () => getGameState(uuid, playerId),
     });
 
     return {
         isLoading,
         isError,
         data: gameState,
+        refetch
     };
 }

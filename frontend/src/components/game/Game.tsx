@@ -13,8 +13,8 @@ import {usePickRandomWagonCard} from "../../hooks/usePickRandomWagonCard";
 
 function GameContent({gameId, playerId, boardId}: { gameId: string, playerId: string, boardId: string }) {
     const {isLoading, isError, data: gameState} = useGameState(gameId, playerId);
-    console.log(gameId, playerId, boardId);
-    const pickRandomWagonCardMutation = usePickRandomWagonCard();
+    const {refetch: refetchWagonCardPile} = useGameState(gameId, playerId);
+    const pickRandomWagonCardMutation = usePickRandomWagonCard(refetchWagonCardPile)
 
     if (isLoading) return <Loader>Loading Game Details...</Loader>;
 
@@ -44,15 +44,18 @@ function GameContent({gameId, playerId, boardId}: { gameId: string, playerId: st
                 height: '80vh'
             }}>
                 {/* Left Column */}
-                <WagonCardPile cardCount={gameState.usedWagonCardPileSize} cardColor={gameState.lastUsedWagonCard}
+                <WagonCardPile cardCount={gameState.usedWagonCardPileSize}
+                               cardColor={gameState.lastUsedWagonCard}
                                onClick={() => console.log("unimplemented")}/>
-                <WagonCardPile cardCount={gameState.wagonCardPileSize} onClick={() => {
-                    pickRandomWagonCardMutation.mutate({
-                        playerId: playerId,
-                        boardId: boardId,
-                    });
-                }}/>
-                <FaceUpWagonCards faceUpWagonCards={gameState.faceUpWagonCards}/>
+                <WagonCardPile cardCount={gameState.wagonCardPileSize}
+                               onClick={() => {
+                                   pickRandomWagonCardMutation.mutate({
+                                       playerId: playerId,
+                                       boardId: boardId,
+                                   });
+                               }}/>
+                <FaceUpWagonCards faceUpWagonCards={gameState.faceUpWagonCards} playerId={playerId} boardId={boardId}
+                                  gameId={gameId}/>
             </Grid>
             <Grid item xs={8}>
                 <Board boardUuid={boardId}/>
@@ -78,7 +81,7 @@ function GameContent({gameId, playerId, boardId}: { gameId: string, playerId: st
                     <Grid item xs={2}></Grid>
                     <Grid item xs={8}>
                         <PlayerWagonCards wagonCards={gameState.privateGameState.wagonCards}
-                                          onClick={() => console.log("temp")}/>
+                                          onClick={() => console.log("clicked wagon cards")}/>
                     </Grid>
                     <Grid item xs={2} sx={{bottom: 0, right: 0}}>
                         <PlayerInformation playerState={gameState.players[0]}/>
@@ -99,7 +102,5 @@ export default function Game() {
         return <Alert severity="error">Unable to load this game's details.</Alert>;
     }
 
-
-    console.log("SENDING BACK: " + game.board! + " WITH PLAYERID: " + game.players[0])
     return <GameContent gameId={uuid} playerId={game.players[0]} boardId={game.board!}/>;
 }
