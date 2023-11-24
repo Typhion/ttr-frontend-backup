@@ -39,7 +39,7 @@ export default function WagonCardPile({cardCount, onClick, cardColor}: WagonCard
 
     return (
         <Badge
-            badgeContent={cardCount.toString()}
+            badgeContent={cardCount}
             color="primary"
             anchorOrigin={{
                 vertical: 'top',
@@ -49,6 +49,7 @@ export default function WagonCardPile({cardCount, onClick, cardColor}: WagonCard
                 width: '50%',
                 margin: 'auto'
             }}
+            showZero
         >
             <Card onClick={onClick} sx={{ width: '100%', cursor: 'pointer' }}>
                 <CardMedia

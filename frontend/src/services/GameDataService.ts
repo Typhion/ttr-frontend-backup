@@ -7,7 +7,7 @@ export const getGame = async (uuid: string): Promise<Game> => {
     return response.data;
 }
 
-export const getGameState = async (uuid: string): Promise<GameState> => {
-    const response = await axios.get<GameState>(`/game/${uuid}/state`);
+export const getGameState = async (uuid: string, playerId: string): Promise<GameState> => {
+    const response = await axios.get<GameState>(`/game/${uuid}/state/${playerId}`);
     return response.data;
 }
