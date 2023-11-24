@@ -7,7 +7,7 @@ interface PlayerIconProps {
 }
 
 export default function PlayerIcon({playerState}: PlayerIconProps) {
-    const { score, wagonAmount, stationAmount } = playerState;
+    const {score, wagonAmount, stationAmount} = playerState;
 
     return (
         <Box sx={{
@@ -20,12 +20,13 @@ export default function PlayerIcon({playerState}: PlayerIconProps) {
             width: '6vw',
             height: '6vw',
         }}>
-            <Avatar sx={{ width: '100%', height: '100%' }}>
-                <PersonIcon sx={{ fontSize: '200%' }} />
+            <Avatar sx={{width: '100%', height: '100%'}}>
+                <PersonIcon sx={{fontSize: '200%'}}/>
             </Avatar>
             <Badge
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                badgeContent={<Typography variant="caption" sx={{ fontSize: '0.8em' }}>{score}</Typography>} // Font size in em for relative sizing
+                anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                badgeContent={<Typography variant="caption"
+                                          sx={{fontSize: '0.8em'}}>{score}</Typography>} // Font size in em for relative sizing
                 color="primary"
                 sx={{
                     position: 'absolute',
@@ -35,8 +36,9 @@ export default function PlayerIcon({playerState}: PlayerIconProps) {
                 }}
             />
             <Badge
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                badgeContent={<Typography variant="caption" sx={{ fontSize: '0.8em' }}>{`${wagonAmount}/${stationAmount}`}</Typography>}
+                anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                badgeContent={<Typography variant="caption"
+                                          sx={{fontSize: '0.8em'}}>{`${wagonAmount}/${stationAmount}`}</Typography>}
                 color="secondary"
                 sx={{
                     position: 'absolute',
