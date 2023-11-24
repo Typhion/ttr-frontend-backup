@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import {useGame} from "../../hooks/useGame.ts";
-import {Alert, Grid} from "@mui/material";
+import {Alert, Box, Grid} from "@mui/material";
 import Loader from "../general/Loader.tsx";
 import Board from "./board/Board.tsx";
 import WagonCardPile from "./board/WagonCardPile.tsx";
@@ -10,11 +10,15 @@ import PlayerWagonCards from "./board/PlayerWagonCards.tsx";
 import PlayerIcon from "./board/PlayerIcon.tsx";
 import PlayerInformation from "./board/PlayerInformation";
 import {usePickRandomWagonCard} from "../../hooks/usePickRandomWagonCard";
+import {useState} from "react";
 
-function GameContent({gameId, playerId, boardId}: { gameId: string, playerId: string, boardId: string }) {
+function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defaultPlayerId: string, boardId: string }) {
+    const [playerId, setPlayerId] = useState(defaultPlayerId);
     const {isLoading, isError, data: gameState} = useGameState(gameId, playerId);
     const {refetch: refetchWagonCardPile} = useGameState(gameId, playerId);
     const pickRandomWagonCardMutation = usePickRandomWagonCard(refetchWagonCardPile)
+    const {uuid} = useParams<{ uuid: string }>();
+    const {data: game} = useGame(uuid!);
 
     if (isLoading) return <Loader>Loading Game Details...</Loader>;
 
@@ -31,6 +35,10 @@ function GameContent({gameId, playerId, boardId}: { gameId: string, playerId: st
     }
 
     if (boardId === undefined) {
+        return <Alert severity="error">Unable to load this game's details.</Alert>;
+    }
+
+    if (game === undefined) {
         return <Alert severity="error">Unable to load this game's details.</Alert>;
     }
 
@@ -66,7 +74,9 @@ function GameContent({gameId, playerId, boardId}: { gameId: string, playerId: st
                       style={{height: '80vh'}}>
                     {gameState.players.map((playerState, index) => (
                         <Grid item key={index}>
-                            <PlayerIcon playerState={playerState}/>
+                            <Box onClick={() => setPlayerId(game.players[index])} sx={{ cursor: 'pointer' }}>
+                                <PlayerIcon playerState={playerState} />
+                            </Box>
                         </Grid>
                     ))}
                 </Grid>
@@ -102,5 +112,5 @@ export default function Game() {
         return <Alert severity="error">Unable to load this game's details.</Alert>;
     }
 
-    return <GameContent gameId={uuid} playerId={game.players[0]} boardId={game.board!}/>;
+    return <GameContent gameId={uuid} defaultPlayerId={game.players[0]} boardId={game.board!}/>;
 }
