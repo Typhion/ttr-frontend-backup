@@ -7,11 +7,6 @@ interface CityNodeProps {
     imageSize: { width: number; height: number; };
 }
 
-interface CityNodeProps {
-    city: City;
-    imageSize: { width: number; height: number };
-}
-
 const originalSize = { width: 1328, height: 863 };
 
 export default function CityNode({ city, imageSize }: CityNodeProps) {

@@ -8,6 +8,8 @@ export type GameState = {
     players: PlayerState[];
     privateGameState: PrivateGameState;
     cities: City[];
+    connectionTiles: ConnectionTile[];
+    connections: Connection[];
 }
 
 
@@ -44,4 +46,19 @@ export type City = {
     id: string;
     x: number;
     y: number;
+}
+
+export type ConnectionTile = {
+    id: string;
+    y: number;
+    x: number;
+    rotation: number;
+    isJoker: boolean;
+}
+
+export type Connection = {
+    id: string;
+    wagonColor: string;
+    connectionType: string;
+    connectionTiles: string[];
 }
