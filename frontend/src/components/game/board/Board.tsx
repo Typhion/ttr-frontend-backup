@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { Alert, Box } from "@mui/material";
-import { City } from "../../../model/GameState.ts";
+import {City, Connection, ConnectionTile} from "../../../model/GameState.ts";
 import CityNode from "./CityNode.tsx";
 import Loader from "../../general/Loader.tsx";
 import { useBoardImage } from "../../../hooks/useBoardImage.ts";
+import ConnectionNode from "./ConnectionNode.tsx";
 
 interface BoardProps {
     boardUuid: string;
     cities: City[];
+    connections: Connection[];
+    connectionTiles: ConnectionTile[];
 }
 
-export default function Board({ boardUuid, cities }: BoardProps) {
+export default function Board({ boardUuid, cities,  connections, connectionTiles  }: BoardProps) {
     const { isLoading, isError, data: imageUrl } = useBoardImage(boardUuid!);
     const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
     const imageRef = useRef<HTMLImageElement>(null);
@@ -55,6 +58,16 @@ export default function Board({ boardUuid, cities }: BoardProps) {
             <Box sx={{ position: 'absolute', height: imageSize.height, width: imageSize.width }}>
                 {cities.map((city) => (
                     <CityNode city={city} key={city.id} imageSize={imageSize} />
+                ))}
+                {connections && connections.map((connection) => (
+                    <Box key={connection.id} sx={{ position: 'absolute' }}>
+                        <ConnectionNode
+                            connection={connection}
+                            connectionTiles={connectionTiles}
+                            key={connection.id}
+                            imageSize={imageSize}
+                        />
+                    </Box>
                 ))}
             </Box>
         </Box>
