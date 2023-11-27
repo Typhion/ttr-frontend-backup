@@ -12,6 +12,7 @@ import PlayerInformation from "./board/PlayerInformation";
 import {usePickRandomWagonCard} from "../../hooks/usePickRandomWagonCard";
 import {useState} from "react";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import PlayerRouteCards from "./board/PlayerRouteCards.tsx";
 
 function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defaultPlayerId: string, boardId: string }) {
     const [playerId, setPlayerId] = useState(defaultPlayerId);
@@ -112,10 +113,13 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
             <Grid item xs={12} sx={{
                 backgroundColor: theme => theme.palette.secondary.main,
                 height: '20vh',
+                position: 'relative'
             }}>
                 {/* Large Bottom Bar */}
                 <Grid container direction="row">
-                    <Grid item xs={2}></Grid>
+                    <Grid item xs={2}>
+                        <PlayerRouteCards routeCards={gameState.privateGameState.routeCards}/>
+                    </Grid>
                     <Grid item xs={8}>
                         <PlayerWagonCards wagonCards={gameState.privateGameState.wagonCards}
                                           onClick={() => console.log("clicked wagon cards")}/>
