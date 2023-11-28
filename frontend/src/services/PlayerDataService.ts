@@ -1,5 +1,6 @@
 import axios from "axios";
 import {ConnectionPick} from "../components/game/board/ConnectionDialog.tsx";
+import {StationCreate} from "../components/game/board/CreateStationDialog.tsx";
 
 export type RandomWagonCardPick = {
     playerId: string;
@@ -16,6 +17,20 @@ export type FaceUpWagonCardPick = {
 }
 export const pickFaceUpWagonCard = async (faceUpWagonCardPick: FaceUpWagonCardPick): Promise<void> => {
     await axios.post(`/player/pick/wagoncard/faceup`, faceUpWagonCardPick);
+}
+
+export type PlayerCardsForStations = {
+    wagonCards: string[] | null;
+}
+
+export const getPlayerCardsForStation = async (playerId: string): Promise<PlayerCardsForStations> => {
+    console.log(playerId)
+    const result = await axios.get(`/player/create/station/player/${playerId}`);
+    return result.data;
+}
+
+export const createStation = async (stationCreate: StationCreate): Promise<void> => {
+    await axios.post(`/player/create/station`, stationCreate);
 }
 
 export type RouteCardPick = {

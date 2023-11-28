@@ -15,7 +15,7 @@ export default function PlayerIcon({playerState}: PlayerIconProps) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            border: '5px solid grey', //should be the player color eventually
+            border: `5px solid ${playerState.color.toLowerCase()}`, //should be the player color eventually
             borderRadius: '50%',
             width: '6vw',
             height: '6vw',
