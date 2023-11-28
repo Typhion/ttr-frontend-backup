@@ -15,6 +15,7 @@ export default function PlayerInformation({ playerState }: PlayerInformationProp
             flexDirection: 'column', // Stack children vertically
             justifyContent: 'center', // Center vertically
             alignItems: 'center',  // Center horizontally
+            marginRight: '2px',
         }}>
             <CardContent>
                 <Typography variant="h6" component="h6" sx={{ fontSize: '3.5vh' }}>

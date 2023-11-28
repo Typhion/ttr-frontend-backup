@@ -8,12 +8,13 @@ import ConnectionNode from "./ConnectionNode.tsx";
 
 interface BoardProps {
     boardUuid: string;
+    playerUuid: string;
     cities: City[];
     connections: Connection[];
     connectionTiles: ConnectionTile[];
 }
 
-export default function Board({ boardUuid, cities,  connections, connectionTiles  }: BoardProps) {
+export default function Board({ boardUuid, playerUuid, cities,  connections, connectionTiles  }: BoardProps) {
     const { isLoading, isError, data: imageUrl } = useBoardImage(boardUuid!);
     const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
     const imageRef = useRef<HTMLImageElement>(null);
@@ -63,6 +64,8 @@ export default function Board({ boardUuid, cities,  connections, connectionTiles
                     <Box key={connection.id} sx={{ position: 'absolute' }}>
                         <ConnectionNode
                             connection={connection}
+                            boardId={boardUuid}
+                            playerId={playerUuid}
                             connectionTiles={connectionTiles}
                             key={connection.id}
                             imageSize={imageSize}
