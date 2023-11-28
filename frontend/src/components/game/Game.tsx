@@ -70,6 +70,7 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
             <Grid item xs={8}>
                 <Board
                     boardUuid={boardId}
+                    playerUuid={playerId}
                     cities={gameState.cities}
                     connections={gameState.connections}
                     connectionTiles={gameState.connectionTiles}
