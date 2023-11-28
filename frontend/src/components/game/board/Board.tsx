@@ -12,9 +12,10 @@ interface BoardProps {
     cities: City[];
     connections: Connection[];
     connectionTiles: ConnectionTile[];
+    gameId: string;
 }
 
-export default function Board({ boardUuid, playerUuid, cities,  connections, connectionTiles  }: BoardProps) {
+export default function Board({ boardUuid, playerUuid, cities,  connections, connectionTiles, gameId }: BoardProps) {
     const { isLoading, isError, data: imageUrl } = useBoardImage(boardUuid!);
     const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
     const imageRef = useRef<HTMLImageElement>(null);
@@ -58,7 +59,14 @@ export default function Board({ boardUuid, playerUuid, cities,  connections, con
             />
             <Box sx={{ position: 'absolute', height: imageSize.height, width: imageSize.width }}>
                 {cities.map((city) => (
-                    <CityNode city={city} key={city.id} imageSize={imageSize} />
+                    <CityNode
+                        city={city}
+                        key={city.id}
+                        imageSize={imageSize}
+                        boardUuid={boardUuid}
+                        playerId={playerUuid}
+                        gameId={gameId}
+                    />
                 ))}
                 {connections && connections.map((connection) => (
                     <Box key={connection.id} sx={{ position: 'absolute' }}>

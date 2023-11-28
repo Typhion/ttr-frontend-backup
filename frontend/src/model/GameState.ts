@@ -18,6 +18,7 @@ export type PlayerState = {
     score: number;
     wagonAmount: number;
     stationAmount: number;
+    color: string;
 };
 
 export type PrivateGameState = {
@@ -49,6 +50,7 @@ export type City = {
     id: string;
     x: number;
     y: number;
+    hasStation: boolean;
 }
 
 export type ConnectionTile = {
