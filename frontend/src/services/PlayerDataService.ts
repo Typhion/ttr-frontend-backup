@@ -18,6 +18,26 @@ export const pickFaceUpWagonCard = async (faceUpWagonCardPick: FaceUpWagonCardPi
     await axios.post(`/player/pick/wagoncard/faceup`, faceUpWagonCardPick);
 }
 
+export type RouteCardPick = {
+    playerId: string;
+    boardId: string;
+    routeIds: string[];
+
+}
+
+export const pickRouteCard = async (routeCardPick: RouteCardPick): Promise<void> => {
+    await axios.post(`/player/pick/routes`, routeCardPick);
+}
+
+export type ShortRouteCardsDraw = {
+    playerId: string;
+    boardId: string;
+}
+
+export const drawRouteCards = async (drawRouteCards: ShortRouteCardsDraw): Promise<void> => {
+    await axios.post(`/player/draw/routes`, drawRouteCards);
+}
+
 export type PlayerCardsForConnection = {
     wagonColors: string[] | null;
 }

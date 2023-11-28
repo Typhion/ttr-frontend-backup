@@ -1,0 +1,96 @@
+import {useState} from 'react';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+import {RouteCard} from "../../../model/GameState";
+import {usePickRouteCard} from "../../../hooks/usePickRouteCard";
+import {useGameState} from "../../../hooks/useGameState";
+import {Box} from "@mui/material";
+
+type RandomRouteCardsDialogProps = {
+    open: boolean;
+    onClose: () => void;
+
+    routes: RouteCard[];
+
+    boardId: string;
+    playerId: string;
+    gameId: string;
+}
+
+export default function RandomRouteCardsDialog({
+                                                   open,
+                                                   onClose,
+                                                   routes,
+                                                   boardId,
+                                                   playerId,
+                                                   gameId
+                                               }: RandomRouteCardsDialogProps) {
+    const [selectedRoutes, setSelectedRoutes] = useState<string[]>([]);
+    const handleCheckboxChange = (routeId: string) => {
+        if (selectedRoutes.includes(routeId)) {
+            setSelectedRoutes((prevSelectedRoutes) =>
+                prevSelectedRoutes.filter((id) => id !== routeId)
+            );
+        } else {
+            setSelectedRoutes((prevSelectedRoutes) => [...prevSelectedRoutes, routeId]);
+        }
+    };
+    const {refetch} = useGameState(gameId, playerId)
+    const pickRouteCard = usePickRouteCard(() => {
+        refetch();
+    });
+
+
+    const handlePickRoutes = () => {
+        if (selectedRoutes.length > 0) {
+            pickRouteCard.mutate({
+                playerId: playerId,
+                boardId: boardId,
+                routeIds: selectedRoutes.map((route) => route),
+            });
+
+            selectedRoutes.forEach((routeId) => {
+                handleCheckboxChange(routeId);
+            });
+            onClose();
+        }
+    };
+
+    return (
+        <Dialog disableEscapeKeyDown={true} open={open} onClose={onClose} maxWidth={'lg'}>
+            <DialogContent>
+                <Typography variant="h6">Select the routes you want:</Typography>
+                {routes.map((route) => (
+                    <Box key={route.routeId} sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                        <Checkbox
+                            checked={selectedRoutes.includes(route.routeId)}
+                            onChange={() => handleCheckboxChange(route.routeId)}
+                        />
+                        <Typography variant="body1">
+                            {route.beginCity} - {route.endCity}
+                        </Typography>
+                        <Typography variant="body1" sx={{
+                            right: '0',
+                            position: 'absolute',
+                            marginRight: '10%'
+                        }}>
+                            {route.connectionSize}
+                        </Typography>
+                    </Box>
+                ))}
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handlePickRoutes} color="primary">
+                    Pick Routes
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
+}

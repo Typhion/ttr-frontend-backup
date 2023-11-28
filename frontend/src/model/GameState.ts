@@ -1,5 +1,6 @@
 export type GameState = {
     wagonCardPileSize: number;
+    routeCardsPileSize: number;
     faceUpWagonCards: string[];
     turn: number;
     playerTurnIndex: number;
@@ -26,6 +27,8 @@ export type PrivateGameState = {
     routeCards: RouteCard[];
     tempWagonCards: string[];
     tempRouteCards: TempRouteCard[];
+    randomRoutes: RouteCard[];
+
 };
 
 export type RouteCard = {

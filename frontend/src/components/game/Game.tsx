@@ -12,6 +12,7 @@ import PlayerInformation from "./board/PlayerInformation";
 import {usePickRandomWagonCard} from "../../hooks/usePickRandomWagonCard";
 import {useState} from "react";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import RouteCardsPile from "./board/RouteCardsPile";
 import PlayerRouteCards from "./board/PlayerRouteCards.tsx";
 
 function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defaultPlayerId: string, boardId: string }) {
@@ -54,6 +55,8 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
                 height: '80vh'
             }}>
                 {/* Left Column */}
+                <RouteCardsPile boardId={boardId} playerId={playerId} routes={gameState.privateGameState.tempRouteCards}
+                                pileSize={gameState.routeCardsPileSize} gameId={gameId}/>
                 <WagonCardPile cardCount={gameState.usedWagonCardPileSize}
                                cardColor={gameState.lastUsedWagonCard}
                                onClick={() => console.log("unimplemented")}/>

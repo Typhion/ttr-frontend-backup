@@ -23,7 +23,7 @@ export default function FaceUpWagonCards({ faceUpWagonCards, boardId, playerId, 
         <div style={{
             display: 'flex',
             flexDirection: 'column',
-            width: '50%',
+            width: '40%',
             overflow: 'hidden',
             margin: 'auto'
         }}>

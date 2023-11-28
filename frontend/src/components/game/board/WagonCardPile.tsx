@@ -46,12 +46,12 @@ export default function WagonCardPile({cardCount, onClick, cardColor}: WagonCard
                 horizontal: 'right',
             }}
             sx={{
-                width: '50%',
-                margin: 'auto'
+                margin: 'auto',
+                width: '40%'
             }}
             showZero
         >
-            <Card onClick={onClick} sx={{ width: '100%', cursor: 'pointer' }}>
+            <Card onClick={onClick} sx={{cursor: 'pointer' }}>
                 <CardMedia
                     component="img"
                     image={cardImages[color]}
