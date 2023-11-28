@@ -10,6 +10,8 @@ export function useGameState(uuid: string, playerId: string) {
     } = useQuery({
         queryKey: ['gameState', uuid, playerId],
         queryFn: () => getGameState(uuid, playerId),
+        refetchInterval: 1000 * 3, //Refetches every 3 seconds
+        refetchIntervalInBackground: true,//Turn off later so that it doesn't refetch when the tab is not active
     });
 
     return {
