@@ -1,5 +1,5 @@
 import Badge from '@mui/material/Badge';
-import {Box, Card, CardMedia, Grid} from "@mui/material";
+import {alpha, Box, Card, CardMedia, Grid, Popper, Typography, useTheme} from "@mui/material";
 import BlackCard from "../../../assets/images/card-black.png";
 import BlueCard from "../../../assets/images/card-blue.png";
 import GreenCard from "../../../assets/images/card-green.png";
@@ -9,10 +9,12 @@ import RedCard from "../../../assets/images/card-red.png";
 import WhiteCard from "../../../assets/images/card-white.png";
 import YellowCard from "../../../assets/images/card-yellow.png";
 import JokerCard from "../../../assets/images/card-joker.png";
+import {useRef} from "react";
 
 
 interface PlayerWagonCardsProps {
     wagonCards: { [key: string]: number };
+    tempWagonCards?: string[];
     onClick: () => void;
 }
 
@@ -28,9 +30,54 @@ const cardImages: { [key: string]: string } = {
     joker: JokerCard
 };
 
-export default function PlayerWagonCards({wagonCards, onClick}: PlayerWagonCardsProps) {
+export default function PlayerWagonCards({wagonCards, tempWagonCards, onClick}: PlayerWagonCardsProps) {
+    const theme = useTheme();
+    const anchorEl = useRef(null);
+
+    const renderTooltip = () => {
+        if (tempWagonCards && tempWagonCards.length === 1) {
+            const color = tempWagonCards[0].toLowerCase();
+            return (
+                <Popper
+                    open
+                    anchorEl={anchorEl.current}
+                    placement="top"
+                    style={{
+                        width: '20vw',
+                        height: '20vh',
+                        backgroundColor: alpha(theme.palette.background.paper, 0.8),
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: theme.shape.borderRadius,
+                }}
+                    modifiers={[
+                        {
+                            name: 'offset',
+                            options: {
+                                offset: [0, 0],
+                            },
+                        },
+                    ]}
+                >
+                    <Typography variant="subtitle1" style={{ marginBottom: '1vh' }}>
+                        Picked Wagon Card
+                    </Typography>
+                    <CardMedia
+                        component="img"
+                        image={cardImages[color]}
+                        alt={`${color} card`}
+                        style={{ width: '50%', height: 'auto' }}
+                    />
+                </Popper>
+            );
+        }
+    };
+
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} ref={anchorEl}>
+            {renderTooltip()}
             <Box style={{
                 display: 'flex',
                 flexDirection: 'row',
