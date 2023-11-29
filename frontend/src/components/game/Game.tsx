@@ -127,6 +127,7 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
                     </Grid>
                     <Grid item xs={8}>
                         <PlayerWagonCards wagonCards={gameState.privateGameState.wagonCards}
+                                            tempWagonCards={gameState.privateGameState.tempWagonCards}
                                           onClick={() => console.log("clicked wagon cards")}/>
                     </Grid>
                     <Grid item xs={2}>
