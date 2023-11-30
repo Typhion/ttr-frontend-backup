@@ -14,9 +14,10 @@ interface WagonCardPileProps {
     cardCount: number;
     onClick: () => void;
     cardColor?: string;
+    myTurn?: boolean;
 }
 
-export default function WagonCardPile({cardCount, onClick, cardColor}: WagonCardPileProps) {
+export default function WagonCardPile({cardCount, onClick, cardColor, myTurn}: WagonCardPileProps) {
     let color;
     if (cardColor === undefined) {
         color = 'back';
@@ -51,7 +52,10 @@ export default function WagonCardPile({cardCount, onClick, cardColor}: WagonCard
             }}
             showZero
         >
-            <Card onClick={onClick} sx={{cursor: 'pointer' }}>
+            <Card
+                onClick={myTurn === true ? onClick : () => {}}
+                sx={{ cursor: myTurn === true ? 'pointer' : 'default' }}
+            >
                 <CardMedia
                     component="img"
                     image={cardImages[color]}

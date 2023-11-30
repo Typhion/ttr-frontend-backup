@@ -13,9 +13,10 @@ interface BoardProps {
     connections: Connection[];
     connectionTiles: ConnectionTile[];
     gameId: string;
+    myTurn: boolean;
 }
 
-export default function Board({ boardUuid, playerUuid, cities,  connections, connectionTiles, gameId }: BoardProps) {
+export default function Board({ boardUuid, playerUuid, cities,  connections, connectionTiles, gameId, myTurn }: BoardProps) {
     const { isLoading, isError, data: imageUrl } = useBoardImage(boardUuid!);
     const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
     const imageRef = useRef<HTMLImageElement>(null);
@@ -55,7 +56,7 @@ export default function Board({ boardUuid, playerUuid, cities,  connections, con
                 alt="Game Board"
                 ref={imageRef}
                 style={{ maxHeight: '100%', maxWidth: '100%', minHeight: '80%', minWidth: '80%' }}
-                onLoad={updateImageSize} // Update size when image is loaded
+                onLoad={updateImageSize}
             />
             <Box sx={{ position: 'absolute', height: imageSize.height, width: imageSize.width }}>
                 {cities.map((city) => (
@@ -66,6 +67,7 @@ export default function Board({ boardUuid, playerUuid, cities,  connections, con
                         boardUuid={boardUuid}
                         playerId={playerUuid}
                         gameId={gameId}
+                        myTurn={myTurn}
                     />
                 ))}
                 {connections && connections.map((connection) => (
@@ -77,6 +79,7 @@ export default function Board({ boardUuid, playerUuid, cities,  connections, con
                             connectionTiles={connectionTiles}
                             key={connection.id}
                             imageSize={imageSize}
+                            myTurn={myTurn}
                         />
                     </Box>
                 ))}

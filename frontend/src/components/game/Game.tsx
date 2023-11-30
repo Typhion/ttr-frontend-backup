@@ -45,6 +45,8 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
         return <Alert severity="error">Unable to load this game's details.</Alert>;
     }
 
+    const isPlayersTurn = gameState && game.players[gameState.playerTurnIndex] === playerId;
+
     return (
         <Grid container>
             <Grid item xs={2} sx={{
@@ -56,19 +58,22 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
             }}>
                 {/* Left Column */}
                 <RouteCardsPile boardId={boardId} playerId={playerId} routes={gameState.privateGameState.tempRouteCards}
-                                pileSize={gameState.routeCardsPileSize} gameId={gameId}/>
+                                pileSize={gameState.routeCardsPileSize} gameId={gameId} myTurn={isPlayersTurn}/>
                 <WagonCardPile cardCount={gameState.usedWagonCardPileSize}
                                cardColor={gameState.lastUsedWagonCard}
-                               onClick={() => console.log("unimplemented")}/>
+                               onClick={() => console.log("unimplemented")}
+                />
                 <WagonCardPile cardCount={gameState.wagonCardPileSize}
                                onClick={() => {
                                    pickRandomWagonCardMutation.mutate({
                                        playerId: playerId,
                                        boardId: boardId,
                                    });
-                               }}/>
+                               }}
+                               myTurn={isPlayersTurn}
+                />
                 <FaceUpWagonCards faceUpWagonCards={gameState.faceUpWagonCards} playerId={playerId} boardId={boardId}
-                                  gameId={gameId}/>
+                                  gameId={gameId} myTurn={isPlayersTurn}/>
             </Grid>
             <Grid item xs={8}>
                 <Board
@@ -78,11 +83,12 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
                     connections={gameState.connections}
                     connectionTiles={gameState.connectionTiles}
                     gameId={gameId}
+                    myTurn={isPlayersTurn}
                 />
             </Grid>
             <Grid item xs={2}>
                 {/* Right Column */}
-                <Grid container direction="column" justifyContent="space-evenly" style={{height: '80vh'}}>
+                <Grid container direction="column" alignItems="center" justifyContent="space-evenly" style={{height: '80vh'}}>
 
                     <Typography variant="body2" sx={{
                         fontWeight: 'bold'
@@ -90,13 +96,14 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
 
                     {gameState.players.map((playerState, index) => (
                         <Grid item key={index} container alignItems="center">
+                            <Grid item xs={2}/>
                             <Grid item xs={2}
                                   sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                 {gameState.playerTurnIndex === index && (
                                     <ArrowForwardIosIcon sx={{marginRight: 1}}/>
                                 )}
                             </Grid>
-                            <Grid item onClick={() => setPlayerId(game.players[index])} sx={{
+                            <Grid item xs={4} onClick={() => setPlayerId(game.players[index])} sx={{
                                 cursor: 'pointer',
                                 display: 'flex',
                                 flexDirection: 'column',

@@ -12,9 +12,10 @@ import {Card, CardMedia} from "@mui/material";
 interface FaceUpWagonCardProps {
     cardColor: string;
     onClick: () => void;
+    myTurn: boolean;
 }
 
-export default function FaceUpWagonCard({cardColor, onClick}: FaceUpWagonCardProps) {
+export default function FaceUpWagonCard({cardColor, onClick, myTurn}: FaceUpWagonCardProps) {
     const color = cardColor.toLowerCase();
 
     const cardImages: { [key: string]: string } = {
@@ -31,13 +32,17 @@ export default function FaceUpWagonCard({cardColor, onClick}: FaceUpWagonCardPro
 
     if (color in cardImages) {
         return (
-            <Card onClick={onClick} sx={{width: '100%', cursor: 'pointer'}}>
+            <Card
+                onClick={myTurn ? onClick : undefined}
+                sx={{ width: '100%', cursor: myTurn ? 'pointer' : 'default' }}
+            >
                 <CardMedia
                     component="img"
                     image={cardImages[color]}
                     alt="FaceUpWagonCard"
                 />
             </Card>
+
         )
     }
 }

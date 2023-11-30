@@ -7,6 +7,7 @@ interface ConnectionTileProps {
     imageSize: { width: number; height: number };
     connection: Connection;
     isConnectionHovered: boolean;
+    myTurn: boolean;
 }
 
 
@@ -17,6 +18,7 @@ export default function ConnectionTileNode({
                                                imageSize,
                                                connection,
                                                isConnectionHovered,
+                                               myTurn
                                            }: ConnectionTileProps) {
     const [isHovered, setHovered] = useState(false);
 
@@ -46,15 +48,19 @@ export default function ConnectionTileNode({
                 : connection.wagonColor,
         transform: `translate(-50%, -50%) rotate(${connectionTile.rotation}deg)`,
         boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-        border: isHovered || isConnectionHovered ? "3px solid green" : isBlack ? "1px solid white" : "1px solid black",
-        cursor: "pointer"
+        cursor: myTurn ? "pointer" : "default",
+        border: isHovered || (isConnectionHovered && myTurn)
+            ? "3px solid green"
+            : isBlack
+                ? "1px solid white"
+                : "1px solid black"
     };
 
     return (
         <Box
             sx={tileStyle}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
+            onMouseEnter={() => myTurn && setHovered(true)}
+            onMouseLeave={() => myTurn && setHovered(false)}
         ></Box>
     );
-};
+}
