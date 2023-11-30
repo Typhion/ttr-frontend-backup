@@ -11,7 +11,7 @@ interface FaceupWagonCardsProps {
 }
 
 export default function FaceUpWagonCards({ faceUpWagonCards, boardId, playerId, gameId, myTurn }: FaceupWagonCardsProps) {
-    const {refetch: refetchFaceUpWagonCards} = useGameState(gameId, playerId);
+    const {refetch: refetchFaceUpWagonCards} = useGameState(gameId, playerId, true);
     const pickFaceUpWagonCardMutation = usePickFaceUpWagonCard(
         () => {
             refetchFaceUpWagonCards();

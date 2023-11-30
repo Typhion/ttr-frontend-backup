@@ -42,7 +42,7 @@ export default function RandomRouteCardsDialog({
                                                    gameId
                                                }: RandomRouteCardsDialogProps) {
     const [selectedRoutes, setSelectedRoutes] = useState<string[]>([]);
-    const {refetch} = useGameState(gameId, playerId);
+    const { refetch } = useGameState(gameId, playerId, true);
     const pickRouteCard = usePickRouteCard(() => {
         refetch();
     });

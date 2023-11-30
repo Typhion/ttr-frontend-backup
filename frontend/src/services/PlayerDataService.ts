@@ -24,7 +24,6 @@ export type PlayerCardsForStations = {
 }
 
 export const getPlayerCardsForStation = async (playerId: string): Promise<PlayerCardsForStations> => {
-    console.log(playerId)
     const result = await axios.get(`/player/create/station/player/${playerId}`);
     return result.data;
 }
@@ -55,15 +54,24 @@ export const drawRouteCards = async (drawRouteCards: ShortRouteCardsDraw): Promi
 
 export type PlayerCardsForConnection = {
     wagonColors: string[] | null;
+    message: string | null;
 }
 
 export const getPlayerCardsForConnection = async (connectionId: string, playerId: string): Promise<PlayerCardsForConnection> => {
-    console.log(playerId)
     const result = await axios.get(`/player/pick/connection/${connectionId}/player/${playerId}`);
     return result.data;
 }
 
-export const pickConnection = async (connectionPick: ConnectionPick): Promise<void> => {
-    console.log(connectionPick.playerId)
-    await axios.post(`/player/pick/connection`, connectionPick);
+export const pickConnection = async (connectionPick: ConnectionPick): Promise<PlayerCardsForConnection> => {
+    const result = await axios.post(`/player/pick/connection`, connectionPick);
+    return result.data;
+}
+
+export type EndTurn = {
+    gameId: string;
+    playerId: string;
+}
+
+export const endTurn = async (endTurn: EndTurn): Promise<void> => {
+    await axios.post(`/turn/end/${endTurn.gameId}/player/${endTurn.playerId}`);
 }

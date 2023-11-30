@@ -5,7 +5,8 @@ export function usePlayerCardsForConnection(connectionId: string, playerId: stri
     const {
         isLoading,
         isError,
-        data: wagonCards
+        data: wagonCards,
+        refetch
     } = useQuery({
         queryKey: ['playerCardsForConnection', connectionId, playerId],
         queryFn: () => getPlayerCardsForConnection(connectionId, playerId),
@@ -14,6 +15,7 @@ export function usePlayerCardsForConnection(connectionId: string, playerId: stri
     return {
         isLoading,
         isError,
-        data: wagonCards
+        data: wagonCards,
+        refetch
     };
 }

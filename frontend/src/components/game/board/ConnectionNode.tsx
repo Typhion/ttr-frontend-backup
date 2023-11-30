@@ -1,10 +1,9 @@
-import {useState} from 'react';
+import {ChangeEvent, Suspense, useState} from 'react';
 import {Connection as ConnectionType, ConnectionTile} from '../../../model/GameState';
 import ConnectionTileNode from './ConnectionTileNode';
 import {Box} from '@mui/material';
-import ConnectionDialog, {ConnectionPick} from "./ConnectionDialog.tsx";
-import {usePickConnection} from "../../../hooks/usePickConnection.ts";
-
+import ConnectionDialog from "./ConnectionDialog.tsx";
+import TunnelDialog from "./TunnelDialog.tsx";
 
 interface ConnectionNodeProps {
     connection: ConnectionType;
@@ -12,6 +11,7 @@ interface ConnectionNodeProps {
     playerId: string;
     connectionTiles: ConnectionTile[];
     imageSize: { width: number; height: number };
+    gameId: string;
     myTurn: boolean;
 }
 
@@ -21,15 +21,11 @@ export default function ConnectionNode({
                                            playerId,
                                            connectionTiles,
                                            imageSize,
-                                           myTurn
+                                           myTurn,
+                                           gameId
                                        }: ConnectionNodeProps) {
     const [connectionHoverStates, setConnectionHoverStates] = useState<{ [key: string]: boolean }>({});
     const [isConnectionDialogOpen, setIsConnectionDialogOpen] = useState(false);
-    const pickConnection = usePickConnection(
-        () => {
-            setIsConnectionDialogOpen(false);
-        },
-    );
 
     const handleConnectionClick = () => {
         if (myTurn) {
@@ -37,12 +33,14 @@ export default function ConnectionNode({
         }
     };
 
-    const handleConnectionDialogClose = () => {
-        setIsConnectionDialogOpen(false);
+    const handleConnectionDialogClose = (_: ChangeEvent, reason: string) => {
+        if (reason !== 'backdropClick') {
+            setIsConnectionDialogOpen(false);
+        }
     }
 
-    const handleConnectionDialogSubmit = (connectionPick: ConnectionPick) => {
-        pickConnection.mutate(connectionPick);
+    const handleConnectionDialogSubmit = () => {
+        // setIsConnectionDialogOpen(false);
     }
 
     const handleConnectionHover = (connectionId: string, isHovered: boolean) => {
@@ -54,12 +52,32 @@ export default function ConnectionNode({
         }
     };
 
+
     return (
         <Box key={connection.id}>
-            {(isConnectionDialogOpen) &&
-                <ConnectionDialog boardId={boardId} connectionId={connection.id} playerId={playerId}
-                                  isOpen={isConnectionDialogOpen} onClose={handleConnectionDialogClose}
-                                  onSubmit={handleConnectionDialogSubmit}/>}
+            {isConnectionDialogOpen && (
+                <Suspense>
+                    {connection.connectionType !== 'TUNNEL' ? (
+                        <ConnectionDialog boardId={boardId}
+                                          connectionId={connection.id}
+                                          playerId={playerId}
+                                          isOpen={isConnectionDialogOpen}
+                            // @ts-ignore
+                                          onClose={handleConnectionDialogClose}
+                                          onSubmit={handleConnectionDialogSubmit}/>
+                    ) : (
+                        <TunnelDialog boardId={boardId}
+                                      connectionId={connection.id}
+                                      playerId={playerId}
+                                      gameId={gameId}
+                                      isOpen={isConnectionDialogOpen}
+                            // @ts-ignore
+                                      onClose={handleConnectionDialogClose}
+                                      onSubmit={handleConnectionDialogSubmit}/>
+
+                    )}
+                </Suspense>
+            )}
             <Box
                 onClick={handleConnectionClick}
                 onMouseEnter={() => handleConnectionHover(connection.id, true)}
@@ -79,6 +97,7 @@ export default function ConnectionNode({
                                 connection={connection}
                                 isConnectionHovered={connectionHoverStates[connection.id] || false}
                                 myTurn={myTurn}
+                                playerColor={connection.playerColor}
                             />
                         );
                     }
