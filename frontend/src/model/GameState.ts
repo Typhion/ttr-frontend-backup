@@ -66,4 +66,5 @@ export type Connection = {
     wagonColor: string;
     connectionType: string;
     connectionTiles: string[];
+    playerColor: string;
 }

@@ -24,7 +24,7 @@ export default function RouteCardsPile({
                                            myTurn
                                        }: RouteCardsPileProps) {
     const [isDialogOpen, setDialogOpen] = useState(true);
-    const {refetch} = useGameState(gameId, playerId)
+    const {refetch} = useGameState(gameId, playerId, true)
     const drawRouteCards = useDrawRouteCards(() => {
         refetch();
     });

@@ -8,6 +8,7 @@ interface ConnectionTileProps {
     connection: Connection;
     isConnectionHovered: boolean;
     myTurn: boolean;
+    playerColor: string;
 }
 
 
@@ -18,7 +19,8 @@ export default function ConnectionTileNode({
                                                imageSize,
                                                connection,
                                                isConnectionHovered,
-                                               myTurn
+                                               myTurn,
+                                               playerColor
                                            }: ConnectionTileProps) {
     const [isHovered, setHovered] = useState(false);
 
@@ -49,11 +51,20 @@ export default function ConnectionTileNode({
         transform: `translate(-50%, -50%) rotate(${connectionTile.rotation}deg)`,
         boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
         cursor: myTurn ? "pointer" : "default",
-        border: isHovered || (isConnectionHovered && myTurn)
-            ? "3px solid green"
-            : isBlack
-                ? "1px solid white"
-                : "1px solid black"
+        border: isHovered || isConnectionHovered && myTurn ? "solid green" : isBlack ? "solid white" : "solid black",
+        borderStyle: connection.connectionType == 'TUNNEL' ? "dashed" : "solid",
+        borderWidth: connection.connectionType == 'TUNNEL' ? "5px" : isHovered || isConnectionHovered ? "4px" : "1px",
+    };
+
+    const dotStyle = {
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        width: "8px",
+        height: "8px",
+        backgroundColor: playerColor,
+        borderRadius: "50%",
+        transform: "translate(-50%, -50%)"
     };
 
     return (
@@ -61,6 +72,8 @@ export default function ConnectionTileNode({
             sx={tileStyle}
             onMouseEnter={() => myTurn && setHovered(true)}
             onMouseLeave={() => myTurn && setHovered(false)}
-        ></Box>
+        >
+            {playerColor.toLowerCase() !== 'gray' && <Box sx={dotStyle}/>}
+        </Box>
     );
 }

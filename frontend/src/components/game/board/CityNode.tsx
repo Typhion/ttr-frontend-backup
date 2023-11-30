@@ -20,7 +20,7 @@ const originalSize = {width: 1328, height: 863};
 export default function CityNode({city, imageSize, boardUuid, playerId, gameId, myTurn}: CityNodeProps) {
     const [isHovered, setHovered] = useState(false);
     const [isCreateStationDialogOpen, setIsCreateStationDialogOpen] = useState(false);
-    const {refetch: refetchStations} = useGameState(gameId, playerId);
+    const {refetch: refetchStations} = useGameState(gameId, playerId, true);
     const createStationMutation = useCreateStation(
         () => {
             setIsCreateStationDialogOpen(false);

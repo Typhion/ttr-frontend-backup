@@ -10,18 +10,28 @@ import PlayerWagonCards from "./board/PlayerWagonCards.tsx";
 import PlayerIcon from "./board/PlayerIcon.tsx";
 import PlayerInformation from "./board/PlayerInformation";
 import {usePickRandomWagonCard} from "../../hooks/usePickRandomWagonCard";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RouteCardsPile from "./board/RouteCardsPile";
 import PlayerRouteCards from "./board/PlayerRouteCards.tsx";
 
-function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defaultPlayerId: string, boardId: string }) {
+function GameContent({ gameId, defaultPlayerId, boardId }: { gameId: string, defaultPlayerId: string, boardId: string }) {
     const [playerId, setPlayerId] = useState(defaultPlayerId);
-    const {isLoading, isError, data: gameState} = useGameState(gameId, playerId);
-    const {refetch: refetchWagonCardPile} = useGameState(gameId, playerId);
-    const pickRandomWagonCardMutation = usePickRandomWagonCard(refetchWagonCardPile)
-    const {uuid} = useParams<{ uuid: string }>();
-    const {data: game} = useGame(uuid!);
+    const [shouldRefetch, setShouldRefetch] = useState(true);
+    const { isLoading, isError, data: gameState } = useGameState(gameId, playerId, shouldRefetch);
+    const { data: game } = useGame(gameId);
+
+    const isPlayersTurn = gameState && game && game.players[gameState.playerTurnIndex] === playerId;
+
+    useEffect(() => {
+        if (isPlayersTurn !== undefined && isPlayersTurn) {
+            setShouldRefetch(false);
+        } else setShouldRefetch(true);
+    }, [isPlayersTurn]);
+
+
+    const { refetch: refetchGameState } = useGameState(gameId, playerId, shouldRefetch);
+    const pickRandomWagonCardMutation = usePickRandomWagonCard(refetchGameState);
 
     if (isLoading) return <Loader>Loading Game Details...</Loader>;
 
@@ -45,7 +55,11 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
         return <Alert severity="error">Unable to load this game's details.</Alert>;
     }
 
-    const isPlayersTurn = gameState && game.players[gameState.playerTurnIndex] === playerId;
+    if (isPlayersTurn === undefined) {
+        return <Alert severity="error">Unable to load this game's details.</Alert>;
+    }
+
+
 
     return (
         <Grid container>

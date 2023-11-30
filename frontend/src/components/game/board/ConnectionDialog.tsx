@@ -13,6 +13,7 @@ import WhiteCard from "../../../assets/images/card-white.png";
 import YellowCard from "../../../assets/images/card-yellow.png";
 import JokerCard from "../../../assets/images/card-joker.png";
 import {useState} from "react";
+import {usePickConnection} from "../../../hooks/usePickConnection.ts";
 import Draggable from "react-draggable";
 
 export type ConnectionPick = {
@@ -40,8 +41,7 @@ interface ConnectionDialogProps {
     playerId: string;
     boardId: string;
     onSubmit: (connectionPick: ConnectionPick) => void;
-    onClose: () => void;
-}
+    onClose: () => void;}
 
 function PaperComponent(props: PaperProps) {
     return (
@@ -60,10 +60,21 @@ export default function ConnectionDialog({
                                              onClose,
                                              connectionId,
                                              playerId,
-                                             boardId
+                                             boardId,
                                          }: ConnectionDialogProps) {
-    const {isLoading, isError, data: wagonColors} = usePlayerCardsForConnection(connectionId, playerId);
+    const {isLoading, isError, data: wagonColors, refetch} = usePlayerCardsForConnection(connectionId, playerId);
     const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
+
+    const pickConnection = usePickConnection(data => {
+            onSubmit({
+                connectionId,
+                playerId,
+                boardId,
+                pickedWagonCards: data.wagonColors || []
+            });
+        }
+    );
+
     if (isLoading) return;
 
     if (isError || !wagonColors) return;
@@ -81,12 +92,18 @@ export default function ConnectionDialog({
     const handleSubmit = () => {
         const safeWagonColors = wagonColors.wagonColors ?? [];
         const pickedWagonCards = selectedIndices.map(index => safeWagonColors[index]);
-        onSubmit({
-            connectionId,
-            playerId,
-            boardId,
-            pickedWagonCards,
-        });
+        pickConnection.mutate({
+                connectionId,
+                playerId,
+                boardId,
+                pickedWagonCards,
+            },
+            {
+                onSuccess: () => {
+                    setSelectedIndices([])
+                    refetch();
+                }
+            });
     };
 
     const selectedCardStyle = {

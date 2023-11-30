@@ -79,6 +79,7 @@ export default function Board({ boardUuid, playerUuid, cities,  connections, con
                             connectionTiles={connectionTiles}
                             key={connection.id}
                             imageSize={imageSize}
+                            gameId={gameId}
                             myTurn={myTurn}
                         />
                     </Box>
