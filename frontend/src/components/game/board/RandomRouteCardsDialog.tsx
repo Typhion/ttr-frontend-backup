@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Checkbox from '@mui/material/Checkbox';
-import { RouteCard } from "../../../model/GameState";
-import { usePickRouteCard } from "../../../hooks/usePickRouteCard";
-import { useGameState } from "../../../hooks/useGameState";
-import { Box } from "@mui/material";
+import {RouteCard} from "../../../model/GameState";
+import {usePickRouteCard} from "../../../hooks/usePickRouteCard";
+import {useGameState} from "../../../hooks/useGameState";
+import {Box, DialogTitle, Paper, PaperProps} from "@mui/material";
+import Draggable from 'react-draggable';
 
 type RandomRouteCardsDialogProps = {
     open: boolean;
@@ -21,6 +22,17 @@ type RandomRouteCardsDialogProps = {
     gameId: string;
 };
 
+function PaperComponent(props: PaperProps) {
+    return (
+        <Draggable
+            handle="#RandomRouteCardsDialog"
+            cancel={'[class*="MuiDialogContent-root"]'}
+        >
+            <Paper {...props} />
+        </Draggable>
+    );
+}
+
 export default function RandomRouteCardsDialog({
                                                    open,
                                                    onClose,
@@ -30,7 +42,7 @@ export default function RandomRouteCardsDialog({
                                                    gameId
                                                }: RandomRouteCardsDialogProps) {
     const [selectedRoutes, setSelectedRoutes] = useState<string[]>([]);
-    const { refetch } = useGameState(gameId, playerId);
+    const {refetch} = useGameState(gameId, playerId);
     const pickRouteCard = usePickRouteCard(() => {
         refetch();
     });
@@ -65,9 +77,13 @@ export default function RandomRouteCardsDialog({
     };
 
     return (
-        <Dialog disableEscapeKeyDown={true} open={open} onClose={onClose} maxWidth={'lg'}>
+        <Dialog disableEscapeKeyDown={true} open={open} onClose={onClose} maxWidth={'lg'}
+                PaperComponent={PaperComponent}
+        >
+            <DialogTitle id={'RandomRouteCardsDialog'} sx={{
+                cursor: 'all-scroll'
+            }}>Select the routes you want:</DialogTitle>
             <DialogContent>
-                <Typography variant="h6">Select the routes you want:</Typography>
                 {routes.map((route) => (
                     <Box key={route.routeId} sx={{
                         display: 'flex',
