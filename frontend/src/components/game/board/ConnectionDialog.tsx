@@ -102,6 +102,7 @@ export default function ConnectionDialog({
                 onSuccess: () => {
                     setSelectedIndices([])
                     refetch();
+                    onClose()
                 }
             });
     };
