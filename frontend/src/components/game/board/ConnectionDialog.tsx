@@ -1,6 +1,6 @@
 import {
     Button, Card, CardMedia,
-    Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid
+    Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Paper, PaperProps
 } from "@mui/material";
 import {usePlayerCardsForConnection} from "../../../hooks/usePlayerCardsForConnection.ts";
 import BlackCard from "../../../assets/images/card-black.png";
@@ -13,6 +13,7 @@ import WhiteCard from "../../../assets/images/card-white.png";
 import YellowCard from "../../../assets/images/card-yellow.png";
 import JokerCard from "../../../assets/images/card-joker.png";
 import {useState} from "react";
+import Draggable from "react-draggable";
 
 export type ConnectionPick = {
     connectionId: string;
@@ -40,6 +41,17 @@ interface ConnectionDialogProps {
     boardId: string;
     onSubmit: (connectionPick: ConnectionPick) => void;
     onClose: () => void;
+}
+
+function PaperComponent(props: PaperProps) {
+    return (
+        <Draggable
+            handle="#ConnectionDialog"
+            cancel={'[class*="MuiDialogContent-root"]'}
+        >
+            <Paper {...props} />
+        </Draggable>
+    );
 }
 
 export default function ConnectionDialog({
@@ -82,17 +94,22 @@ export default function ConnectionDialog({
     };
 
     return (
-        <Dialog open={isOpen} onClose={onClose} maxWidth="md" fullWidth>
-            <DialogTitle>Pick cards</DialogTitle>
+        <Dialog open={isOpen} onClose={onClose} maxWidth="md" fullWidth PaperComponent={PaperComponent}>
+            <DialogTitle id={"ConnectionDialog"} sx={{
+                cursor: 'all-scroll'
+            }}>Pick cards</DialogTitle>
             <DialogContent>
                 <DialogContentText color={'black'}>
                     Please pick the cards you want to use for this connection.
                 </DialogContentText>
                 <Grid container spacing={1}>
-                        {wagonColors.wagonColors && wagonColors.wagonColors.map((cardColor, index) => (
+                    {wagonColors.wagonColors && wagonColors.wagonColors.map((cardColor, index) => (
                         <Grid item key={index} onClick={() => handleCardClick(index)}>
                             <Card
-                                sx={{cursor: 'pointer', width: '14vh', ...(selectedIndices.includes(index) ? selectedCardStyle : {})}}
+                                sx={{
+                                    cursor: 'pointer',
+                                    width: '14vh', ...(selectedIndices.includes(index) ? selectedCardStyle : {})
+                                }}
                             >
                                 <CardMedia
                                     component="img"
