@@ -12,6 +12,7 @@ type RouteCardsPileProps = {
     pileSize: number;
     routes: RouteCard[];
     gameId: string;
+    myTurn: boolean;
 };
 
 export default function RouteCardsPile({
@@ -19,7 +20,8 @@ export default function RouteCardsPile({
                                            boardId,
                                            pileSize,
                                            routes,
-                                           gameId
+                                           gameId,
+                                           myTurn
                                        }: RouteCardsPileProps) {
     const [isDialogOpen, setDialogOpen] = useState(true);
     const {refetch} = useGameState(gameId, playerId)
@@ -35,7 +37,7 @@ export default function RouteCardsPile({
         }
     }, [routes.length]);
 
-    const handleCloseDialog = (_: ChangeEvent,reason: string) => {
+    const handleCloseDialog = (_: ChangeEvent, reason: string) => {
         if (reason !== 'backdropClick') {
             setDialogOpen(false);
         }
@@ -63,9 +65,13 @@ export default function RouteCardsPile({
                 }}
                 showZero
             >
-                <Card onClick={handleCardClick} sx={{cursor: 'pointer'}}>
+                <Card
+                    onClick={() => { if (myTurn) handleCardClick(); }}
+                    sx={{ cursor: myTurn ? 'pointer' : 'default' }}
+                >
                     <CardMedia component="img" image={CardRoute} alt="Card"/>
                 </Card>
+
             </Badge>
             <RouteCardDialog
                 open={isDialogOpen}

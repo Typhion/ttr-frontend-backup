@@ -12,11 +12,12 @@ interface CityNodeProps {
     boardUuid: string;
     playerId: string;
     gameId: string;
+    myTurn: boolean;
 }
 
 const originalSize = {width: 1328, height: 863};
 
-export default function CityNode({city, imageSize, boardUuid, playerId, gameId}: CityNodeProps) {
+export default function CityNode({city, imageSize, boardUuid, playerId, gameId, myTurn}: CityNodeProps) {
     const [isHovered, setHovered] = useState(false);
     const [isCreateStationDialogOpen, setIsCreateStationDialogOpen] = useState(false);
     const {refetch: refetchStations} = useGameState(gameId, playerId);
@@ -59,15 +60,17 @@ export default function CityNode({city, imageSize, boardUuid, playerId, gameId}:
     };
 
     return (
-        <div>
+        <Box>
             <Box sx={{
                 ...cityStyle,
-                pointerEvents: city.hasStation ? 'none' : 'auto',
+                pointerEvents: myTurn ? (city.hasStation ? 'none' : 'auto') : 'none',
             }}
-                 onMouseEnter={() => setHovered(true)}
-                 onMouseLeave={() => setHovered(false)}
-                 onClick={() => !city.hasStation && setIsCreateStationDialogOpen(true)}
-            >{city.hasStation && <TrainIcon/>}</Box>
+                 onMouseEnter={() => myTurn && setHovered(true)}
+                 onMouseLeave={() => myTurn && setHovered(false)}
+                 onClick={() => myTurn && !city.hasStation && setIsCreateStationDialogOpen(true)}
+            >
+                {city.hasStation && <TrainIcon/>}
+            </Box>
             <CreateStationDialog
                 isOpen={isCreateStationDialogOpen}
                 onSubmit={handleStationDialogSubmit}
@@ -75,6 +78,7 @@ export default function CityNode({city, imageSize, boardUuid, playerId, gameId}:
                 playerId={playerId}
                 cityId={city.id}
                 boardId={boardUuid}/>
-        </div>
+        </Box>
+
     );
 }

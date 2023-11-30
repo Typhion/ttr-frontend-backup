@@ -1,14 +1,14 @@
-import {useState} from 'react';
+import { useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Checkbox from '@mui/material/Checkbox';
-import {RouteCard} from "../../../model/GameState";
-import {usePickRouteCard} from "../../../hooks/usePickRouteCard";
-import {useGameState} from "../../../hooks/useGameState";
-import {Box} from "@mui/material";
+import { RouteCard } from "../../../model/GameState";
+import { usePickRouteCard } from "../../../hooks/usePickRouteCard";
+import { useGameState } from "../../../hooks/useGameState";
+import { Box } from "@mui/material";
 
 type RandomRouteCardsDialogProps = {
     open: boolean;
@@ -19,7 +19,7 @@ type RandomRouteCardsDialogProps = {
     boardId: string;
     playerId: string;
     gameId: string;
-}
+};
 
 export default function RandomRouteCardsDialog({
                                                    open,
@@ -30,20 +30,23 @@ export default function RandomRouteCardsDialog({
                                                    gameId
                                                }: RandomRouteCardsDialogProps) {
     const [selectedRoutes, setSelectedRoutes] = useState<string[]>([]);
-    const handleCheckboxChange = (routeId: string) => {
-        if (selectedRoutes.includes(routeId)) {
-            setSelectedRoutes((prevSelectedRoutes) =>
-                prevSelectedRoutes.filter((id) => id !== routeId)
-            );
-        } else {
-            setSelectedRoutes((prevSelectedRoutes) => [...prevSelectedRoutes, routeId]);
-        }
-    };
-    const {refetch} = useGameState(gameId, playerId)
+    const { refetch } = useGameState(gameId, playerId);
     const pickRouteCard = usePickRouteCard(() => {
         refetch();
     });
 
+    useEffect(() => {
+        // Set all routes as selected when the component mounts
+        setSelectedRoutes(routes.map((route) => route.routeId));
+    }, [routes]);
+
+    const handleCheckboxChange = (routeId: string) => {
+        setSelectedRoutes((prevSelectedRoutes) =>
+            prevSelectedRoutes.includes(routeId)
+                ? prevSelectedRoutes.filter((id) => id !== routeId)
+                : [...prevSelectedRoutes, routeId]
+        );
+    };
 
     const handlePickRoutes = () => {
         if (selectedRoutes.length > 0) {
@@ -56,6 +59,7 @@ export default function RandomRouteCardsDialog({
             selectedRoutes.forEach((routeId) => {
                 handleCheckboxChange(routeId);
             });
+
             onClose();
         }
     };

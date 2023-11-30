@@ -100,7 +100,7 @@ export default function PlayerWagonCards({wagonCards, tempWagonCards, onClick}: 
                             >
                                 <Card
                                     onClick={onClick}
-                                    sx={{cursor: 'pointer', transform: 'rotate(90deg)', width: '14vh'}}
+                                    sx={{cursor: 'default', transform: 'rotate(90deg)', width: '14vh'}}
                                 >
                                     <CardMedia
                                         component="img"

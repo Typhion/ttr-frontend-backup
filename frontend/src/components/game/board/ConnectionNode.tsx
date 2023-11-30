@@ -12,6 +12,7 @@ interface ConnectionNodeProps {
     playerId: string;
     connectionTiles: ConnectionTile[];
     imageSize: { width: number; height: number };
+    myTurn: boolean;
 }
 
 export default function ConnectionNode({
@@ -20,6 +21,7 @@ export default function ConnectionNode({
                                            playerId,
                                            connectionTiles,
                                            imageSize,
+                                           myTurn
                                        }: ConnectionNodeProps) {
     const [connectionHoverStates, setConnectionHoverStates] = useState<{ [key: string]: boolean }>({});
     const [isConnectionDialogOpen, setIsConnectionDialogOpen] = useState(false);
@@ -30,7 +32,9 @@ export default function ConnectionNode({
     );
 
     const handleConnectionClick = () => {
-        setIsConnectionDialogOpen(true);
+        if (myTurn) {
+            setIsConnectionDialogOpen(true);
+        }
     };
 
     const handleConnectionDialogClose = () => {
@@ -42,10 +46,12 @@ export default function ConnectionNode({
     }
 
     const handleConnectionHover = (connectionId: string, isHovered: boolean) => {
-        setConnectionHoverStates(prevStates => ({
-            ...prevStates,
-            [connectionId]: isHovered,
-        }));
+        if (myTurn) {
+            setConnectionHoverStates(prevStates => ({
+                ...prevStates,
+                [connectionId]: isHovered,
+            }));
+        }
     };
 
     return (
@@ -72,6 +78,7 @@ export default function ConnectionNode({
                                 imageSize={imageSize}
                                 connection={connection}
                                 isConnectionHovered={connectionHoverStates[connection.id] || false}
+                                myTurn={myTurn}
                             />
                         );
                     }
