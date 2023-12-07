@@ -9,6 +9,8 @@ import axios from "axios";
 import RouteGuard from "./components/RouteGuard.tsx";
 import {AuthHeader} from "./components/AuthHeader.tsx";
 import SecurityContextProvider from "./context/SecurityContextProvider.tsx";
+import Home from "./components/home/Home.tsx";
+import Lobby from "./components/lobby/Lobby.tsx";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
 const queryClient = new QueryClient()
@@ -22,7 +24,8 @@ function App() {
                         <CssBaseline/> {/* Reset CSS */}
                         <AuthHeader/>
                         <Routes>
-                            <Route path="/" element={<div>Home</div>}/>
+                            <Route path="/" element={<RouteGuard component={<Home/>}/>}/>
+                            <Route path="/lobby/:uuid" element={<RouteGuard component={<Lobby/>}/>}/>
                             <Route path="/game/:uuid" element={<RouteGuard component={<Game/>}/>}/>
                         </Routes>
                     </ThemeProvider>
