@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+const mantleUrl = import.meta.env.VITE_MANTLE_URL
 export function addAccessTokenToAuthHeader(token: string | undefined) {
     if (token) axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     else {
@@ -12,5 +12,5 @@ export function removeAccessTokenFromAuthHeader() {
 }
 
 export const createAccount = async () => {
-    await axios.post(`http://localhost:8081/applicationUser/create`);
+    await axios.post(`${mantleUrl}/applicationUser/create`);
 }
