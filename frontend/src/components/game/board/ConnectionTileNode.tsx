@@ -31,8 +31,13 @@ export default function ConnectionTileNode({
     // Apply scaling to connection tile coordinates
     const scaledX = connectionTile.x * scaleX;
     const scaledY = connectionTile.y * scaleY;
+    const rectWidth = 43 * scaleX;
+    const rectHeight = 17 * scaleY;
+    const borderWidth = connection.connectionType === 'TUNNEL' ? 5 : (isHovered || isConnectionHovered ? 4 : 1);
+    const scaledBorderWidthX = borderWidth * scaleX;
+    const scaledBorderWidthY = borderWidth * scaleY;
 
-    const rectangleSize = { width: 43, height: 17 }; // Specify the rectangle size
+    const rectangleSize = { width: rectWidth, height: rectHeight }; // Specify the rectangle size
 
     const isJokerColor = connection.wagonColor === "JOKER";
     const isBlack = connection.wagonColor === "BLACK";
@@ -53,7 +58,7 @@ export default function ConnectionTileNode({
         cursor: myTurn ? "pointer" : "default",
         border: isHovered || isConnectionHovered && myTurn ? "solid green" : isBlack ? "solid white" : "solid black",
         borderStyle: connection.connectionType == 'TUNNEL' ? "dashed" : "solid",
-        borderWidth: connection.connectionType == 'TUNNEL' ? "5px" : isHovered || isConnectionHovered ? "4px" : "1px",
+        borderWidth: connection.connectionType === 'TUNNEL' ? `${scaledBorderWidthX}px` : `${scaledBorderWidthY}px`,
     };
 
     const dotStyle = {

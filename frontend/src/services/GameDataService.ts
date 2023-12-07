@@ -11,3 +11,9 @@ export const getGameState = async (uuid: string, playerId: string): Promise<Game
     const response = await axios.get<GameState>(`/game/${uuid}/state/${playerId}`);
     return response.data;
 }
+
+export const createGame = async (): Promise<String> => {
+    const result = await axios.post(`/game/init`);
+    return result.data;
+}
+
