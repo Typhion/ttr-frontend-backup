@@ -37,6 +37,7 @@ export type RouteCard = {
     beginCity: string;
     endCity: string;
     connectionSize: number;
+    isCompleted: boolean;
 };
 
 export type TempRouteCard = {

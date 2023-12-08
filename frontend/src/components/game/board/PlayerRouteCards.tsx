@@ -36,6 +36,7 @@ export default function PlayerRouteCards(props: PlayerRouteCardsProps) {
                     endCity={"Grab a card"}
                     connectionSize={0}
                     large={true}
+                    isCompleted={false}
                 />
             </Box>
         );
@@ -54,6 +55,7 @@ export default function PlayerRouteCards(props: PlayerRouteCardsProps) {
                 endCity={sortedRouteCards[0].endCity}
                 connectionSize={sortedRouteCards[0].connectionSize}
                 large={true}
+                isCompleted={sortedRouteCards[0].isCompleted}
             />
 
             {isHovered && (
@@ -70,6 +72,7 @@ export default function PlayerRouteCards(props: PlayerRouteCardsProps) {
                             endCity={routeCard.endCity}
                             connectionSize={routeCard.connectionSize}
                             large={false}
+                            isCompleted={routeCard.isCompleted}
                         />
                     ))
                     }

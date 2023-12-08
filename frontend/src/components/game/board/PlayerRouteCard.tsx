@@ -5,6 +5,7 @@ interface PlayerRouteCardProps {
     endCity: string;
     connectionSize: number;
     large: boolean;
+    isCompleted: boolean;
 }
 
 
@@ -18,6 +19,8 @@ export default function PlayerRouteCard(playerRouteCard: PlayerRouteCardProps) {
                 width: '100%',
                 height: '100%',
                 marginLeft: '2px',
+                ...(playerRouteCard.isCompleted && { border: '5px solid green' })
+
             }}>
                 <CardContent>
                     <Typography>{playerRouteCard.beginCity} - {playerRouteCard.endCity}</Typography>
@@ -32,6 +35,7 @@ export default function PlayerRouteCard(playerRouteCard: PlayerRouteCardProps) {
                 border: '1px solid grey',
                 width: '100%',
                 height: '100%',
+                ...(playerRouteCard.isCompleted && { border: '5px solid green' })
             }}>
                 <CardContent>
                     <Typography>{playerRouteCard.beginCity} - {playerRouteCard.endCity}</Typography>
