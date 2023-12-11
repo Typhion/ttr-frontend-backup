@@ -2,6 +2,7 @@ export type LobbyState = {
     lobbyUsersDto: LobbyUserDto[];
     isPublic: boolean;
     maxSize: number;
+    code: string;
 }
 
 export type LobbyUserDto = {
