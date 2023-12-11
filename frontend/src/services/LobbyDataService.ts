@@ -6,6 +6,11 @@ export const createLobby = async (): Promise<String> => {
     return result.data;
 }
 
+export const joinLobby = async (code: string): Promise<String> => {
+    const result = await axios.post(`${mantleUrl}/lobby/join/${code}`);
+    return result.data;
+}
+
 export const setReady = async (uuid: string): Promise<void> => {
     await axios.patch(`${mantleUrl}/lobbyUser/ready/${uuid}`);
 }

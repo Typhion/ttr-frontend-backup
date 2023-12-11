@@ -1,14 +1,15 @@
 import Button from "@mui/material/Button";
 import {useNavigate, useParams} from "react-router-dom";
 import {useCreateGame} from "../../hooks/useCreateGame.ts";
-import {Alert, Box} from "@mui/material";
+import {Alert, Box, Input, InputAdornment} from "@mui/material";
 import {useSetReady} from "../../hooks/useSetReady.ts";
 import Loader from "../general/Loader.tsx";
 import {useLobbyState} from "../../hooks/useLobbyState.ts";
 import SecurityContext from "../../context/SecurityContext.ts";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 function LobbyContent({lobbyId}: { lobbyId: string }) {
     const navigate = useNavigate();
@@ -20,6 +21,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
             navigate(`/game/${uuid}`)
         }
     )
+    const [copied, setCopied] = useState(false);
 
     if (isLoading) return <Loader>Loading Lobby Details...</Loader>;
 
@@ -34,6 +36,14 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
     const handleOnStartClick = () => {
         createGame.mutate()
     }
+
+    const handleCopySuccess = () => {
+        setCopied(true);
+        setTimeout(() => {
+            setCopied(false);
+        }, 2000);
+    };
+
 
     return (
         <Box
@@ -70,6 +80,46 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                         )}
                     </Box>
                 ))}
+            </Box>
+
+            <Box
+                sx={{
+                    width: "33.33%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                {lobbyState.lobbyUsersDto.some(
+                    (player) => player.applicationUserDto.id === loggedInUserId
+                ) && (
+                    <Input
+                        value={lobbyState.code}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <CopyToClipboard text={lobbyState.code} onCopy={handleCopySuccess}>
+                                    <Button
+                                        variant="contained"
+                                        sx={{
+                                            width: "100%",
+                                            backgroundColor: "green",
+                                            color: "white",
+                                        }}
+                                    >
+                                        {copied ? "Copied!" : "Copy Code"}
+                                    </Button>
+                                </CopyToClipboard>
+                            </InputAdornment>
+                        }
+                        readOnly
+                        sx={{
+                            width: "100%",
+                            padding: "8px",
+                            fontSize: "16px",
+                            borderRadius: "4px",
+                        }}
+                    />
+                )}
             </Box>
 
             <Box
