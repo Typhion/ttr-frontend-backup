@@ -1,7 +1,7 @@
 import axios from "axios";
 import {LobbyState} from "../model/LobbyState.ts";
 const mantleUrl = import.meta.env.VITE_MANTLE_URL
-export const createLobby = async (): Promise<String> => {
+export const createLobby = async (): Promise<string> => {
     const result = await axios.post(`${mantleUrl}/lobby/create`);
     return result.data;
 }
