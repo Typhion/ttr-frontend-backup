@@ -19,7 +19,7 @@ export default function Home() {
     }
 
     if (isAuthenticated()) {
-        return <Button variant="contained" sx={{width: '1%', margin: 'auto'}} onClick={handleOnClick}>Lobby</Button>
+        return <Button variant="contained" sx={{width: '7%', margin: 'auto'}} onClick={handleOnClick}>Create Lobby</Button>
     }
     else return <Box>
         Please log in to view the rest of this page
