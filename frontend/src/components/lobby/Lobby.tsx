@@ -1,7 +1,14 @@
 import Button from "@mui/material/Button";
 import {useNavigate, useParams} from "react-router-dom";
 import {useCreateGame} from "../../hooks/useCreateGame.ts";
-import {Alert, Box, Input, InputAdornment} from "@mui/material";
+import {
+    Alert,
+    Box,
+    FormControlLabel,
+    FormGroup,
+    Input,
+    InputAdornment, Switch
+} from "@mui/material";
 import {useSetReady} from "../../hooks/useSetReady.ts";
 import Loader from "../general/Loader.tsx";
 import {useLobbyState} from "../../hooks/useLobbyState.ts";
@@ -10,10 +17,12 @@ import {useContext, useState} from "react";
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import {useSetPublic} from "../../hooks/useSetPublic.ts";
 
 function LobbyContent({lobbyId}: { lobbyId: string }) {
     const navigate = useNavigate();
     const setReady = useSetReady()
+    const setPublic = useSetPublic()
     const {loggedInUserId} = useContext(SecurityContext)
     const {isLoading, isError, data: lobbyState, refetch} = useLobbyState(lobbyId);
     const createGame = useCreateGame(
@@ -37,13 +46,21 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
         createGame.mutate()
     }
 
+    const handleGoBack = () => {
+        navigate(`/`);
+    };
+
     const handleCopySuccess = () => {
         setCopied(true);
         setTimeout(() => {
             setCopied(false);
-        }, 2000);
+        }, 5000);
     };
 
+    const handleToggleChange = async () => {
+        await setPublic.mutateAsync(lobbyId);
+        await refetch();
+    }
 
     return (
         <Box
@@ -54,6 +71,16 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                 alignItems: 'center',
             }}
         >
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleGoBack}
+                sx={{
+                    marginBottom: '10px',
+                }}
+            >
+                Go Back to Home
+            </Button>
             <Box
                 sx={{
                     border: '2px solid black',
@@ -82,6 +109,23 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                 ))}
             </Box>
 
+            <Box
+                sx={{
+                    width: '33.33%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                {lobbyState.lobbyUsersDto.some(
+                    (player) => player.applicationUserDto.id === loggedInUserId && player.isHost
+                ) && (
+                    <FormGroup>
+                        <FormControlLabel control={<Switch defaultValue={String(lobbyState.isPublic)}/>} onChange={handleToggleChange}
+                                          label={lobbyState.isPublic ? "public" : "private"}/>
+                    </FormGroup>
+                )}
+            </Box>
             <Box
                 sx={{
                     width: "33.33%",
