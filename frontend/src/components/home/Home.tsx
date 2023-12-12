@@ -1,6 +1,5 @@
 import Button from "@mui/material/Button";
 import {useCreateLobby} from "../../hooks/useCreateLobby.ts";
-
 import {useContext, useState} from "react";
 import SecurityContext from "../../context/SecurityContext.ts";
 import {Box, Grid, TextField} from "@mui/material";
@@ -27,9 +26,22 @@ export default function Home() {
         joinLobby.mutate(lobbyCode);
     };
 
+    const handleGetLobbiesClick = () => {
+        navigate(`/lobby`);
+    }
+
     if (isAuthenticated()) {
         return (
             <Grid container style={{justifyContent: 'center', alignItems: 'center'}} spacing={2}>
+                <Grid item>
+                    <Button
+                        variant="contained"
+                        sx={{height: '100%', marginBottom: '10%'}}
+                        onClick={handleGetLobbiesClick}
+                    >
+                        Lobbies
+                    </Button>
+                </Grid>
                 <Grid container style={{justifyContent: 'center'}}>
                     <Grid item>
                         <TextField
