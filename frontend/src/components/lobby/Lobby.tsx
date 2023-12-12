@@ -18,11 +18,13 @@ import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import {useSetPublic} from "../../hooks/useSetPublic.ts";
+import {useSetColor} from "../../hooks/useSetColor.ts";
 
 function LobbyContent({lobbyId}: { lobbyId: string }) {
     const navigate = useNavigate();
     const setReady = useSetReady()
     const setPublic = useSetPublic()
+    const setColor = useSetColor()
     const {loggedInUserId} = useContext(SecurityContext)
     const {isLoading, isError, data: lobbyState, refetch} = useLobbyState(lobbyId);
     const createGame = useCreateGame(
@@ -31,17 +33,28 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
         }
     )
     const [copied, setCopied] = useState(false);
+    const [userColor, setUserColor] = useState<string | null>(null);
+
 
     if (isLoading) return <Loader>Loading Lobby Details...</Loader>;
 
     if (isError || !lobbyState) {
         return <Alert severity="error">Unable to load this lobby's details.</Alert>;
     }
+    const handleColorChange = (newColor: string) => {
+        setUserColor(newColor);
+    };
 
-    const handleOnReadyClick = async () => {
-        await setReady.mutateAsync(lobbyId);
-        await refetch();
+    const handleOnColorClick = (color: string) => {
+        setColor.mutate({lobbyId, color});
+        refetch();
     }
+
+    const handleOnReadyClick = () => {
+        setReady.mutate(lobbyId);
+        refetch();
+    }
+
     const handleOnStartClick = () => {
         createGame.mutate()
     }
@@ -86,19 +99,33 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                     border: '2px solid black',
                     padding: '5%',
                     marginBottom: '20px',
+                    width: '70vw'
                 }}
             >
                 {lobbyState.lobbyUsersDto.map((player) => (
                     <Box
                         key={player.id}
                         sx={{
+                            border: '2px solid black',
                             marginBottom: '15px',
-                            display: 'flex',
+                            display: 'grid',
+                            gridTemplateColumns: '10fr 20fr 20fr 1fr ',
                             alignItems: 'center',
                             fontSize: '32px',
+                            width: '100%',
+                            padding: '5px',
+                            justifyContent: 'space-between',
                         }}
                     >
-                        {player.isHost && <span style={{marginRight: '5px'}}>👑</span>}
+                        <span style={{minWidth: '5%'}}>{player.isHost ? "👑" : ""}</span>
+                        <div
+                            style={{
+                                backgroundColor: player.color,
+                                width: '20px',
+                                height: '20px',
+                                marginRight: '10px',
+                            }}
+                        />
                         {player.applicationUserDto.username}
                         {player.ready ? (
                             <DoneIcon sx={{marginLeft: '20px', color: 'green'}}/>
@@ -108,6 +135,53 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                     </Box>
                 ))}
             </Box>
+
+            {lobbyState.lobbyUsersDto.some(
+                (player) => player.applicationUserDto.id === loggedInUserId
+            ) && (
+                <Box
+                    sx={{
+                        marginBottom: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        fontSize: '32px',
+                        padding: '5px',
+                        justifyContent: 'center',
+                        width: '40vw',
+                    }}
+                >
+                    <span style={{minWidth: '5%'}}>Color:</span>
+                    <input
+                        type="color"
+                        value={userColor || lobbyState.lobbyUsersDto.find(
+                            (player) => player.applicationUserDto.id === loggedInUserId
+                        )?.color || '#000000'}
+                        onChange={(e) => handleColorChange(e.target.value)}
+                        style={{
+                            marginRight: '10px',
+                            border: 'none',
+                            width: '30px',
+                            height: '30px',
+                            borderRadius: '100%',
+                            boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.3)',
+                            cursor: 'pointer',
+                            outline: 'none',
+                        }}
+                    />
+                    -
+                    <Button
+                        variant="contained"
+                        sx={{
+                            backgroundColor: "green",
+                            color: "white",
+                            marginLeft: '10px',
+                        }}
+                        onClick={() => handleOnColorClick(userColor || '#000000')}
+                    >
+                        Set Color
+                    </Button>
+                </Box>
+            )}
 
             <Box
                 sx={{
@@ -121,7 +195,8 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                     (player) => player.applicationUserDto.id === loggedInUserId && player.isHost
                 ) && (
                     <FormGroup>
-                        <FormControlLabel control={<Switch defaultValue={String(lobbyState.isPublic)}/>} onChange={handleToggleChange}
+                        <FormControlLabel control={<Switch defaultValue={String(lobbyState.isPublic)}/>}
+                                          onChange={handleToggleChange}
                                           label={lobbyState.isPublic ? "public" : "private"}/>
                     </FormGroup>
                 )}
