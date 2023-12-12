@@ -15,6 +15,10 @@ export const setReady = async (uuid: string): Promise<void> => {
     await axios.patch(`${mantleUrl}/lobbyUser/ready/${uuid}`);
 }
 
+export const setPublic = async (uuid: string): Promise<void> => {
+    await axios.patch(`${mantleUrl}/lobby/public/${uuid}`);
+}
+
 export const getLobbyState = async (uuid: string): Promise<LobbyState> => {
     const response = await axios.get<LobbyState>(`${mantleUrl}/lobby/${uuid}/state`);
     return response.data;
