@@ -18,3 +18,8 @@ export type ApplicationUserDto = {
     username: string;
     email: string;
 }
+
+export type ColorSetting = {
+    lobbyId: string;
+    color: string;
+}
