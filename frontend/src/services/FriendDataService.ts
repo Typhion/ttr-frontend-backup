@@ -7,6 +7,10 @@ export const getFriendlist = async (): Promise<Friend[]> => {
     return response.data;
 }
 
+export const addFriend = async (friend: string): Promise<void> => {
+    await axios.post(`${mantleUrl}/applicationUser/friends/request/${friend}`);
+}
+
 export const removeFriend = async (friendId: string): Promise<void> => {
     await axios.post(`${mantleUrl}/applicationUser/friends/remove/${friendId}`);
 }

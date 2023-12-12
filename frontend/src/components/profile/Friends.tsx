@@ -1,5 +1,6 @@
-import {Box} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import Friendlist from "./Friendlist.tsx";
+import AddFriend from "./AddFriend.tsx";
 
 export default function Friends() {
     return (
@@ -7,8 +8,11 @@ export default function Friends() {
             width: '100%',
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            flexDirection: 'column'
         }}>
+            <Typography variant="h6">Friends</Typography>
+            <AddFriend/>
             <Friendlist/>
         </Box>
     )
