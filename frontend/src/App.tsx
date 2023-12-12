@@ -12,6 +12,7 @@ import SecurityContextProvider from "./context/SecurityContextProvider.tsx";
 import Home from "./components/home/Home.tsx";
 import Lobby from "./components/lobby/Lobby.tsx";
 import Friends from "./components/profile/Friends.tsx";
+import LobbyList from "./components/lobby/LobbyList.tsx";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
 const queryClient = new QueryClient()
@@ -27,6 +28,7 @@ function App() {
                         <Routes>
                             <Route path="/" element={<RouteGuard component={<Home/>}/>}/>
                             <Route path="/lobby/:uuid" element={<RouteGuard component={<Lobby/>}/>}/>
+                            <Route path="/lobby" element={<RouteGuard component={<LobbyList/>}/>}/>
                             <Route path="/game/:uuid" element={<RouteGuard component={<Game/>}/>}/>
                             <Route path="/profile/friends" element={<RouteGuard component={<Friends/>}/>}/>
                         </Routes>
