@@ -2,9 +2,19 @@ import {Alert, Box, IconButton, List, ListItem, ListItemText, Typography} from "
 import {useFriendlist} from "../../hooks/useFriendlist.ts";
 import Loader from "../general/Loader.tsx";
 import CloseIcon from '@mui/icons-material/Close';
+import {useRemoveFriend} from "../../hooks/useRemoveFriend.ts";
 
 export default function Friendlist() {
-    const {isLoading: isLoading, isError: isError, data: friendlist} = useFriendlist();
+    const {isLoading: isLoading, isError: isError, data: friendlist, refetch} = useFriendlist();
+
+    const removeFriend = useRemoveFriend(() => {
+            refetch();
+        }
+    );
+
+    const handleRemoveFriend = (friendId: string) => {
+        removeFriend.mutate(friendId);
+    }
 
     if (isLoading) return <Loader>Loading Game Details...</Loader>;
 
@@ -23,7 +33,7 @@ export default function Friendlist() {
                         {friendlist.map((friend, index) => (
                             <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <ListItemText primary={friend.username} />
-                                <IconButton edge="end" aria-label="delete" sx={{ color: 'red' }}>
+                                <IconButton onClick={() => handleRemoveFriend(friend.id)} edge="end" aria-label="delete" sx={{ color: 'red' }}>
                                     <CloseIcon />
                                 </IconButton>
                             </ListItem>

@@ -6,6 +6,7 @@ export function useFriendlist() {
         isLoading,
         isError,
         data: friendlist,
+        refetch
     } = useQuery({
         queryKey: ['friendlist'], //TODO: not sure about this
         queryFn: () => getFriendlist()
@@ -15,5 +16,6 @@ export function useFriendlist() {
         isLoading,
         isError,
         data: friendlist,
+        refetch
     };
 }
