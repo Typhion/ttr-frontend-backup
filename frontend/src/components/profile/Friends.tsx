@@ -11,7 +11,7 @@ export default function Friends() {
             alignItems: 'center',
             flexDirection: 'column'
         }}>
-            <Typography variant="h6">Friends</Typography>
+            <Typography variant="h4">Friends</Typography>
             <AddFriend/>
             <Friendlist/>
         </Box>
