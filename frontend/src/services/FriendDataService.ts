@@ -23,3 +23,7 @@ export const removeFriend = async (friendId: string): Promise<void> => {
 export const acceptFriend = async (friendId: string): Promise<void> => {
     await axios.post(`${mantleUrl}/applicationUser/friends/accept/${friendId}`);
 }
+
+export const denyFriend = async (friendId: string): Promise<void> => {
+    await axios.post(`${mantleUrl}/applicationUser/friends/decline/${friendId}`);
+}

@@ -6,10 +6,11 @@ import DoneIcon from '@mui/icons-material/Done';
 import {useRemoveFriend} from "../../hooks/useRemoveFriend.ts";
 import {useFriendRequestList} from "../../hooks/useFriendRequestList.ts";
 import {useAcceptFriend} from "../../hooks/useAcceptFriend.ts";
+import {useDenyFriend} from "../../hooks/useDenyFriend.ts";
 
 export default function Friendlist() {
     const {isLoading: isLoading, isError: isError, data: friendlist, refetch} = useFriendlist();
-    const {isLoading: isReqLoading, isError: isReqError, data: friendReqList} = useFriendRequestList();
+    const {isLoading: isReqLoading, isError: isReqError, data: friendReqList, refetch: reqRefetch} = useFriendRequestList();
 
     const removeFriend = useRemoveFriend(() => {
             refetch();
@@ -17,6 +18,12 @@ export default function Friendlist() {
     );
     const acceptFriend = useAcceptFriend(() => {
             refetch();
+            reqRefetch();
+        }
+    );
+    const denyFriend = useDenyFriend(() => {
+            refetch();
+            reqRefetch();
         }
     );
 
@@ -25,6 +32,9 @@ export default function Friendlist() {
     }
     const handleAcceptFriend = (friendId: string) => {
         acceptFriend.mutate(friendId);
+    }
+    const handleDenyFriend = (friendId: string) => {
+        denyFriend.mutate(friendId);
     }
 
     if (isLoading || isReqLoading) return <Loader>Loading friends...</Loader>;
@@ -46,9 +56,13 @@ export default function Friendlist() {
                         {friendReqList.map((friend, index) => (
                             <ListItem key={index} sx={{display: 'flex', justifyContent: 'space-between'}}>
                                 <ListItemText primary={friend.username}/>
-                                <IconButton onClick={() => handleAcceptFriend(friend.id)} edge="end" aria-label="delete"
+                                <IconButton onClick={() => handleAcceptFriend(friend.id)} edge="end" aria-label="accept"
                                             sx={{color: 'green'}}>
                                     <DoneIcon/>
+                                </IconButton>
+                                <IconButton onClick={() => handleDenyFriend(friend.id)} edge="end" aria-label="deny"
+                                            sx={{color: 'red'}}>
+                                    <CloseIcon/>
                                 </IconButton>
                             </ListItem>
                         ))}
