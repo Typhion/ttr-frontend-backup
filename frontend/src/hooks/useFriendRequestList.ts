@@ -6,6 +6,7 @@ export function useFriendRequestList() {
         isLoading,
         isError,
         data: friendrequestlist,
+        refetch
     } = useQuery({
         queryKey: ['friendrequestlist'], //TODO: not sure about this
         queryFn: () => getFriendRequestList()
@@ -15,5 +16,6 @@ export function useFriendRequestList() {
         isLoading,
         isError,
         data: friendrequestlist,
+        refetch
     };
 }
