@@ -14,6 +14,8 @@ import Lobby from "./components/lobby/Lobby.tsx";
 import Friends from "./components/profile/Friends.tsx";
 import LobbyList from "./components/lobby/LobbyList.tsx";
 import Profile from "./components/profile/Profile.tsx";
+import Users from "./components/admin/Users.tsx";
+import AdminRouteGuard from "./components/AdminRouteGuard.tsx";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
 const queryClient = new QueryClient()
@@ -33,6 +35,7 @@ function App() {
                             <Route path="/game/:uuid" element={<RouteGuard component={<Game/>}/>}/>
                             <Route path="/profile/friends" element={<RouteGuard component={<Friends/>}/>}/>
                             <Route path="/profile" element={<RouteGuard component={<Profile/>}/>}/>
+                            <Route path="/admin/users" element={<RouteGuard component={<AdminRouteGuard component={<Users/>}/>}/>}/>
                         </Routes>
                     </ThemeProvider>
                 </BrowserRouter>
