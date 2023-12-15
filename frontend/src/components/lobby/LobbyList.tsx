@@ -118,6 +118,7 @@ export default function LobbyList() {
                                 <Button
                                     variant="contained"
                                     onClick={() => handleJoinLobbyClick(lobby)}
+                                    disabled={lobby.lobbyUsersDto.length >= lobby.maxSize}
                                 >
                                     {lobby.code ? 'Join Lobby' : 'Join Game'}
                                 </Button>
