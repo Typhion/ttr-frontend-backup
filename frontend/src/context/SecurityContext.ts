@@ -6,6 +6,7 @@ export interface ISecurityContext {
     loggedInUserId: string | undefined
     login: () => void
     logout: () => void
+    isAdmin: () => boolean
 }
 
 export default createContext<ISecurityContext>({
@@ -14,4 +15,5 @@ export default createContext<ISecurityContext>({
     loggedInUserId: undefined,
     login: () => {},
     logout: () => {},
+    isAdmin: () => false,
 })

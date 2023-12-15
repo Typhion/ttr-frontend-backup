@@ -63,6 +63,11 @@ export default function SecurityContextProvider({children}: IWithChildren) {
         else return false
     }
 
+    function isAdmin() {
+        if (keycloak.token) return keycloak.hasRealmRole('admin')
+        else return false
+    }
+
     return (
         <SecurityContext.Provider
             value={{
@@ -71,6 +76,7 @@ export default function SecurityContextProvider({children}: IWithChildren) {
                 loggedInUserId,
                 login,
                 logout,
+                isAdmin
             }}
         >
             {children}
