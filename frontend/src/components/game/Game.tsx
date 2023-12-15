@@ -1,4 +1,4 @@
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useGame} from "../../hooks/useGame.ts";
 import {Alert, Grid, Typography} from "@mui/material";
 import Loader from "../general/Loader.tsx";
@@ -10,18 +10,32 @@ import PlayerWagonCards from "./board/PlayerWagonCards.tsx";
 import PlayerIcon from "./board/PlayerIcon.tsx";
 import PlayerInformation from "./board/PlayerInformation";
 import {usePickRandomWagonCard} from "../../hooks/usePickRandomWagonCard";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RouteCardsPile from "./board/RouteCardsPile";
 import PlayerRouteCards from "./board/PlayerRouteCards.tsx";
+import SecurityContext from "../../context/SecurityContext.ts";
+import Button from "@mui/material/Button";
 
-function GameContent({ gameId, defaultPlayerId, boardId }: { gameId: string, defaultPlayerId: string, boardId: string }) {
+function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defaultPlayerId: string, boardId: string }) {
+    const navigate = useNavigate();
     const [playerId, setPlayerId] = useState(defaultPlayerId);
+    const {loggedInUserId} = useContext(SecurityContext)
     const [shouldRefetch, setShouldRefetch] = useState(true);
-    const { isLoading, isError, data: gameState } = useGameState(gameId, playerId, shouldRefetch);
-    const { data: game } = useGame(gameId);
+    const {isLoading, isError, data: gameState} = useGameState(gameId, playerId, shouldRefetch);
+    const {data: game} = useGame(gameId);
 
     const isPlayersTurn = gameState && game && game.players[gameState.playerTurnIndex] === playerId;
+
+    useEffect(() => {
+        if (gameState && game) {
+            gameState.players.map((playerState, index) => {
+                if (playerState.applicationUserId === loggedInUserId) {
+                    setPlayerId(game.players[index]);
+                }
+            })
+        }
+    }, [gameState]);
 
     useEffect(() => {
         if (isPlayersTurn !== undefined && isPlayersTurn) {
@@ -29,8 +43,7 @@ function GameContent({ gameId, defaultPlayerId, boardId }: { gameId: string, def
         } else setShouldRefetch(true);
     }, [isPlayersTurn]);
 
-
-    const { refetch: refetchGameState } = useGameState(gameId, playerId, shouldRefetch);
+    const {refetch: refetchGameState} = useGameState(gameId, playerId, shouldRefetch);
     const pickRandomWagonCardMutation = usePickRandomWagonCard(refetchGameState);
 
     if (isLoading) return <Loader>Loading Game Details...</Loader>;
@@ -38,6 +51,7 @@ function GameContent({ gameId, defaultPlayerId, boardId }: { gameId: string, def
     if (isError || !gameState) {
         return <Alert severity="error">Unable to load this game's details.</Alert>;
     }
+
 
     if (gameState.lastUsedWagonCard === null) {
         gameState.lastUsedWagonCard = 'back';
@@ -59,7 +73,9 @@ function GameContent({ gameId, defaultPlayerId, boardId }: { gameId: string, def
         return <Alert severity="error">Unable to load this game's details.</Alert>;
     }
 
-
+    const handleGoBack = () => {
+        navigate(`/`);
+    };
 
     return (
         <Grid container>
@@ -102,7 +118,18 @@ function GameContent({ gameId, defaultPlayerId, boardId }: { gameId: string, def
             </Grid>
             <Grid item xs={2}>
                 {/* Right Column */}
-                <Grid container direction="column" alignItems="center" justifyContent="space-evenly" style={{height: '80vh'}}>
+                <Grid container direction="column" alignItems="center" justifyContent="space-evenly"
+                      style={{height: '80vh'}}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleGoBack}
+                        sx={{
+                            marginBottom: '10px',
+                        }}
+                    >
+                        Go Back to Home
+                    </Button>
 
                     <Typography variant="body2" sx={{
                         fontWeight: 'bold'
@@ -117,19 +144,18 @@ function GameContent({ gameId, defaultPlayerId, boardId }: { gameId: string, def
                                     <ArrowForwardIosIcon sx={{marginRight: 1}}/>
                                 )}
                             </Grid>
-                            <Grid item xs={4} onClick={() => setPlayerId(game.players[index])} sx={{
-                                cursor: 'pointer',
+                            <Grid item xs={4} sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center'
                             }}>
-                                {game.players[index] === playerId && (
+                                {gameState.players[index].applicationUserId === loggedInUserId ? (
                                     <Typography variant="body2" sx={{
                                         color: 'green',
                                         fontWeight: 'bold',
                                         marginBottom: 1
                                     }}>You</Typography>
-                                )}
+                                ) : gameState.players[index].username}
                                 <PlayerIcon playerState={playerState}/>
                             </Grid>
                         </Grid>
@@ -148,11 +174,12 @@ function GameContent({ gameId, defaultPlayerId, boardId }: { gameId: string, def
                     </Grid>
                     <Grid item xs={8}>
                         <PlayerWagonCards wagonCards={gameState.privateGameState.wagonCards}
-                                            tempWagonCards={gameState.privateGameState.tempWagonCards}
+                                          tempWagonCards={gameState.privateGameState.tempWagonCards}
                                           onClick={() => console.log("clicked wagon cards")}/>
                     </Grid>
                     <Grid item xs={2}>
-                        <PlayerInformation playerState={gameState.players[0]}/>
+                        <PlayerInformation
+                            playerState={gameState.players.find(player => player.playerId === playerId)!}/>
                     </Grid>
                 </Grid>
             </Grid>

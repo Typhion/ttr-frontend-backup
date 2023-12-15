@@ -55,7 +55,7 @@ export default function Board({ boardUuid, playerUuid, cities,  connections, con
                 src={imageUrl}
                 alt="Game Board"
                 ref={imageRef}
-                style={{ maxHeight: '100%', maxWidth: '100%', minHeight: '80%', minWidth: '80%' }}
+                style={{ maxHeight: '100%', maxWidth: '100%', minHeight: '80%', minWidth: '80%', opacity: '0.8' }}
                 onLoad={updateImageSize}
             />
             <Box sx={{ position: 'absolute', height: imageSize.height, width: imageSize.width }}>
