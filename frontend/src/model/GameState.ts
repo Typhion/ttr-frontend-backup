@@ -1,4 +1,5 @@
 export type GameState = {
+    gameId: string;
     wagonCardPileSize: number;
     routeCardsPileSize: number;
     faceUpWagonCards: string[];
@@ -19,6 +20,9 @@ export type PlayerState = {
     wagonAmount: number;
     stationAmount: number;
     color: string;
+    username: string;
+    applicationUserId: string;
+    playerId: string;
 };
 
 export type PrivateGameState = {

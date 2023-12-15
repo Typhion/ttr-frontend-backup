@@ -1,31 +1,48 @@
 import {useNavigate} from "react-router-dom";
 import SecurityContext from "../../context/SecurityContext.ts";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {useJoinLobby} from "../../hooks/useJoinLobby.ts";
 import {usePublicLobbies} from "../../hooks/usePublicLobbies.ts";
-import {Box, Grid} from "@mui/material";
+import {Box, Grid, Switch} from "@mui/material";
 import Button from "@mui/material/Button";
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
+import {useStartedLobbies} from "../../hooks/useStartedLobbies.ts";
+import {LobbyState} from "../../model/LobbyState.ts";
 
 export default function LobbyList() {
     const {isAuthenticated} = useContext(SecurityContext);
     const navigate = useNavigate();
+    const [viewPublicLobbies, setViewPublicLobbies] = useState(true);
     const publicLobbies = usePublicLobbies();
+    const startedLobbies = useStartedLobbies();
 
     const joinLobby = useJoinLobby((uuid) => {
         navigate(`/lobby/${uuid}`);
     });
 
-    const handleJoinLobbyClick = (lobbyCode: string) => {
-        joinLobby.mutate(lobbyCode);
+    const handleJoinLobbyClick = (lobby: LobbyState) => {
+        if (lobby.code) {
+            joinLobby.mutate(lobby.code);
+        } else {
+            const uuid = lobby.gameId
+            if (uuid) {
+                navigate(`/game/${uuid}`);
+            }
+        }
     };
 
     const handleGoBack = () => {
         navigate(`/`);
     };
 
+    const handleToggleView = () => {
+        setViewPublicLobbies((prev) => !prev);
+    };
+
     if (isAuthenticated()) {
+        const currentLobbies = viewPublicLobbies ? publicLobbies : startedLobbies;
+
         return (
             <Grid container style={{justifyContent: 'center', alignItems: 'center'}} spacing={2}>
                 <Grid item>
@@ -42,10 +59,17 @@ export default function LobbyList() {
                     <Button
                         variant="contained"
                         sx={{height: '100%', marginBottom: '10%', marginLeft: '1vw'}}
-                        onClick={() => publicLobbies.refetch()}
+                        onClick={() => currentLobbies.refetch()}
                     >
                         Refresh
                     </Button>
+                    <Switch
+                        checked={viewPublicLobbies}
+                        onChange={handleToggleView}
+                        color="primary"
+                        onClick={() => currentLobbies.refetch()}
+                    />
+                    {viewPublicLobbies ? <label>Open Lobbies</label> : <label>Started Lobbies</label>}
                 </Grid>
                 <Grid container style={{justifyContent: 'center'}}>
                     <Box sx={{
@@ -61,8 +85,7 @@ export default function LobbyList() {
                             <strong>Lobby</strong> <strong>Host</strong> <strong>Access</strong>
                             <strong>Code</strong> <strong>Join</strong>
                     </Box>
-                    {publicLobbies.data?.map((lobby) => (
-
+                    {currentLobbies.data?.map((lobby) => (
                         <Box key={lobby.code}>
                             <Box sx={{
                                 border: '1px solid black',
@@ -94,9 +117,9 @@ export default function LobbyList() {
                                 </Box>
                                 <Button
                                     variant="contained"
-                                    onClick={() => handleJoinLobbyClick(lobby.code)}
+                                    onClick={() => handleJoinLobbyClick(lobby)}
                                 >
-                                    Join Lobby
+                                    {lobby.code ? 'Join Lobby' : 'Join Game'}
                                 </Button>
                             </Box>
                         </Box>

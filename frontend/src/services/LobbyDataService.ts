@@ -1,5 +1,5 @@
 import axios from "axios";
-import {LobbyState} from "../model/LobbyState.ts";
+import {LobbyState, SettingDto, StartLobbyDto} from "../model/LobbyState.ts";
 
 const mantleUrl = import.meta.env.VITE_MANTLE_URL
 export const createLobby = async (): Promise<string> => {
@@ -25,8 +25,17 @@ export const setPublic = async (uuid: string): Promise<void> => {
     await axios.patch(`${mantleUrl}/lobby/public/${uuid}`);
 }
 
+export const startGame = async (startLobbyDto: StartLobbyDto): Promise<void> => {
+    await axios.patch(`${mantleUrl}/lobby/start/${startLobbyDto.lobbyId}/game/${startLobbyDto.gameId}`);
+}
+
 export const getPublicLobbies = async (): Promise<LobbyState[]> => {
     const response = await axios.get<LobbyState[]>(`${mantleUrl}/lobby/available`);
+    return response.data;
+}
+
+export const getStartedLobbies = async (): Promise<LobbyState[]> => {
+    const response = await axios.get<LobbyState[]>(`${mantleUrl}/lobby/started`);
     return response.data;
 }
 
@@ -34,3 +43,9 @@ export const getLobbyState = async (uuid: string): Promise<LobbyState> => {
     const response = await axios.get<LobbyState>(`${mantleUrl}/lobby/${uuid}/state`);
     return response.data;
 }
+
+export const setLobbySettings = async (lobbyId: string, settingDto: SettingDto): Promise<void> => {
+    await axios.put(`${mantleUrl}/lobby/${lobbyId}/setting`, settingDto);
+}
+
+

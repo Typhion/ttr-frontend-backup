@@ -7,7 +7,7 @@ import {
     FormControlLabel,
     FormGroup,
     Input,
-    InputAdornment, Switch
+    InputAdornment, Switch, Typography
 } from "@mui/material";
 import {useSetReady} from "../../hooks/useSetReady.ts";
 import Loader from "../general/Loader.tsx";
@@ -19,6 +19,10 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import {useSetPublic} from "../../hooks/useSetPublic.ts";
 import {useSetColor} from "../../hooks/useSetColor.ts";
+import SettingsDialog from "./SettingsDialog.tsx";
+import SettingsIcon from '@mui/icons-material/Settings';
+import {GameInitDto} from "../../model/LobbyState.ts";
+import {useStartGame} from "../../hooks/useStartGame.ts";
 
 function LobbyContent({lobbyId}: { lobbyId: string }) {
     const navigate = useNavigate();
@@ -27,14 +31,25 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
     const setColor = useSetColor()
     const {loggedInUserId} = useContext(SecurityContext)
     const {isLoading, isError, data: lobbyState, refetch} = useLobbyState(lobbyId);
+    const startGame = useStartGame();
     const createGame = useCreateGame(
-        (uuid) => {
-            navigate(`/game/${uuid}`)
+        (gameId) => {
+            startGame.mutate({lobbyId, gameId})
+            navigate(`/game/${gameId}`)
         }
     )
+
     const [copied, setCopied] = useState(false);
     const [userColor, setUserColor] = useState<string | null>(null);
+    const [isSettingsDialogOpen, setSettingsDialogOpen] = useState(false);
 
+    const handleSettingsDialogOpen = () => {
+        setSettingsDialogOpen(true);
+    };
+
+    const handleSettingsDialogClose = () => {
+        setSettingsDialogOpen(false);
+    };
 
     if (isLoading) return <Loader>Loading Lobby Details...</Loader>;
 
@@ -55,8 +70,8 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
         refetch();
     }
 
-    const handleOnStartClick = () => {
-        createGame.mutate()
+    const handleOnStartClick = (gameInitDto: GameInitDto) => {
+        createGame.mutate(gameInitDto)
     }
 
     const handleGoBack = () => {
@@ -67,7 +82,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
         setCopied(true);
         setTimeout(() => {
             setCopied(false);
-        }, 5000);
+        }, 2500);
     };
 
     const handleToggleChange = async () => {
@@ -94,6 +109,12 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
             >
                 Go Back to Home
             </Button>
+            <Button onClick={handleSettingsDialogOpen}><SettingsIcon/></Button>
+            <SettingsDialog
+                open={isSettingsDialogOpen}
+                onClose={handleSettingsDialogClose}
+                lobbySettings={{lobbyId: lobbyId, settingDto: lobbyState.settingDto}}
+            />
             <Box
                 sx={{
                     border: '2px solid black',
@@ -124,6 +145,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                                 width: '20px',
                                 height: '20px',
                                 marginRight: '10px',
+                                border: '1px solid black',
                             }}
                         />
                         {player.applicationUserDto.username}
@@ -138,7 +160,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
 
             {lobbyState.lobbyUsersDto.some(
                 (player) => player.applicationUserDto.id === loggedInUserId
-            ) && (
+            ) && !lobbyState.gameId && (
                 <Box
                     sx={{
                         marginBottom: '20px',
@@ -181,6 +203,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                         Set Color
                     </Button>
                 </Box>
+
             )}
 
             <Box
@@ -193,7 +216,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
             >
                 {lobbyState.lobbyUsersDto.some(
                     (player) => player.applicationUserDto.id === loggedInUserId && player.isHost
-                ) && (
+                ) && !lobbyState.gameId && (
                     <FormGroup>
                         <FormControlLabel control={<Switch defaultValue={String(lobbyState.isPublic)}/>}
                                           onChange={handleToggleChange}
@@ -211,7 +234,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
             >
                 {lobbyState.lobbyUsersDto.some(
                     (player) => player.applicationUserDto.id === loggedInUserId
-                ) && (
+                ) && !lobbyState.gameId && (
                     <Input
                         value={lobbyState.code}
                         endAdornment={
@@ -240,7 +263,28 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                     />
                 )}
             </Box>
-
+            {lobbyState.gameId && (
+                <Box
+                    sx={{
+                        marginTop: '2%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Typography>De game is al gestart, klik hier om de game te joinen</Typography>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            marginTop: '2%',
+                            backgroundColor: 'green',
+                            color: 'white',
+                        }}
+                        onClick={() => navigate(`/game/${lobbyState.gameId}`)}>
+                        Join Game
+                    </Button>
+                </Box>
+            )}
             <Box
                 sx={{
                     display: 'flex',
@@ -265,8 +309,10 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                                 width: '10%',
                                 margin: 'auto',
                                 backgroundColor: 'green',
+                                color: 'white',
                             }}
                             onClick={handleOnReadyClick}
+                            disabled={!!lobbyState.gameId}
                         >
                             Ready
                         </Button>
@@ -284,9 +330,10 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                                 width: '25%',
                                 marginLeft: '10px',
                                 backgroundColor: 'green',
+                                color: 'white',
                             }}
-                            onClick={handleOnStartClick}
-                            disabled={!lobbyState.lobbyUsersDto.find((player) => player.isHost && player.applicationUserDto.id === loggedInUserId)}
+                            onClick={() => handleOnStartClick(lobbyState?.gameInitDto)}
+                            disabled={!lobbyState.lobbyUsersDto.find((player) => player.isHost && player.applicationUserDto.id === loggedInUserId) || !!lobbyState.gameId}
                         >
                             Start Game
                         </Button>
@@ -301,7 +348,8 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                 </Box>
             </Box>
         </Box>
-    );
+    )
+        ;
 }
 
 

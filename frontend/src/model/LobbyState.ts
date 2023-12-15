@@ -3,6 +3,10 @@ export type LobbyState = {
     isPublic: boolean;
     maxSize: number;
     code: string;
+    settingDto: SettingDto;
+    gameInitDto: GameInitDto;
+    isOpen: boolean;
+    gameId: string;
 }
 
 export type LobbyUserDto = {
@@ -22,4 +26,32 @@ export type ApplicationUserDto = {
 export type ColorSetting = {
     lobbyId: string;
     color: string;
+}
+
+export type GameInitDto = {
+    players : PlayerDto[];
+    settingDto: SettingDto;
+}
+
+export type LobbySettings = {
+    lobbyId: string;
+    settingDto: SettingDto;
+}
+
+export type SettingDto = {
+    wagonAmount: number;
+    jokerWagonCardAmount: number;
+    normalWagonCardCount: number;
+    maxSize: number;
+}
+
+export type PlayerDto = {
+    id: string;
+    username: string;
+    color: string;
+}
+
+export type StartLobbyDto = {
+    lobbyId: string;
+    gameId: String;
 }
