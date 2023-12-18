@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Alert, Box } from "@mui/material";
-import {City, Connection, ConnectionTile} from "../../../model/GameState.ts";
+import {City, Connection, ConnectionTile, PlayerState} from "../../../model/GameState.ts";
 import CityNode from "./CityNode.tsx";
 import Loader from "../../general/Loader.tsx";
 import { useBoardImage } from "../../../hooks/useBoardImage.ts";
@@ -14,9 +14,11 @@ interface BoardProps {
     connectionTiles: ConnectionTile[];
     gameId: string;
     myTurn: boolean;
+    playerState: PlayerState;
+    tempWagonCards? : string[];
 }
 
-export default function Board({ boardUuid, playerUuid, cities,  connections, connectionTiles, gameId, myTurn }: BoardProps) {
+export default function Board({ boardUuid, playerUuid, cities,  connections, connectionTiles, gameId, myTurn, playerState, tempWagonCards }: BoardProps) {
     const { isLoading, isError, data: imageUrl } = useBoardImage(boardUuid!);
     const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
     const imageRef = useRef<HTMLImageElement>(null);
@@ -68,6 +70,7 @@ export default function Board({ boardUuid, playerUuid, cities,  connections, con
                         playerId={playerUuid}
                         gameId={gameId}
                         myTurn={myTurn}
+                        tempWagonCards={tempWagonCards}
                     />
                 ))}
                 {connections && connections.map((connection) => (
@@ -81,6 +84,8 @@ export default function Board({ boardUuid, playerUuid, cities,  connections, con
                             imageSize={imageSize}
                             gameId={gameId}
                             myTurn={myTurn}
+                            playerState={playerState}
+                            tempWagonCards={tempWagonCards}
                         />
                     </Box>
                 ))}
