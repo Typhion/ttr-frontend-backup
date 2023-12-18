@@ -56,6 +56,8 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
     if (isError || !lobbyState) {
         return <Alert severity="error">Unable to load this lobby's details.</Alert>;
     }
+
+    const allPlayersReady = lobbyState.lobbyUsersDto.every((player) => player.ready);
     const handleColorChange = (newColor: string) => {
         setUserColor(newColor);
     };
@@ -71,7 +73,9 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
     }
 
     const handleOnStartClick = (gameInitDto: GameInitDto) => {
-        createGame.mutate(gameInitDto)
+        if (allPlayersReady) {
+            createGame.mutate(gameInitDto)
+        }
     }
 
     const handleCopySuccess = () => {
@@ -326,7 +330,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                                     color: 'white',
                                 }}
                                 onClick={() => handleOnStartClick(lobbyState?.gameInitDto)}
-                                disabled={!lobbyState.lobbyUsersDto.find((player) => player.isHost && player.applicationUserDto.id === loggedInUserId) || !!lobbyState.gameId}
+                                disabled={!lobbyState.lobbyUsersDto.find((player) => player.isHost && player.applicationUserDto.id === loggedInUserId) || !!lobbyState.gameId || !allPlayersReady}
                             >
                                 Start Game
                             </Button>
