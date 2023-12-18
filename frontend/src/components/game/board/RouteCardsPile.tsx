@@ -13,6 +13,7 @@ type RouteCardsPileProps = {
     routes: TempRouteCard[];
     gameId: string;
     myTurn: boolean;
+    tempWagonCards?: string[];
 };
 
 export default function RouteCardsPile({
@@ -21,7 +22,8 @@ export default function RouteCardsPile({
                                            pileSize,
                                            routes,
                                            gameId,
-                                           myTurn
+                                           myTurn,
+                                           tempWagonCards
                                        }: RouteCardsPileProps) {
     const [isDialogOpen, setDialogOpen] = useState(true);
     const {refetch} = useGameState(gameId, playerId, true)
@@ -66,8 +68,10 @@ export default function RouteCardsPile({
                 showZero
             >
                 <Card
-                    onClick={() => { if (myTurn) handleCardClick(); }}
-                    sx={{ cursor: myTurn ? 'pointer' : 'default' }}
+                    onClick={() => {
+                        if (myTurn && tempWagonCards?.length === 0) handleCardClick();
+                    }}
+                    sx={{cursor: myTurn && tempWagonCards?.length === 0 ? 'pointer' : 'default'}}
                 >
                     <CardMedia component="img" image={CardRoute} alt="Card"/>
                 </Card>
