@@ -32,9 +32,6 @@ export default function LobbyList() {
         }
     };
 
-    const handleGoBack = () => {
-        navigate(`/`);
-    };
 
     const handleToggleView = () => {
         setViewPublicLobbies((prev) => !prev);
@@ -46,16 +43,6 @@ export default function LobbyList() {
         return (
             <Grid container style={{justifyContent: 'center', alignItems: 'center'}} spacing={2}>
                 <Grid item>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleGoBack}
-                        sx={{
-                            marginBottom: '10%'
-                        }}
-                    >
-                        Go Back to Home
-                    </Button>
                     <Button
                         variant="contained"
                         sx={{height: '100%', marginBottom: '10%', marginLeft: '1vw'}}
@@ -85,8 +72,8 @@ export default function LobbyList() {
                             <strong>Lobby</strong> <strong>Host</strong> <strong>Access</strong>
                             <strong>Code</strong> <strong>Join</strong>
                     </Box>
-                    {currentLobbies.data?.map((lobby) => (
-                        <Box key={lobby.code}>
+                    {currentLobbies.data && currentLobbies.data?.map((lobby, index) => (
+                        <Box key={lobby.code || index}>
                             <Box sx={{
                                 border: '1px solid black',
                                 marginBottom: '10px',
