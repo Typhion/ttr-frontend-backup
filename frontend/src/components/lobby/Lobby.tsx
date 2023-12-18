@@ -74,10 +74,6 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
         createGame.mutate(gameInitDto)
     }
 
-    const handleGoBack = () => {
-        navigate(`/`);
-    };
-
     const handleCopySuccess = () => {
         setCopied(true);
         setTimeout(() => {
@@ -91,265 +87,262 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
     }
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}
-        >
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleGoBack}
-                sx={{
-                    marginBottom: '10px',
-                }}
-            >
-                Go Back to Home
-            </Button>
-            <Button onClick={handleSettingsDialogOpen}><SettingsIcon/></Button>
-            <SettingsDialog
-                open={isSettingsDialogOpen}
-                onClose={handleSettingsDialogClose}
-                lobbySettings={{lobbyId: lobbyId, settingDto: lobbyState.settingDto}}
-            />
-            <Box
-                sx={{
-                    border: '2px solid black',
-                    padding: '5%',
-                    marginBottom: '20px',
-                    width: '70vw'
-                }}
-            >
-                {lobbyState.lobbyUsersDto.map((player) => (
-                    <Box
-                        key={player.id}
-                        sx={{
-                            border: '2px solid black',
-                            marginBottom: '15px',
-                            display: 'grid',
-                            gridTemplateColumns: '10fr 20fr 20fr 1fr ',
-                            alignItems: 'center',
-                            fontSize: '32px',
-                            width: '100%',
-                            padding: '5px',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <span style={{minWidth: '5%'}}>{player.isHost ? "👑" : ""}</span>
-                        <div
-                            style={{
-                                backgroundColor: player.color,
-                                width: '20px',
-                                height: '20px',
-                                marginRight: '10px',
-                                border: '1px solid black',
-                            }}
-                        />
-                        {player.applicationUserDto.username}
-                        {player.ready ? (
-                            <DoneIcon sx={{marginLeft: '20px', color: 'green'}}/>
-                        ) : (
-                            <ClearIcon sx={{marginLeft: '20px', color: 'red'}}/>
-                        )}
-                    </Box>
-                ))}
-            </Box>
-
+        <Box>
             {lobbyState.lobbyUsersDto.some(
-                (player) => player.applicationUserDto.id === loggedInUserId
-            ) && !lobbyState.gameId && (
-                <Box
-                    sx={{
-                        marginBottom: '20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        fontSize: '32px',
-                        padding: '5px',
-                        justifyContent: 'center',
-                        width: '40vw',
-                    }}
-                >
-                    <span style={{minWidth: '5%'}}>Color:</span>
-                    <input
-                        type="color"
-                        value={userColor || lobbyState.lobbyUsersDto.find(
-                            (player) => player.applicationUserDto.id === loggedInUserId
-                        )?.color || '#000000'}
-                        onChange={(e) => handleColorChange(e.target.value)}
-                        style={{
-                            marginRight: '10px',
-                            border: 'none',
-                            width: '30px',
-                            height: '30px',
-                            borderRadius: '100%',
-                            boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.3)',
-                            cursor: 'pointer',
-                            outline: 'none',
-                        }}
+                (player) => player.applicationUserDto.id === loggedInUserId && player.isHost
+            ) && (
+                <Box>
+                    <Button onClick={handleSettingsDialogOpen}><SettingsIcon/></Button>
+                    <SettingsDialog
+                        open={isSettingsDialogOpen}
+                        onClose={handleSettingsDialogClose}
+                        lobbySettings={{lobbyId: lobbyId, settingDto: lobbyState.settingDto}}
                     />
-                    -
-                    <Button
-                        variant="contained"
-                        sx={{
-                            backgroundColor: "green",
-                            color: "white",
-                            marginLeft: '10px',
-                        }}
-                        onClick={() => handleOnColorClick(userColor || '#000000')}
-                    >
-                        Set Color
-                    </Button>
                 </Box>
-
             )}
-
             <Box
                 sx={{
-                    width: '33.33%',
                     display: 'flex',
+                    flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}
             >
-                {lobbyState.lobbyUsersDto.some(
-                    (player) => player.applicationUserDto.id === loggedInUserId && player.isHost
-                ) && !lobbyState.gameId && (
-                    <FormGroup>
-                        <FormControlLabel control={<Switch defaultValue={String(lobbyState.isPublic)}/>}
-                                          onChange={handleToggleChange}
-                                          label={lobbyState.isPublic ? "public" : "private"}/>
-                    </FormGroup>
-                )}
-            </Box>
-            <Box
-                sx={{
-                    width: "33.33%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
+                <Box
+                    sx={{
+                        border: '2px solid black',
+                        padding: '5%',
+                        marginBottom: '20px',
+                        width: '70vw'
+                    }}
+                >
+                    {lobbyState.lobbyUsersDto.map((player) => (
+                        <Box
+                            key={player.id}
+                            sx={{
+                                border: '2px solid black',
+                                marginBottom: '15px',
+                                display: 'grid',
+                                gridTemplateColumns: '10fr 20fr 20fr 1fr ',
+                                alignItems: 'center',
+                                fontSize: '32px',
+                                width: '100%',
+                                padding: '5px',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <span style={{minWidth: '5%'}}>{player.isHost ? "👑" : ""}</span>
+                            <div
+                                style={{
+                                    backgroundColor: player.color,
+                                    width: '20px',
+                                    height: '20px',
+                                    marginRight: '10px',
+                                    border: '1px solid black',
+                                }}
+                            />
+                            {player.applicationUserDto.username}
+                            {player.ready ? (
+                                <DoneIcon sx={{marginLeft: '20px', color: 'green'}}/>
+                            ) : (
+                                <ClearIcon sx={{marginLeft: '20px', color: 'red'}}/>
+                            )}
+                        </Box>
+                    ))}
+                </Box>
+
                 {lobbyState.lobbyUsersDto.some(
                     (player) => player.applicationUserDto.id === loggedInUserId
                 ) && !lobbyState.gameId && (
-                    <Input
-                        value={lobbyState.code}
-                        endAdornment={
-                            <InputAdornment position="end">
-                                <CopyToClipboard text={lobbyState.code} onCopy={handleCopySuccess}>
-                                    <Button
-                                        variant="contained"
-                                        sx={{
-                                            width: "100%",
-                                            backgroundColor: "green",
-                                            color: "white",
-                                        }}
-                                    >
-                                        {copied ? "Copied!" : "Copy Code"}
-                                    </Button>
-                                </CopyToClipboard>
-                            </InputAdornment>
-                        }
-                        readOnly
+                    <Box
                         sx={{
-                            width: "100%",
-                            padding: "8px",
-                            fontSize: "16px",
-                            borderRadius: "4px",
+                            marginBottom: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            fontSize: '32px',
+                            padding: '5px',
+                            justifyContent: 'center',
+                            width: '40vw',
                         }}
-                    />
+                    >
+                        <span style={{minWidth: '5%'}}>Color:</span>
+                        <input
+                            type="color"
+                            value={userColor || lobbyState.lobbyUsersDto.find(
+                                (player) => player.applicationUserDto.id === loggedInUserId
+                            )?.color || '#000000'}
+                            onChange={(e) => handleColorChange(e.target.value)}
+                            style={{
+                                marginRight: '10px',
+                                border: 'none',
+                                width: '30px',
+                                height: '30px',
+                                borderRadius: '100%',
+                                boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.3)',
+                                cursor: 'pointer',
+                                outline: 'none',
+                            }}
+                        />
+                        -
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: "green",
+                                color: "white",
+                                marginLeft: '10px',
+                            }}
+                            onClick={() => handleOnColorClick(userColor || '#000000')}
+                        >
+                            Set Color
+                        </Button>
+                    </Box>
+
                 )}
-            </Box>
-            {lobbyState.gameId && (
+
                 <Box
                     sx={{
-                        marginTop: '2%',
+                        width: '33.33%',
                         display: 'flex',
-                        flexDirection: 'column',
                         justifyContent: 'center',
+                        alignItems: 'center',
                     }}
                 >
-                    <Typography>De game is al gestart, klik hier om de game te joinen</Typography>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            marginTop: '2%',
-                            backgroundColor: 'green',
-                            color: 'white',
-                        }}
-                        onClick={() => navigate(`/game/${lobbyState.gameId}`)}>
-                        Join Game
-                    </Button>
+                    {lobbyState.lobbyUsersDto.some(
+                        (player) => player.applicationUserDto.id === loggedInUserId && player.isHost
+                    ) && !lobbyState.gameId && (
+                        <FormGroup>
+                            <FormControlLabel control={<Switch defaultValue={String(lobbyState.isPublic)}/>}
+                                              onChange={handleToggleChange}
+                                              label={lobbyState.isPublic ? "public" : "private"}/>
+                        </FormGroup>
+                    )}
                 </Box>
-            )}
-            <Box
-                sx={{
-                    display: 'flex',
-                    width: '100%',
-                    position: 'absolute',
-                    bottom: 10,
-                    left: 0,
-                    right: 0,
-                }}
-            >
-                <Box sx={{
-                    width: '33.33%', display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}>
+                <Box
+                    sx={{
+                        width: "33.33%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
                     {lobbyState.lobbyUsersDto.some(
                         (player) => player.applicationUserDto.id === loggedInUserId
-                    ) && (
+                    ) && !lobbyState.gameId && (
+                        <Input
+                            value={lobbyState.code}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <CopyToClipboard text={lobbyState.code} onCopy={handleCopySuccess}>
+                                        <Button
+                                            variant="contained"
+                                            sx={{
+                                                width: "100%",
+                                                backgroundColor: "green",
+                                                color: "white",
+                                            }}
+                                        >
+                                            {copied ? "Copied!" : "Copy Code"}
+                                        </Button>
+                                    </CopyToClipboard>
+                                </InputAdornment>
+                            }
+                            readOnly
+                            sx={{
+                                width: "100%",
+                                padding: "8px",
+                                fontSize: "16px",
+                                borderRadius: "4px",
+                            }}
+                        />
+                    )}
+                </Box>
+                {lobbyState.gameId && (
+                    <Box
+                        sx={{
+                            marginTop: '2%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Typography>De game is al gestart, klik hier om de game te joinen</Typography>
                         <Button
                             variant="contained"
                             sx={{
-                                width: '10%',
-                                margin: 'auto',
+                                marginTop: '2%',
                                 backgroundColor: 'green',
                                 color: 'white',
                             }}
-                            onClick={handleOnReadyClick}
-                            disabled={!!lobbyState.gameId}
-                        >
-                            Ready
+                            onClick={() => navigate(`/game/${lobbyState.gameId}`)}>
+                            Join Game
                         </Button>
-                    )}
-                </Box>
-                <Box sx={{
-                    width: '33.33%', display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}>
-                    {lobbyState.lobbyUsersDto.some((player) => player.isHost) && (
-                        <Button
-                            variant="contained"
-                            sx={{
-                                width: '25%',
-                                marginLeft: '10px',
-                                backgroundColor: 'green',
-                                color: 'white',
-                            }}
-                            onClick={() => handleOnStartClick(lobbyState?.gameInitDto)}
-                            disabled={!lobbyState.lobbyUsersDto.find((player) => player.isHost && player.applicationUserDto.id === loggedInUserId) || !!lobbyState.gameId}
-                        >
-                            Start Game
-                        </Button>
-                    )}
-                </Box>
-                <Box sx={{
-                    width: '33.33%', display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}>
-                    Europe
+                    </Box>
+                )}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        width: '100%',
+                        position: 'absolute',
+                        bottom: 10,
+                        left: 0,
+                        right: 0,
+                    }}
+                >
+                    <Box sx={{
+                        width: '33.33%', display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                        {lobbyState.lobbyUsersDto.some(
+                            (player) => player.applicationUserDto.id === loggedInUserId
+                        ) && (
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    width: '10%',
+                                    margin: 'auto',
+                                    backgroundColor: 'green',
+                                    color: 'white',
+                                }}
+                                onClick={handleOnReadyClick}
+                                disabled={!!lobbyState.gameId}
+                            >
+                                Ready
+                            </Button>
+                        )}
+                    </Box>
+                    <Box sx={{
+                        width: '33.33%', display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                        {lobbyState.lobbyUsersDto.some((player) => player.isHost) && (
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    width: '25%',
+                                    marginLeft: '10px',
+                                    backgroundColor: 'green',
+                                    color: 'white',
+                                }}
+                                onClick={() => handleOnStartClick(lobbyState?.gameInitDto)}
+                                disabled={!lobbyState.lobbyUsersDto.find((player) => player.isHost && player.applicationUserDto.id === loggedInUserId) || !!lobbyState.gameId}
+                            >
+                                Start Game
+                            </Button>
+                        )}
+                    </Box>
+                    <Box sx={{
+                        width: '33.33%', display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                        Europe
+                    </Box>
                 </Box>
             </Box>
         </Box>
-    )
-        ;
+    );
 }
 
 
