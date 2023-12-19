@@ -55,3 +55,8 @@ export type StartLobbyDto = {
     lobbyId: string;
     gameId: String;
 }
+
+export type InviteMail = {
+    lobbyId: string;
+    email: string;
+}

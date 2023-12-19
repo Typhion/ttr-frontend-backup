@@ -23,6 +23,7 @@ import SettingsDialog from "./SettingsDialog.tsx";
 import SettingsIcon from '@mui/icons-material/Settings';
 import {GameInitDto} from "../../model/LobbyState.ts";
 import {useStartGame} from "../../hooks/useStartGame.ts";
+import InviteFriendDialog from "./InviteFriendDialog.tsx";
 
 function LobbyContent({lobbyId}: { lobbyId: string }) {
     const navigate = useNavigate();
@@ -42,6 +43,9 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
     const [copied, setCopied] = useState(false);
     const [userColor, setUserColor] = useState<string | null>(null);
     const [isSettingsDialogOpen, setSettingsDialogOpen] = useState(false);
+    const [isInviteDialogOpen, setInviteDialogOpen] = useState(false);
+    const handleInviteDialogOpen = () => setInviteDialogOpen(true);
+    const handleInviteDialogClose = () => setInviteDialogOpen(false);
 
     const handleSettingsDialogOpen = () => {
         setSettingsDialogOpen(true);
@@ -104,6 +108,13 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                     />
                 </Box>
             )}
+            <Button onClick={handleInviteDialogOpen}>Invite Friend</Button>
+
+            <InviteFriendDialog
+                isOpen={isInviteDialogOpen}
+                onClose={handleInviteDialogClose}
+                lobbyId={lobbyId}
+            />
             <Box
                 sx={{
                     display: 'flex',
