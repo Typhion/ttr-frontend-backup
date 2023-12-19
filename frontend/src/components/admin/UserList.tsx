@@ -1,21 +1,19 @@
 import {
     Alert,
-    Box, IconButton,
+    Box,
     Paper,
     Table, TableBody,
     TableCell, TableContainer, TableFooter,
     TableHead, TablePagination,
-    TableRow, TextField,
+    TableRow,
     Typography
 } from "@mui/material";
 import {useGetUserList} from "../../hooks/useGetUserList.ts";
 import Loader from "../general/Loader.tsx";
-import React, {useState} from "react";
-import SearchIcon from '@mui/icons-material/Search';
+import {useState} from "react";
 
 export default function UserList() {
-    const [page, setPage] = useState({pageNumber: 0, size: 5, nameFilter: ""});
-    const [nameFilter, setNameFilter] = useState("");
+    const [page, setPage] = useState({pageNumber: 0, size: 5});
     const {isLoading: isLoading, isError: isError, data: userPage} = useGetUserList(page);
 
     if (isLoading) return <Loader>Loading User List...</Loader>;
@@ -25,27 +23,13 @@ export default function UserList() {
     }
 
     const handleChangePage = (_event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-        setPage({pageNumber: newPage, size: page.size, nameFilter: page.nameFilter});
+        setPage({pageNumber: newPage, size: page.size});
     };
 
     const handleChangeRowsPerPage = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     ) => {
-        setPage({pageNumber: 0, size: parseInt(event.target.value, 10), nameFilter: page.nameFilter});
-    };
-
-    const handleChangeNameFilter = (newNameFilter: string) => {
-        setNameFilter(newNameFilter);
-    };
-
-    const handleApplyNameFilter = () => {
-        setPage({pageNumber: 0, size: page.size, nameFilter: nameFilter});
-    };
-
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter') {
-            handleApplyNameFilter();
-        }
+        setPage({pageNumber: 0, size: parseInt(event.target.value, 10)});
     };
 
     return (
@@ -56,7 +40,7 @@ export default function UserList() {
                 <div>
                     <Typography variant="h6">Users</Typography>
                     <TableContainer component={Paper}>
-                        <Table sx={{minWidth: 650}} aria-label="simple table">
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
                                     <TableCell>ID</TableCell>
@@ -68,7 +52,7 @@ export default function UserList() {
                                 {userPage.applicationUsers.map((user, index) => (
                                     <TableRow
                                         key={index}
-                                        sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell component="th" scope="row">
                                             {user.id}
@@ -80,7 +64,7 @@ export default function UserList() {
                                 {Array.apply(null, Array(page.size - userPage.applicationUsers.length)).map((_, index) => (
                                     <TableRow
                                         key={index}
-                                        sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell component="th" scope="row">
                                             -
@@ -92,17 +76,6 @@ export default function UserList() {
                             </TableBody>
                             <TableFooter>
                                 <TableRow>
-                                    <TableCell>
-                                        <TextField
-                                            size={"medium"}
-                                            label="Filter by username"
-                                            variant="outlined"
-                                            value={nameFilter}
-                                            onChange={(e) => handleChangeNameFilter(e.target.value)}
-                                            onKeyDown={handleKeyDown}
-                                        />
-                                        <IconButton onClick={handleApplyNameFilter}><SearchIcon fontSize={"large"}/></IconButton>
-                                    </TableCell>
                                     <TablePagination
                                         sx={{justifyContent: 'center'}}
                                         count={userPage.totalUsers}

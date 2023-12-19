@@ -1,4 +1,4 @@
-import {Connection, ConnectionTile, PlayerState} from "../../../model/GameState.ts";
+import {Connection, ConnectionTile} from "../../../model/GameState.ts";
 import {useState} from "react";
 import {Box} from "@mui/material";
 
@@ -9,11 +9,10 @@ interface ConnectionTileProps {
     isConnectionHovered: boolean;
     myTurn: boolean;
     playerColor: string;
-    playerState: PlayerState;
 }
 
 
-const originalSize = {width: 1328, height: 863};
+const originalSize = { width: 1328, height: 863 };
 
 export default function ConnectionTileNode({
                                                connectionTile,
@@ -21,8 +20,7 @@ export default function ConnectionTileNode({
                                                connection,
                                                isConnectionHovered,
                                                myTurn,
-                                               playerColor,
-                                               playerState
+                                               playerColor
                                            }: ConnectionTileProps) {
     const [isHovered, setHovered] = useState(false);
 
@@ -35,11 +33,11 @@ export default function ConnectionTileNode({
     const scaledY = connectionTile.y * scaleY;
     const rectWidth = 43 * scaleX;
     const rectHeight = 17 * scaleY;
-    const borderWidth = connection.connectionType === 'TUNNEL' ? 5 : 1;
+    const borderWidth = connection.connectionType === 'TUNNEL' ? 5 : (isHovered || isConnectionHovered ? 4 : 1);
     const scaledBorderWidthX = borderWidth * scaleX;
     const scaledBorderWidthY = borderWidth * scaleY;
 
-    const rectangleSize = {width: rectWidth, height: rectHeight}; // Specify the rectangle size
+    const rectangleSize = { width: rectWidth, height: rectHeight }; // Specify the rectangle size
 
     const isJokerColor = connection.wagonColor === "JOKER";
     const isBlack = connection.wagonColor === "BLACK";
@@ -57,29 +55,21 @@ export default function ConnectionTileNode({
                 : connection.wagonColor,
         transform: `translate(-50%, -50%) rotate(${connectionTile.rotation}deg)`,
         boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-        cursor: playerColor.toLowerCase() === 'gray' && myTurn ? "pointer" : "default",
-        border: isBlack ? "solid white" : "solid black",
+        cursor: myTurn ? "pointer" : "default",
+        border: isHovered || isConnectionHovered && myTurn ? "solid green" : isBlack ? "solid white" : "solid black",
         borderStyle: connection.connectionType == 'TUNNEL' ? "dashed" : "solid",
         borderWidth: connection.connectionType === 'TUNNEL' ? `${scaledBorderWidthX}px` : `${scaledBorderWidthY}px`,
     };
 
-    const carriageStyle = {
-        display: "inline-block",
-        width: `${40 * scaleX}px`,
-        height: `${20 * scaleY}px`,
-        backgroundColor: playerColor.toLowerCase() !== 'gray' ? playerColor : playerState.color,
-        borderRadius: "5%",
-    };
-
-    const windowStyle = {
-        display: "inline-block",
-        width: `${6 * scaleX}px`,
-        height: `${12 * scaleY}px`,
-        backgroundColor: "#FFF",
-        border: "1px solid #000",
-        margin: `0 ${2 / 40 * (40 * scaleX)}px`,
+    const dotStyle = {
         position: "absolute",
-        top: "10%"
+        left: "50%",
+        top: "50%",
+        width: "8px",
+        height: "8px",
+        backgroundColor: playerColor,
+        borderRadius: "50%",
+        transform: "translate(-50%, -50%)"
     };
 
     return (
@@ -88,28 +78,7 @@ export default function ConnectionTileNode({
             onMouseEnter={() => myTurn && setHovered(true)}
             onMouseLeave={() => myTurn && setHovered(false)}
         >
-            {playerColor.toLowerCase() !== 'gray' &&
-                <>
-                    <Box sx={{position: "relative", display: "inline-block"}}>
-                        <Box sx={carriageStyle}>
-                            <Box sx={windowStyle} left={'10%'} ></Box>
-                            <Box sx={windowStyle} left={'40%'}></Box>
-                            <Box sx={windowStyle} left={'70%'}></Box>
-                        </Box>
-                    </Box>
-                </>
-            }
-            {playerColor.toLowerCase() === 'gray' && (isHovered || isConnectionHovered) && myTurn &&
-                <>
-                    <Box sx={{position: "relative", display: "inline-block", opacity: "0.6"}}>
-                        <Box sx={carriageStyle}>
-                            <Box sx={windowStyle} left={'10%'} ></Box>
-                            <Box sx={windowStyle} left={'40%'}></Box>
-                            <Box sx={windowStyle} left={'70%'}></Box>
-                        </Box>
-                    </Box>
-                </>
-            }
+            {playerColor.toLowerCase() !== 'gray' && <Box sx={dotStyle}/>}
         </Box>
     );
 }

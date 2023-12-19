@@ -3,7 +3,7 @@ import {Badge, Card, CardMedia} from '@mui/material';
 import RouteCardDialog from './RandomRouteCardsDialog';
 import CardRoute from '../../../assets/images/card-route.png';
 import {TempRouteCard} from '../../../model/GameState';
-import {useDrawRouteCards} from '../../../hooks/useDrawRouteCards';
+import {useDrawRouteCards} from '../../../hooks/useDrawRouteCards.ts';
 import {useGameState} from "../../../hooks/useGameState";
 
 type RouteCardsPileProps = {
@@ -13,7 +13,6 @@ type RouteCardsPileProps = {
     routes: TempRouteCard[];
     gameId: string;
     myTurn: boolean;
-    tempWagonCards?: string[];
 };
 
 export default function RouteCardsPile({
@@ -22,8 +21,7 @@ export default function RouteCardsPile({
                                            pileSize,
                                            routes,
                                            gameId,
-                                           myTurn,
-                                           tempWagonCards
+                                           myTurn
                                        }: RouteCardsPileProps) {
     const [isDialogOpen, setDialogOpen] = useState(true);
     const {refetch} = useGameState(gameId, playerId, true)
@@ -68,10 +66,8 @@ export default function RouteCardsPile({
                 showZero
             >
                 <Card
-                    onClick={() => {
-                        if (myTurn && tempWagonCards?.length === 0) handleCardClick();
-                    }}
-                    sx={{cursor: myTurn && tempWagonCards?.length === 0 ? 'pointer' : 'default'}}
+                    onClick={() => { if (myTurn) handleCardClick(); }}
+                    sx={{ cursor: myTurn ? 'pointer' : 'default' }}
                 >
                     <CardMedia component="img" image={CardRoute} alt="Card"/>
                 </Card>
