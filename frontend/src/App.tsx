@@ -30,6 +30,7 @@ function App() {
                         <AuthHeader/>
                         <Routes>
                             <Route path="/" element={<RouteGuard component={<Home/>}/>}/>
+                            <Route path="/:lobbyCode?" element={<RouteGuard component={<Home />} />} />
                             <Route path="/lobby/:uuid" element={<RouteGuard component={<Lobby/>}/>}/>
                             <Route path="/lobby" element={<RouteGuard component={<LobbyList/>}/>}/>
                             <Route path="/game/:uuid" element={<RouteGuard component={<Game/>}/>}/>
