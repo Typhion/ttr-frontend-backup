@@ -3,7 +3,7 @@ import {useCreateLobby} from "../../hooks/useCreateLobby.ts";
 import {useContext, useState} from "react";
 import SecurityContext from "../../context/SecurityContext.ts";
 import {Box, Grid, TextField} from "@mui/material";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useJoinLobby} from "../../hooks/useJoinLobby.ts";
 
 export default function Home() {
@@ -16,7 +16,8 @@ export default function Home() {
         navigate(`/lobby/${uuid}`);
     });
 
-    const [lobbyCode, setLobbyCode] = useState("");
+    const { lobbyCode: paramLobbyCode } = useParams();
+    const [lobbyCode, setLobbyCode] = useState(paramLobbyCode || "");
 
     const handleCreateLobbyClick = () => {
         createLobby.mutate();
