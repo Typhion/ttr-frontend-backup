@@ -52,3 +52,7 @@ export const sendInviteMail = async (inviteMail: InviteMail): Promise<void> => {
     await axios.post(`${mantleUrl}/lobby/${inviteMail.lobbyId}/invite/${inviteMail.email}`);
 }
 
+
+export const kickLobbyUser = async (lobbyId: string, userId: string): Promise<void> => {
+    await axios.post(`${mantleUrl}/lobbyUser/${lobbyId}/kick/${userId}`)
+}

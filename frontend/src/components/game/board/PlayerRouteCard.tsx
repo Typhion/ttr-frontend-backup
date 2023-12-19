@@ -19,13 +19,12 @@ export default function PlayerRouteCard(playerRouteCard: PlayerRouteCardProps) {
                 width: '100%',
                 height: '100%',
                 marginLeft: '2px',
-                ...(playerRouteCard.isCompleted && { backgroundColor: 'green' }),
-                ...(playerRouteCard.isCompleted && { color: 'white' })
+                ...(playerRouteCard.isCompleted && { border: '5px solid green' })
 
             }}>
                 <CardContent>
                     <Typography>{playerRouteCard.beginCity} - {playerRouteCard.endCity}</Typography>
-                    <Typography>{"Length: " + playerRouteCard.connectionSize}</Typography>
+                    <Typography>{"Size: " + playerRouteCard.connectionSize}</Typography>
                 </CardContent>
             </Card>
         );
@@ -36,12 +35,11 @@ export default function PlayerRouteCard(playerRouteCard: PlayerRouteCardProps) {
                 border: '1px solid grey',
                 width: '100%',
                 height: '100%',
-                ...(playerRouteCard.isCompleted && { backgroundColor: 'green' }),
-                ...(playerRouteCard.isCompleted && { color: 'white' })
+                ...(playerRouteCard.isCompleted && { border: '5px solid green' })
             }}>
                 <CardContent>
                     <Typography>{playerRouteCard.beginCity} - {playerRouteCard.endCity}</Typography>
-                    <Typography>{"Length: " + playerRouteCard.connectionSize}</Typography>
+                    <Typography>{"Size: " + playerRouteCard.connectionSize}</Typography>
                 </CardContent>
             </Card>
         );

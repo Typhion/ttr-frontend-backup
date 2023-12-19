@@ -32,6 +32,9 @@ export default function LobbyList() {
         }
     };
 
+    const handleGoBack = () => {
+        navigate(`/`);
+    };
 
     const handleToggleView = () => {
         setViewPublicLobbies((prev) => !prev);
@@ -39,83 +42,92 @@ export default function LobbyList() {
 
     if (isAuthenticated()) {
         const currentLobbies = viewPublicLobbies ? publicLobbies : startedLobbies;
-
-        return (
-            <Grid container style={{justifyContent: 'center', alignItems: 'center'}} spacing={2}>
-                <Grid item>
-                    <Button
-                        variant="contained"
-                        sx={{height: '100%', marginBottom: '10%', marginLeft: '1vw'}}
-                        onClick={() => currentLobbies.refetch()}
-                    >
-                        Refresh
-                    </Button>
-                    <Switch
-                        checked={viewPublicLobbies}
-                        onChange={handleToggleView}
-                        color="primary"
-                        onClick={() => currentLobbies.refetch()}
-                    />
-                    {viewPublicLobbies ? <label>Open Lobbies</label> : <label>Started Lobbies</label>}
-                </Grid>
-                <Grid container style={{justifyContent: 'center'}}>
-                    <Box sx={{
-                        border: '1px solid black',
-                        marginBottom: '10px',
-                        padding: '10px',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        minWidth: '60vw',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                    }}>
+            return (
+                <Grid container style={{justifyContent: 'center', alignItems: 'center'}} spacing={2}>
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleGoBack}
+                            sx={{
+                                marginBottom: '10%'
+                            }}
+                        >
+                            Go Back to Home
+                        </Button>
+                        <Button
+                            variant="contained"
+                            sx={{height: '100%', marginBottom: '10%', marginLeft: '1vw'}}
+                            onClick={() => currentLobbies.refetch()}
+                        >
+                            Refresh
+                        </Button>
+                        <Switch
+                            checked={viewPublicLobbies}
+                            onChange={handleToggleView}
+                            color="primary"
+                            onClick={() => currentLobbies.refetch()}
+                        />
+                        {viewPublicLobbies ? <label>Open Lobbies</label> : <label>Started Lobbies</label>}
+                    </Grid>
+                    <Grid container style={{justifyContent: 'center'}}>
+                        <Box sx={{
+                            border: '1px solid black',
+                            marginBottom: '10px',
+                            padding: '10px',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            minWidth: '60vw',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}>
                             <strong>Lobby</strong> <strong>Host</strong> <strong>Access</strong>
                             <strong>Code</strong> <strong>Join</strong>
-                    </Box>
-                    {currentLobbies.data && currentLobbies.data?.map((lobby, index) => (
-                        <Box key={lobby.code || index}>
-                            <Box sx={{
-                                border: '1px solid black',
-                                marginBottom: '10px',
-                                padding: '10px',
-                                display: 'flex',
-                                flexDirection: 'row',
-                                minWidth: '60vw',
-                                justifyContent: 'space-between',
-                                alignItems: 'center'
-                            }}>
-                                <Box>
-                                    {lobby.lobbyUsersDto.length}/{lobby.maxSize}
-                                </Box>
-                                <Box>
-                                    {lobby.lobbyUsersDto.map((user) => (
-                                        user.isHost && (
-                                            <Box key={user.applicationUserDto.username}>
-                                                {user.applicationUserDto.username}
-                                            </Box>
-                                        )
-                                    ))}
-                                </Box>
-                                <Box>
-                                    {lobby.isPublic ? <PublicIcon/> : <LockIcon/>}
-                                </Box>
-                                <Box>
-                                    {lobby.code}
-                                </Box>
-                                <Button
-                                    variant="contained"
-                                    onClick={() => handleJoinLobbyClick(lobby)}
-                                    disabled={lobby.lobbyUsersDto.length >= lobby.maxSize}
-                                >
-                                    {lobby.code ? 'Join Lobby' : 'Join Game'}
-                                </Button>
-                            </Box>
                         </Box>
-                    ))}
+                        {currentLobbies.data && currentLobbies.data?.map((lobby) => (
+                            <Box key={lobby.code}>
+                                <Box sx={{
+                                    border: '1px solid black',
+                                    marginBottom: '10px',
+                                    padding: '10px',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    minWidth: '60vw',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
+                                }}>
+                                    <Box>
+                                        {lobby.lobbyUsersDto.length}/{lobby.maxSize}
+                                    </Box>
+                                    <Box>
+                                        {lobby.lobbyUsersDto.map((user) => (
+                                            user.isHost && (
+                                                <Box key={user.applicationUserDto.username}>
+                                                    {user.applicationUserDto.username}
+                                                </Box>
+                                            )
+                                        ))}
+                                    </Box>
+                                    <Box>
+                                        {lobby.isPublic ? <PublicIcon/> : <LockIcon/>}
+                                    </Box>
+                                    <Box>
+                                        {lobby.code}
+                                    </Box>
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => handleJoinLobbyClick(lobby)}
+                                        disabled={lobby.lobbyUsersDto.length >= lobby.maxSize}
+                                    >
+                                        {lobby.code ? 'Join Lobby' : 'Join Game'}
+                                    </Button>
+                                </Box>
+                            </Box>
+                        ))}
+                    </Grid>
                 </Grid>
-            </Grid>
-        );
-    } else {
-        return <Box>Please log in to view the rest of this page</Box>;
-    }
+            );
+        } else {
+            return <Box>Please log in to view the rest of this page</Box>;
+        }
 }

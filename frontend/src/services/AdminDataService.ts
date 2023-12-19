@@ -4,11 +4,10 @@ const mantleUrl = import.meta.env.VITE_MANTLE_URL
 
 export type Page = {
     pageNumber: number,
-    size: number,
-    nameFilter: string
+    size: number
 }
 
 export const getUserList = async (page: Page): Promise<ApplicationUserPageDto> => {
-    const result = await axios.get(`${mantleUrl}/applicationUser/admin/users?page=${page.pageNumber}&size=${page.size}&nameFilter=${page.nameFilter}`);
+    const result = await axios.get(`${mantleUrl}/applicationUser/admin/users?page=${page.pageNumber}&size=${page.size}`);
     return result.data;
 }

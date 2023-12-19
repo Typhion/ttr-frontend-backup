@@ -24,12 +24,15 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import {GameInitDto} from "../../model/LobbyState.ts";
 import {useStartGame} from "../../hooks/useStartGame.ts";
 import InviteFriendDialog from "./InviteFriendDialog.tsx";
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import {useKickLobbyUser} from "../../hooks/useKickLobbyUser.ts";
 
 function LobbyContent({lobbyId}: { lobbyId: string }) {
     const navigate = useNavigate();
     const setReady = useSetReady()
     const setPublic = useSetPublic()
     const setColor = useSetColor()
+    const kickLobbyUser = useKickLobbyUser();
     const {loggedInUserId} = useContext(SecurityContext)
     const {isLoading, isError, data: lobbyState, refetch} = useLobbyState(lobbyId);
     const startGame = useStartGame();
@@ -80,6 +83,10 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
         if (allPlayersReady) {
             createGame.mutate(gameInitDto)
         }
+    }
+
+    const handleKickLobbyUser = (lobbyId: string, userId: string) => {
+        kickLobbyUser.mutate({lobbyId, userId})
     }
 
     const handleCopySuccess = () => {
@@ -138,7 +145,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                                 border: '2px solid black',
                                 marginBottom: '15px',
                                 display: 'grid',
-                                gridTemplateColumns: '10fr 20fr 20fr 1fr ',
+                                gridTemplateColumns: '10fr 20fr 20fr 3fr 1fr ',
                                 alignItems: 'center',
                                 fontSize: '32px',
                                 width: '100%',
@@ -162,6 +169,11 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                             ) : (
                                 <ClearIcon sx={{marginLeft: '20px', color: 'red'}}/>
                             )}
+
+                            {(player.applicationUserDto.id != loggedInUserId && !player.isHost) &&
+                                <PersonRemoveIcon onClick={() => handleKickLobbyUser(lobbyId, player.id)}
+                                                  style={{cursor: 'pointer'}}/>
+                            }
                         </Box>
                     ))}
                 </Box>
