@@ -5,7 +5,8 @@ export function useProfile(playerId: string | undefined) {
     const {
         isLoading,
         isError,
-        data: profile
+        data: profile,
+        refetch
     } = useQuery({
         queryKey: ['profile', playerId],
         queryFn: () => getProfile(playerId)
@@ -14,6 +15,7 @@ export function useProfile(playerId: string | undefined) {
     return {
         isLoading,
         isError,
-        data: profile
+        data: profile,
+        refetch
     };
 }
