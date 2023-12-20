@@ -13,11 +13,12 @@ interface CityNodeProps {
     playerId: string;
     gameId: string;
     myTurn: boolean;
+    tempWagonCards?: string[];
 }
 
 const originalSize = {width: 1328, height: 863};
 
-export default function CityNode({city, imageSize, boardUuid, playerId, gameId, myTurn}: CityNodeProps) {
+export default function CityNode({city, imageSize, boardUuid, playerId, gameId, myTurn, tempWagonCards}: CityNodeProps) {
     const [isHovered, setHovered] = useState(false);
     const [isCreateStationDialogOpen, setIsCreateStationDialogOpen] = useState(false);
     const {refetch: refetchStations} = useGameState(gameId, playerId, true);
@@ -63,11 +64,11 @@ export default function CityNode({city, imageSize, boardUuid, playerId, gameId, 
         <Box>
             <Box sx={{
                 ...cityStyle,
-                pointerEvents: myTurn ? (city.hasStation ? 'none' : 'auto') : 'none',
+                pointerEvents: myTurn && tempWagonCards?.length === 0 ? (city.hasStation ? 'none' : 'auto') : 'none',
             }}
                  onMouseEnter={() => myTurn && setHovered(true)}
                  onMouseLeave={() => myTurn && setHovered(false)}
-                 onClick={() => myTurn && !city.hasStation && setIsCreateStationDialogOpen(true)}
+                 onClick={() => myTurn && tempWagonCards?.length === 0 && !city.hasStation && setIsCreateStationDialogOpen(true)}
             >
                 {city.hasStation && <TrainIcon/>}
             </Box>

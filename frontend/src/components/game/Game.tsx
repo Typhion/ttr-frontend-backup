@@ -88,7 +88,8 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
             }}>
                 {/* Left Column */}
                 <RouteCardsPile boardId={boardId} playerId={playerId} routes={gameState.privateGameState.tempRouteCards}
-                                pileSize={gameState.routeCardsPileSize} gameId={gameId} myTurn={isPlayersTurn}/>
+                                pileSize={gameState.routeCardsPileSize} gameId={gameId} myTurn={isPlayersTurn}
+                                tempWagonCards={gameState.privateGameState.tempWagonCards}/>
                 <WagonCardPile cardCount={gameState.usedWagonCardPileSize}
                                cardColor={gameState.lastUsedWagonCard}
                                onClick={() => console.log("unimplemented")}
@@ -114,6 +115,8 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
                     connectionTiles={gameState.connectionTiles}
                     gameId={gameId}
                     myTurn={isPlayersTurn}
+                    playerState={gameState.players.find(player => player.playerId === playerId)!}
+                    tempWagonCards={gameState.privateGameState.tempWagonCards}
                 />
             </Grid>
             <Grid item xs={2}>
