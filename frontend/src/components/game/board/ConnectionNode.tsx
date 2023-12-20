@@ -1,5 +1,5 @@
 import {ChangeEvent, Suspense, useState} from 'react';
-import {Connection as ConnectionType, ConnectionTile} from '../../../model/GameState';
+import {Connection as ConnectionType, ConnectionTile, PlayerState} from '../../../model/GameState';
 import ConnectionTileNode from './ConnectionTileNode';
 import {Box} from '@mui/material';
 import ConnectionDialog from "./ConnectionDialog.tsx";
@@ -13,6 +13,8 @@ interface ConnectionNodeProps {
     imageSize: { width: number; height: number };
     gameId: string;
     myTurn: boolean;
+    playerState: PlayerState;
+    tempWagonCards?: string[];
 }
 
 export default function ConnectionNode({
@@ -22,13 +24,15 @@ export default function ConnectionNode({
                                            connectionTiles,
                                            imageSize,
                                            myTurn,
-                                           gameId
+                                           gameId,
+                                           playerState,
+                                           tempWagonCards
                                        }: ConnectionNodeProps) {
     const [connectionHoverStates, setConnectionHoverStates] = useState<{ [key: string]: boolean }>({});
     const [isConnectionDialogOpen, setIsConnectionDialogOpen] = useState(false);
 
     const handleConnectionClick = () => {
-        if (myTurn) {
+        if (myTurn && connection.playerColor.toLowerCase() === 'gray') {
             setIsConnectionDialogOpen(true);
         }
     };
@@ -44,7 +48,7 @@ export default function ConnectionNode({
     }
 
     const handleConnectionHover = (connectionId: string, isHovered: boolean) => {
-        if (myTurn) {
+        if (myTurn && connection.playerColor.toLowerCase() === 'gray') {
             setConnectionHoverStates(prevStates => ({
                 ...prevStates,
                 [connectionId]: isHovered,
@@ -79,11 +83,13 @@ export default function ConnectionNode({
                 </Suspense>
             )}
             <Box
+                sx={{
+                   pointerEvents: myTurn && tempWagonCards?.length === 0 ? 'auto' : 'none'
+                }}
                 onClick={handleConnectionClick}
                 onMouseEnter={() => handleConnectionHover(connection.id, true)}
                 onMouseLeave={() => handleConnectionHover(connection.id, false)}
             >
-
                 {connection.connectionTiles.map((connectionTileId) => {
                     const matchingConnectionTile = connectionTiles.find(
                         (tile) => tile.id === connectionTileId
@@ -98,6 +104,7 @@ export default function ConnectionNode({
                                 isConnectionHovered={connectionHoverStates[connection.id] || false}
                                 myTurn={myTurn}
                                 playerColor={connection.playerColor}
+                                playerState={playerState}
                             />
                         );
                     }

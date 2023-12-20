@@ -7,7 +7,7 @@ export const createLobby = async (): Promise<string> => {
     return result.data;
 }
 
-export const joinLobby = async (code: string): Promise<String> => {
+export const joinLobby = async (code: string): Promise<string> => {
     const result = await axios.post(`${mantleUrl}/lobby/join/${code}`);
     return result.data;
 }
@@ -55,4 +55,8 @@ export const sendInviteMail = async (inviteMail: InviteMail): Promise<void> => {
 
 export const kickLobbyUser = async (lobbyId: string, userId: string): Promise<void> => {
     await axios.post(`${mantleUrl}/lobbyUser/${lobbyId}/kick/${userId}`)
+}
+
+export const banLobbyUser = async (lobbyId: string, userId: string): Promise<void> => {
+    await axios.post(`${mantleUrl}/lobbyUser/${lobbyId}/ban/${userId}`)
 }

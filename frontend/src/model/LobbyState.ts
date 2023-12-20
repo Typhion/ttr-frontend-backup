@@ -1,5 +1,6 @@
 export type LobbyState = {
     lobbyUsersDto: LobbyUserDto[];
+    bannedApplicationUsers: ApplicationUserDto[];
     isPublic: boolean;
     maxSize: number;
     code: string;

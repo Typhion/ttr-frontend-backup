@@ -5,7 +5,7 @@ import {
     Alert,
     Box,
     FormControlLabel,
-    FormGroup,
+    FormGroup, Grid,
     Input,
     InputAdornment, Switch, Typography
 } from "@mui/material";
@@ -23,9 +23,12 @@ import SettingsDialog from "./SettingsDialog.tsx";
 import SettingsIcon from '@mui/icons-material/Settings';
 import {GameInitDto} from "../../model/LobbyState.ts";
 import {useStartGame} from "../../hooks/useStartGame.ts";
-import InviteFriendDialog from "./InviteFriendDialog.tsx";
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import {useKickLobbyUser} from "../../hooks/useKickLobbyUser.ts";
+import {useBanLobbyUser} from "../../hooks/useBanLobbyUser.ts";
+import BlockIcon from '@mui/icons-material/Block';
+import InviteFriendDialog from "./InviteFriendDialog.tsx";
+
 
 function LobbyContent({lobbyId}: { lobbyId: string }) {
     const navigate = useNavigate();
@@ -33,6 +36,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
     const setPublic = useSetPublic()
     const setColor = useSetColor()
     const kickLobbyUser = useKickLobbyUser();
+    const banLobbyUser = useBanLobbyUser();
     const {loggedInUserId} = useContext(SecurityContext)
     const {isLoading, isError, data: lobbyState, refetch} = useLobbyState(lobbyId);
     const startGame = useStartGame();
@@ -89,6 +93,10 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
         kickLobbyUser.mutate({lobbyId, userId})
     }
 
+    const handleBanLobbyUser = (lobbyId: string, userId: string) => {
+        banLobbyUser.mutate({lobbyId, userId})
+    }
+
     const handleCopySuccess = () => {
         setCopied(true);
         setTimeout(() => {
@@ -139,42 +147,66 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                     }}
                 >
                     {lobbyState.lobbyUsersDto.map((player) => (
-                        <Box
+                        <Grid
                             key={player.id}
+                            container
                             sx={{
                                 border: '2px solid black',
                                 marginBottom: '15px',
-                                display: 'grid',
-                                gridTemplateColumns: '10fr 20fr 20fr 3fr 1fr ',
-                                alignItems: 'center',
                                 fontSize: '32px',
                                 width: '100%',
                                 padding: '5px',
                                 justifyContent: 'space-between',
                             }}
                         >
-                            <span style={{minWidth: '5%'}}>{player.isHost ? "👑" : ""}</span>
-                            <div
-                                style={{
-                                    backgroundColor: player.color,
-                                    width: '20px',
-                                    height: '20px',
-                                    marginRight: '10px',
-                                    border: '1px solid black',
-                                }}
-                            />
-                            {player.applicationUserDto.username}
-                            {player.ready ? (
-                                <DoneIcon sx={{marginLeft: '20px', color: 'green'}}/>
-                            ) : (
-                                <ClearIcon sx={{marginLeft: '20px', color: 'red'}}/>
-                            )}
+                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
+                                <span style={{minWidth: '5%'}}>{player.isHost ? '👑' : ''}</span>
+                            </Grid>
+                            <Grid item xs={2} sx={{display: 'flex', alignItems: 'center'}}>
+                                <div
+                                    style={{
+                                        backgroundColor: player.color,
+                                        width: '20px',
+                                        height: '20px',
+                                        marginRight: '10px',
+                                        border: '1px solid black',
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={3} sx={{display: 'flex', alignItems: 'center'}}>
+                                {player.applicationUserDto.username}
+                            </Grid>
+                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
+                                {player.ready ? (
+                                    <DoneIcon sx={{marginLeft: '20px', color: 'green'}}/>
+                                ) : (
+                                    <ClearIcon sx={{marginLeft: '20px', color: 'red'}}/>
+                                )}
+                            </Grid>
+                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
+                                {player.applicationUserDto.id !== loggedInUserId &&
+                                    !player.isHost && (
+                                        <Box>
+                                            <PersonRemoveIcon
+                                                onClick={() => handleKickLobbyUser(lobbyId, player.id)}
+                                                style={{cursor: 'pointer'}}
+                                            />
+                                        </Box>
 
-                            {(player.applicationUserDto.id != loggedInUserId && !player.isHost) &&
-                                <PersonRemoveIcon onClick={() => handleKickLobbyUser(lobbyId, player.id)}
-                                                  style={{cursor: 'pointer'}}/>
-                            }
-                        </Box>
+                                    )}
+                            </Grid>
+                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
+                                {player.applicationUserDto.id !== loggedInUserId &&
+                                    !player.isHost && (
+                                        <Box>
+                                            <BlockIcon
+                                                onClick={() => handleBanLobbyUser(lobbyId, player.id)}
+                                                style={{cursor: 'pointer'}}
+                                            />
+                                        </Box>
+                                    )}
+                            </Grid>
+                        </Grid>
                     ))}
                 </Box>
 

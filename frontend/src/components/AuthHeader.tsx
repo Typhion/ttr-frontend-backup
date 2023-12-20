@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button'
 import {Box, IconButton, Stack, Typography} from '@mui/material'
-import {useContext} from 'react'
+import { useContext } from 'react'
 import SecurityContext from '../context/SecurityContext.ts'
 import {useLocation} from "react-router-dom";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -14,7 +14,6 @@ export function AuthHeader() {
     const handleNavHome = () => {
         navigate(`/`);
     }
-
     const handleNavProfile = () => {
         navigate(`/profile`);
     }
@@ -30,7 +29,7 @@ export function AuthHeader() {
         return null;
     }
     return (
-        <Stack direction="row" alignItems="center" spacing={2} sx={{mt: 1, mx: 2, mb: 2}}>
+        <Stack direction="row" alignItems="center" spacing={2} sx={{ mt: 1, mx: 2, mb: 2 }}>
             {isAuthenticated() && (
                 <>
                     <Box sx={{
