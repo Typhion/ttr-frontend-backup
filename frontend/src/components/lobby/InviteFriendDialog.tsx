@@ -1,16 +1,19 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
+    Box,
     Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle,
-    TextField,
+    DialogTitle, Grid, ListItem, ListItemButton, ListItemText,
+    TextField, Typography,
 } from "@mui/material";
 
 import * as z from 'zod';
 import {useSendInviteMail} from "../../hooks/useSendInviteMail.ts";
+import {useFriendlistNotInLobby} from "../../hooks/useFriendlistNotInLobby.ts";
+import {useSendInviteFriends} from "../../hooks/useSendInviteFriends.ts";
 
 interface InviteFriendDialogProps {
     isOpen: boolean;
@@ -24,9 +27,18 @@ export default function InviteFriendDialog({
                                                onClose,
                                                lobbyId
                                            }: InviteFriendDialogProps) {
+    const {data: friendlist, refetch} = useFriendlistNotInLobby(lobbyId);
     const [email, setEmail] = useState<string>("");
     const [emailError, setEmailError] = useState<string | null>(null);
+    const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
     const sendInviteMail = useSendInviteMail();
+    const sendInviteFriends = useSendInviteFriends();
+
+    useEffect(() => {
+        if (isOpen) {
+            refetch();
+        }
+    }, [isOpen, refetch]);
 
     const handleEmailChange = (value: string) => {
         setEmail(value);
@@ -42,21 +54,28 @@ export default function InviteFriendDialog({
         }
     };
 
+    const handleFriendClick = (friendId: string) => {
+        setSelectedFriends((prevSelectedFriends) =>
+            prevSelectedFriends.includes(friendId)
+                ? prevSelectedFriends.filter((id) => id !== friendId)
+                : [...prevSelectedFriends, friendId]
+        );
+    };
+
     const handleSendInvite = () => {
+        if (email) {
         sendInviteMail.mutate({lobbyId: lobbyId, email: email});
+        }
+        if (selectedFriends.length > 0) {
+            sendInviteFriends.mutate({lobbyId: lobbyId, friendIds: selectedFriends});
+        }
         onClose();
+        setSelectedFriends([]);
     };
 
     return (
-        <Dialog
-            open={isOpen}
-            onClose={onClose}
-            maxWidth="md"
-            fullWidth
-        >
-            <DialogTitle id={"InviteFriendDialog"}>
-                Send Invite
-            </DialogTitle>
+        <Dialog open={isOpen} onClose={onClose} maxWidth="md" fullWidth>
+            <DialogTitle id={'InviteFriendDialog'}>Send Invite</DialogTitle>
             <DialogContent>
                 <DialogContentText color={'black'}>
                     Enter the email address of the friend you want to invite.
@@ -71,6 +90,35 @@ export default function InviteFriendDialog({
                     error={Boolean(emailError)}
                     helperText={emailError}
                 />
+                <Box sx={{ mt: 3 }}>
+                    <Typography variant="h6">Your friends</Typography>
+                    {!friendlist || friendlist.length === 0 ? (
+                        <Typography>You should try adding some friends!</Typography>
+                    ) : (
+                        <Grid container spacing={2}>
+                            {friendlist.map((friend, index) => (
+                                <Grid item xs={6} key={index}>
+                                    <ListItem
+                                        sx={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            border: selectedFriends.includes(friend.id)
+                                                ? '2px solid black'
+                                                : 'none',
+                                            borderRadius: '10px',
+                                        }}
+                                    >
+                                        <ListItemButton
+                                            onClick={() => handleFriendClick(friend.id)}
+                                        >
+                                            <ListItemText primary={friend.username} />
+                                        </ListItemButton>
+                                    </ListItem>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    )}
+                </Box>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="inherit">
