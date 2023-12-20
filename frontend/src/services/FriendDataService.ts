@@ -7,6 +7,11 @@ export const getFriendlist = async (): Promise<Friend[]> => {
     return response.data;
 }
 
+export const getFriendlistNotInLobby = async (lobbyId: string): Promise<Friend[]> => {
+    const response = await axios.get<Friend[]>(`${mantleUrl}/applicationUser/friends/${lobbyId}`);
+    return response.data;
+}
+
 export const getFriendRequestList = async (): Promise<Friend[]> => {
     const response = await axios.get<Friend[]>(`${mantleUrl}/applicationUser/friends/request`);
     return response.data;

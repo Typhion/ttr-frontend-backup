@@ -1,5 +1,5 @@
 import axios from "axios";
-import {InviteMail, LobbyState, SettingDto, StartLobbyDto} from "../model/LobbyState.ts";
+import {InviteFriends, InviteMail, LobbyState, SettingDto, StartLobbyDto} from "../model/LobbyState.ts";
 
 const mantleUrl = import.meta.env.VITE_MANTLE_URL
 export const createLobby = async (): Promise<string> => {
@@ -50,6 +50,9 @@ export const setLobbySettings = async (lobbyId: string, settingDto: SettingDto):
 
 export const sendInviteMail = async (inviteMail: InviteMail): Promise<void> => {
     await axios.post(`${mantleUrl}/lobby/${inviteMail.lobbyId}/invite/${inviteMail.email}`);
+}
+export const sendInviteFriends = async (inviteFriends: InviteFriends): Promise<void> => {
+    await axios.post(`${mantleUrl}/lobby/${inviteFriends.lobbyId}/invite/friends`, inviteFriends.friendIds);
 }
 
 
