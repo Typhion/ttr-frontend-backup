@@ -35,6 +35,7 @@ function App() {
                             <Route path="/lobby" element={<RouteGuard component={<LobbyList/>}/>}/>
                             <Route path="/game/:uuid" element={<RouteGuard component={<Game/>}/>}/>
                             <Route path="/profile/friends" element={<RouteGuard component={<Friends/>}/>}/>
+                            <Route path="/profile/:uuid" element={<RouteGuard component={<Profile/>}/>}/>
                             <Route path="/profile" element={<RouteGuard component={<Profile/>}/>}/>
                             <Route path="/admin/users" element={<RouteGuard component={<AdminRouteGuard component={<Users/>}/>}/>}/>
                         </Routes>
