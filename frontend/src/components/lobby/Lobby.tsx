@@ -2,11 +2,7 @@ import Button from "@mui/material/Button";
 import {useNavigate, useParams} from "react-router-dom";
 import {
     Alert,
-    Box,
-    FormControlLabel,
-    FormGroup, Grid,
-    Input,
-    InputAdornment, Switch
+    Box, Grid,
 } from "@mui/material";
 import Loader from "../general/Loader.tsx";
 import {useLobbyState} from "../../hooks/lobbyHooks/useLobbyState.ts";
@@ -14,7 +10,6 @@ import SecurityContext from "../../context/SecurityContext.ts";
 import {useContext, useState} from "react";
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import {useSetPublic} from "../../hooks/lobbyHooks/useSetPublic.ts";
 import SettingsDialog from "./SettingsDialog.tsx";
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -27,6 +22,10 @@ import GameStartedButton from "./GameStartedButton.tsx";
 import ToggleReadyButton from "./ToggleReadyButton.tsx";
 import ColorSetter from "./ColorSetter.tsx";
 import StartGameButton from "./StartGameButton.tsx";
+import CopyLobbyCode from "./CopyLobbyCode.tsx";
+import TogglePrivateLobby from "./TogglePrivateLobby.tsx";
+
+
 
 function LobbyContent({lobbyId}: { lobbyId: string }) {
     const navigate = useNavigate();
@@ -35,7 +34,6 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
     const banLobbyUser = useBanLobbyUser();
     const {loggedInUserId} = useContext(SecurityContext)
     const {isLoading, isError, data: lobbyState, refetch} = useLobbyState(lobbyId);
-
 
     const [copied, setCopied] = useState(false);
     const [isSettingsDialogOpen, setSettingsDialogOpen] = useState(false);
@@ -76,8 +74,6 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
         await setPublic.mutateAsync(lobbyId);
         await refetch();
     }
-
-
 
     return (
         <Box>
@@ -196,11 +192,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                     {lobbyState.lobbyUsersDto.some(
                         (player) => player.applicationUserDto.id === loggedInUserId && player.isHost
                     ) && !lobbyState.gameId && (
-                        <FormGroup>
-                            <FormControlLabel control={<Switch defaultValue={String(lobbyState.isPublic)}/>}
-                                              onChange={handleToggleChange}
-                                              label={lobbyState.isPublic ? "public" : "private"}/>
-                        </FormGroup>
+                        <TogglePrivateLobby lobbyState={lobbyState} onChange={handleToggleChange}/>
                     )}
                 </Box>
                 <Box
@@ -214,32 +206,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                     {lobbyState.lobbyUsersDto.some(
                         (player) => player.applicationUserDto.id === loggedInUserId
                     ) && !lobbyState.gameId && (
-                        <Input
-                            value={lobbyState.code}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <CopyToClipboard text={lobbyState.code} onCopy={handleCopySuccess}>
-                                        <Button
-                                            variant="contained"
-                                            sx={{
-                                                width: "100%",
-                                                backgroundColor: "green",
-                                                color: "white",
-                                            }}
-                                        >
-                                            {copied ? "Copied!" : "Copy Code"}
-                                        </Button>
-                                    </CopyToClipboard>
-                                </InputAdornment>
-                            }
-                            readOnly
-                            sx={{
-                                width: "100%",
-                                padding: "8px",
-                                fontSize: "16px",
-                                borderRadius: "4px",
-                            }}
-                        />
+                        <CopyLobbyCode lobbyCode={lobbyState.code} onCopy={handleCopySuccess} copied={copied}/>
                     )}
                 </Box>
                 {lobbyState.gameId && (
