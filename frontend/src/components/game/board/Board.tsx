@@ -3,7 +3,7 @@ import { Alert, Box } from "@mui/material";
 import {City, Connection, ConnectionTile, PlayerState} from "../../../model/GameState.ts";
 import CityNode from "./CityNode.tsx";
 import Loader from "../../general/Loader.tsx";
-import { useBoardImage } from "../../../hooks/useBoardImage.ts";
+import { useBoardImage } from "../../../hooks/gameHooks/useBoardImage.ts";
 import ConnectionNode from "./ConnectionNode.tsx";
 
 interface BoardProps {

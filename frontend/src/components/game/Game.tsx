@@ -1,15 +1,15 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {useGame} from "../../hooks/useGame.ts";
+import {useGame} from "../../hooks/gameHooks/useGame.ts";
 import {Alert, Grid, Typography} from "@mui/material";
 import Loader from "../general/Loader.tsx";
 import Board from "./board/Board.tsx";
 import WagonCardPile from "./board/WagonCardPile.tsx";
-import {useGameState} from "../../hooks/useGameState.ts";
+import {useGameState} from "../../hooks/gameHooks/useGameState.ts";
 import FaceUpWagonCards from "./board/FaceUpWagonCards.tsx";
 import PlayerWagonCards from "./board/PlayerWagonCards.tsx";
 import PlayerIcon from "./board/PlayerIcon.tsx";
 import PlayerInformation from "./board/PlayerInformation";
-import {usePickRandomWagonCard} from "../../hooks/usePickRandomWagonCard";
+import {usePickRandomWagonCard} from "../../hooks/gameHooks/usePickRandomWagonCard.ts";
 import {useContext, useEffect, useState} from "react";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RouteCardsPile from "./board/RouteCardsPile";

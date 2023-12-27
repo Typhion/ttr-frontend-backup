@@ -11,9 +11,9 @@ import {
 } from "@mui/material";
 
 import * as z from 'zod';
-import {useSendInviteMail} from "../../hooks/useSendInviteMail.ts";
-import {useFriendlistNotInLobby} from "../../hooks/useFriendlistNotInLobby.ts";
-import {useSendInviteFriends} from "../../hooks/useSendInviteFriends.ts";
+import {useSendInviteMail} from "../../hooks/lobbyHooks/useSendInviteMail.ts";
+import {useFriendlistNotInLobby} from "../../hooks/lobbyHooks/useFriendlistNotInLobby.ts";
+import {useSendInviteFriends} from "../../hooks/lobbyHooks/useSendInviteFriends.ts";
 
 interface InviteFriendDialogProps {
     isOpen: boolean;

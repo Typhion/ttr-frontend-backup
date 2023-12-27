@@ -7,17 +7,9 @@ import {
     DialogTitle,
     Grid
 } from "@mui/material";
-import BlackCard from "../../../assets/images/card-black.png";
-import BlueCard from "../../../assets/images/card-blue.png";
-import GreenCard from "../../../assets/images/card-green.png";
-import OrangeCard from "../../../assets/images/card-orange.png";
-import PinkCard from "../../../assets/images/card-pink.png";
-import RedCard from "../../../assets/images/card-red.png";
-import WhiteCard from "../../../assets/images/card-white.png";
-import YellowCard from "../../../assets/images/card-yellow.png";
-import JokerCard from "../../../assets/images/card-joker.png";
+import CardImages from "../../../assets/images/cards/index.ts";
 import {useState} from "react";
-import {usePlayerCardsForStation} from "../../../hooks/usePlayerCardsForStation.ts";
+import {usePlayerCardsForStation} from "../../../hooks/gameHooks/usePlayerCardsForStation.ts";
 
 export type StationCreate = {
     playerId: string;
@@ -34,18 +26,6 @@ interface CreateStationDialogProps {
     cityId: string;
     boardId: string;
 }
-
-const cardImages: { [key: string]: string } = {
-    black: BlackCard,
-    blue: BlueCard,
-    green: GreenCard,
-    orange: OrangeCard,
-    pink: PinkCard,
-    red: RedCard,
-    white: WhiteCard,
-    yellow: YellowCard,
-    joker: JokerCard
-};
 
 export default function CreateStationDialog({
                                                 isOpen,
@@ -102,7 +82,7 @@ export default function CreateStationDialog({
                             >
                                 <CardMedia
                                     component="img"
-                                    image={cardImages[cardColor.toLowerCase()]}
+                                    image={CardImages[cardColor.toLowerCase()]}
                                     alt="FaceUpWagonCard"
                                     style={{width: '100%'}}
                                 />

@@ -1,6 +1,6 @@
 import FaceUpWagonCard from "./FaceUpWagonCard.tsx";
-import {usePickFaceUpWagonCard} from "../../../hooks/usePickFaceUpWagonCard";
-import {useGameState} from "../../../hooks/useGameState";
+import {usePickFaceUpWagonCard} from "../../../hooks/gameHooks/usePickFaceUpWagonCard.ts";
+import {useGameState} from "../../../hooks/gameHooks/useGameState.ts";
 
 interface FaceupWagonCardsProps {
     faceUpWagonCards: string[] | undefined;

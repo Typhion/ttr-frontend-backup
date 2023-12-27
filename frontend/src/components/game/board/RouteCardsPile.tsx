@@ -1,10 +1,10 @@
 import {useState, useEffect, ChangeEvent} from 'react';
 import {Badge, Card, CardMedia} from '@mui/material';
 import RouteCardDialog from './RandomRouteCardsDialog';
-import CardRoute from '../../../assets/images/card-route.png';
+import CardRoute from '../../../assets/images/cards/card-route.png';
 import {TempRouteCard} from '../../../model/GameState';
-import {useDrawRouteCards} from '../../../hooks/useDrawRouteCards.ts';
-import {useGameState} from "../../../hooks/useGameState";
+import {useDrawRouteCards} from '../../../hooks/gameHooks/useDrawRouteCards.ts';
+import {useGameState} from "../../../hooks/gameHooks/useGameState.ts";
 
 type RouteCardsPileProps = {
     playerId: string;

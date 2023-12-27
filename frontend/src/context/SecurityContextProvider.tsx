@@ -3,7 +3,7 @@ import SecurityContext from './SecurityContext'
 import {addAccessTokenToAuthHeader, removeAccessTokenFromAuthHeader} from '../services/AuthDataService.ts'
 import {isExpired} from 'react-jwt'
 import Keycloak from 'keycloak-js'
-import {useCreateAccount} from "../hooks/useCreateAccount.ts";
+import {useCreateAccount} from "../hooks/userHooks/useCreateAccount.ts";
 
 interface IWithChildren {
     children: ReactNode

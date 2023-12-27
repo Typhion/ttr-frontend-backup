@@ -1,10 +1,10 @@
 import Button from "@mui/material/Button";
-import {useCreateLobby} from "../../hooks/useCreateLobby.ts";
+import {useCreateLobby} from "../../hooks/lobbyHooks/useCreateLobby.ts";
 import {useContext, useState} from "react";
 import SecurityContext from "../../context/SecurityContext.ts";
 import {Box, Grid, TextField} from "@mui/material";
 import {useNavigate, useParams} from "react-router-dom";
-import {useJoinLobby} from "../../hooks/useJoinLobby.ts";
+import {useJoinLobby} from "../../hooks/lobbyHooks/useJoinLobby.ts";
 
 export default function Home() {
     const {isAuthenticated} = useContext(SecurityContext);
