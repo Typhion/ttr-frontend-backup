@@ -57,19 +57,7 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
         gameState.lastUsedWagonCard = 'back';
     }
 
-    if (playerId === undefined) {
-        return <Alert severity="error">Unable to load this game's details.</Alert>;
-    }
-
-    if (boardId === undefined) {
-        return <Alert severity="error">Unable to load this game's details.</Alert>;
-    }
-
-    if (game === undefined) {
-        return <Alert severity="error">Unable to load this game's details.</Alert>;
-    }
-
-    if (isPlayersTurn === undefined) {
+    if (playerId === undefined || boardId === undefined || game === undefined || isPlayersTurn === undefined) {
         return <Alert severity="error">Unable to load this game's details.</Alert>;
     }
 
