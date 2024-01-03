@@ -8,7 +8,7 @@ import {
     TableRow, TextField,
     Typography
 } from "@mui/material";
-import {useGetUserList} from "../../hooks/useGetUserList.ts";
+import {useGetUserList} from "../../hooks/userHooks/useGetUserList.ts";
 import Loader from "../general/Loader.tsx";
 import {useState} from "react";
 import SearchIcon from '@mui/icons-material/Search';

@@ -1,6 +1,6 @@
 import {Box, IconButton, TextField} from "@mui/material";
-import {useAddFriend} from "../../hooks/useAddFriend.ts";
-import {useFriendlist} from "../../hooks/useFriendlist.ts";
+import {useAddFriend} from "../../hooks/friendHooks/useAddFriend.ts";
+import {useFriendlist} from "../../hooks/friendHooks/useFriendlist.ts";
 import SendIcon from '@mui/icons-material/Send';
 import React, {ChangeEvent, useState} from "react";
 

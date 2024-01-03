@@ -1,13 +1,13 @@
 import {useNavigate} from "react-router-dom";
 import SecurityContext from "../../context/SecurityContext.ts";
 import {useContext, useState} from "react";
-import {useJoinLobby} from "../../hooks/useJoinLobby.ts";
-import {usePublicLobbies} from "../../hooks/usePublicLobbies.ts";
+import {useJoinLobby} from "../../hooks/lobbyHooks/useJoinLobby.ts";
+import {usePublicLobbies} from "../../hooks/lobbyHooks/usePublicLobbies.ts";
 import {Box, Grid, Switch} from "@mui/material";
 import Button from "@mui/material/Button";
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
-import {useStartedLobbies} from "../../hooks/useStartedLobbies.ts";
+import {useStartedLobbies} from "../../hooks/lobbyHooks/useStartedLobbies.ts";
 import {LobbyState} from "../../model/LobbyState.ts";
 
 export default function LobbyList() {

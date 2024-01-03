@@ -1,12 +1,12 @@
 import {useNavigate, useParams} from "react-router-dom";
 import Button from "@mui/material/Button";
 import {Alert, Avatar, Box, Grid, Typography} from "@mui/material";
-import {useProfile} from "../../hooks/useProfile.ts";
+import {useProfile} from "../../hooks/userHooks/useProfile.ts";
 import Loader from "../general/Loader.tsx";
 import {getAvatarImage} from "../../model/Profile.ts";
 import PersonIcon from "@mui/icons-material/Person";
-import {useGetUnlockedAvatars} from "../../hooks/useGetUnlockedAvatars.ts";
-import {useChangeAvatar} from "../../hooks/useChangeAvatar.ts";
+import {useGetUnlockedAvatars} from "../../hooks/userHooks/useGetUnlockedAvatars.ts";
+import {useChangeAvatar} from "../../hooks/userHooks/useChangeAvatar.ts";
 
 export default function Profile() {
     const {uuid} = useParams<{ uuid: string }>();
@@ -29,6 +29,10 @@ export default function Profile() {
         navigate(`/profile/friends`);
     }
 
+    const handleNavAchievements = () => {
+        navigate('/profile/achievement')
+    }
+
     const handleAvatarChange = (avatarId: string) => {
         changeAvatar.mutate(avatarId);
     }
@@ -46,15 +50,27 @@ export default function Profile() {
             flexDirection: 'column',
         }} spacing={2}>
             {!uuid && (
-                <Grid item xs={12}>
-                    <Button
-                        variant="contained"
-                        sx={{height: '100%', marginBottom: '10%'}}
-                        onClick={handleNavFriends}
-                    >
-                        Friends
-                    </Button>
-                </Grid>
+                <Box flexDirection={'column'}>
+                    <Grid item xs={10}>
+                        <Button
+                            variant="contained"
+                            sx={{height: '100%', marginBottom: '10%'}}
+                            onClick={handleNavFriends}
+                        >
+                            Friends
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button
+                            variant="contained"
+                            sx={{height: '100%', marginBottom: '10%'}}
+                            onClick={handleNavAchievements}
+                        >
+                            Achievements
+                        </Button>
+                    </Grid>
+                </Box>
+
             )}
             {profile && (
                 <Grid item xs={12}

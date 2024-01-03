@@ -2,18 +2,10 @@ import {
     Button, Card, CardMedia,
     Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Paper, PaperProps
 } from "@mui/material";
-import {usePlayerCardsForConnection} from "../../../hooks/usePlayerCardsForConnection.ts";
-import BlackCard from "../../../assets/images/card-black.png";
-import BlueCard from "../../../assets/images/card-blue.png";
-import GreenCard from "../../../assets/images/card-green.png";
-import OrangeCard from "../../../assets/images/card-orange.png";
-import PinkCard from "../../../assets/images/card-pink.png";
-import RedCard from "../../../assets/images/card-red.png";
-import WhiteCard from "../../../assets/images/card-white.png";
-import YellowCard from "../../../assets/images/card-yellow.png";
-import JokerCard from "../../../assets/images/card-joker.png";
+import {usePlayerCardsForConnection} from "../../../hooks/gameHooks/usePlayerCardsForConnection.ts";
+import CardImages from "../../../assets/images/cards/index.ts";
 import {useState} from "react";
-import {usePickConnection} from "../../../hooks/usePickConnection.ts";
+import {usePickConnection} from "../../../hooks/gameHooks/usePickConnection.ts";
 import Draggable from "react-draggable";
 
 export type ConnectionPick = {
@@ -22,18 +14,6 @@ export type ConnectionPick = {
     boardId: string;
     pickedWagonCards: string[];
 }
-
-const cardImages: { [key: string]: string } = {
-    black: BlackCard,
-    blue: BlueCard,
-    green: GreenCard,
-    orange: OrangeCard,
-    pink: PinkCard,
-    red: RedCard,
-    white: WhiteCard,
-    yellow: YellowCard,
-    joker: JokerCard
-};
 
 interface ConnectionDialogProps {
     isOpen: boolean;
@@ -131,7 +111,7 @@ export default function ConnectionDialog({
                             >
                                 <CardMedia
                                     component="img"
-                                    image={cardImages[cardColor.toLowerCase()]}
+                                    image={CardImages[cardColor.toLowerCase()]}
                                     alt="FaceUpWagonCard"
                                     style={{width: '100%'}}
                                 />
