@@ -1,10 +1,10 @@
 import {City} from "../../../model/GameState.ts";
 import {Box} from "@mui/material";
 import {useState} from "react";
-import {useCreateStation} from "../../../hooks/useCreateStation.ts";
+import {useCreateStation} from "../../../hooks/gameHooks/useCreateStation.ts";
 import CreateStationDialog, {StationCreate} from "./CreateStationDialog.tsx";
 import TrainIcon from '@mui/icons-material/Train';
-import {useGameState} from "../../../hooks/useGameState.ts";
+import {useGameState} from "../../../hooks/gameHooks/useGameState.ts";
 
 interface CityNodeProps {
     city: City;

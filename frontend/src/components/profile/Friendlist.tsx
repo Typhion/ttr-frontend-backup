@@ -1,12 +1,12 @@
 import {Alert, Box, IconButton, List, ListItem, ListItemText, Typography} from "@mui/material";
-import {useFriendlist} from "../../hooks/useFriendlist.ts";
+import {useFriendlist} from "../../hooks/friendHooks/useFriendlist.ts";
 import Loader from "../general/Loader.tsx";
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
-import {useRemoveFriend} from "../../hooks/useRemoveFriend.ts";
-import {useFriendRequestList} from "../../hooks/useFriendRequestList.ts";
-import {useAcceptFriend} from "../../hooks/useAcceptFriend.ts";
-import {useDenyFriend} from "../../hooks/useDenyFriend.ts";
+import {useRemoveFriend} from "../../hooks/friendHooks/useRemoveFriend.ts";
+import {useFriendRequestList} from "../../hooks/friendHooks/useFriendRequestList.ts";
+import {useAcceptFriend} from "../../hooks/friendHooks/useAcceptFriend.ts";
+import {useDenyFriend} from "../../hooks/friendHooks/useDenyFriend.ts";
 
 export default function Friendlist() {
     const {isLoading: isLoading, isError: isError, data: friendlist, refetch} = useFriendlist();

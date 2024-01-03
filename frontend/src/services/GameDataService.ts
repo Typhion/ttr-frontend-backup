@@ -13,7 +13,7 @@ export const getGameState = async (uuid: string, playerId: string): Promise<Game
     return response.data;
 }
 
-export const createGame = async (gameInitDto: GameInitDto): Promise<String> => {
+export const createGame = async (gameInitDto: GameInitDto): Promise<string> => {
     const result = await axios.post(`/game/init`, gameInitDto);
     return result.data;
 }

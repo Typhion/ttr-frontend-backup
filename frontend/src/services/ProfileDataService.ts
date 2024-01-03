@@ -1,5 +1,6 @@
 import axios from "axios";
 import {Avatar, Profile} from "../model/Profile.ts";
+import {Achievement} from "../model/Achievement.ts";
 const mantleUrl = import.meta.env.VITE_MANTLE_URL
 
 export const getProfile = async (playerId: string | undefined): Promise<Profile> => {
@@ -19,4 +20,9 @@ export const getUnlockedAvatars = async (): Promise<Avatar[]> => {
 
 export const changeAvatar = async (avatarId: string): Promise<void> => {
     await axios.patch(`${mantleUrl}/applicationUser/profile/avatar/${avatarId}`);
+}
+
+export const getPlayerAchievements = async (): Promise<Achievement[]> => {
+    const result = await axios.get(`${mantleUrl}/achievement/`);
+    return result.data;
 }

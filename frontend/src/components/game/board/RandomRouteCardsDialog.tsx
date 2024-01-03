@@ -6,8 +6,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Checkbox from '@mui/material/Checkbox';
 import {TempRouteCard} from "../../../model/GameState";
-import {usePickRouteCard} from "../../../hooks/usePickRouteCard.ts";
-import {useGameState} from "../../../hooks/useGameState";
+import {usePickRouteCard} from "../../../hooks/gameHooks/usePickRouteCard.ts";
+import {useGameState} from "../../../hooks/gameHooks/useGameState.ts";
 import {Box, DialogTitle, Paper, PaperProps} from "@mui/material";
 import Draggable from 'react-draggable';
 

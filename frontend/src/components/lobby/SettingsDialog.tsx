@@ -5,7 +5,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Input from '@mui/material/Input';
-import { useSetLobbySettings } from '../../hooks/useSetLobbySettings.ts';
+import { useSetLobbySettings } from '../../hooks/lobbyHooks/useSetLobbySettings.ts';
 import {LobbySettings, SettingDto} from "../../model/LobbyState.ts";
 
 type SettingsDialogProps = {
