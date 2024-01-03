@@ -26,3 +26,8 @@ export const getPlayerAchievements = async (): Promise<Achievement[]> => {
     const result = await axios.get(`${mantleUrl}/achievement/`);
     return result.data;
 }
+
+export const getPlayerAvatar = async (playerId: string): Promise<Avatar> => {
+    const result = await axios.get(`${mantleUrl}/applicationUser/profile/${playerId}/avatar`);
+    return result.data;
+}
