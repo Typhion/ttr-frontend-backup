@@ -5,6 +5,7 @@ import SecurityContext from "../../context/SecurityContext.ts";
 import {Box, Grid, TextField} from "@mui/material";
 import {useNavigate, useParams} from "react-router-dom";
 import {useJoinLobby} from "../../hooks/lobbyHooks/useJoinLobby.ts";
+import {useQuickPlay} from "../../hooks/lobbyHooks/useQuickPlay.ts";
 
 export default function Home() {
     const {isAuthenticated} = useContext(SecurityContext);
@@ -13,6 +14,9 @@ export default function Home() {
         navigate(`/lobby/${uuid}`);
     });
     const joinLobby = useJoinLobby((uuid) => {
+        navigate(`/lobby/${uuid}`);
+    });
+    const quickPlay = useQuickPlay((uuid) => {
         navigate(`/lobby/${uuid}`);
     });
 
@@ -26,6 +30,10 @@ export default function Home() {
     const handleJoinLobbyClick = () => {
         joinLobby.mutate(lobbyCode);
     };
+
+    const handleQuickPlayClick = () => {
+        quickPlay.mutate();
+    }
 
     const handleGetLobbiesClick = () => {
         navigate(`/lobby`);
@@ -62,6 +70,15 @@ export default function Home() {
                             Join
                         </Button>
                     </Grid>
+                </Grid>
+                <Grid item>
+                    <Button
+                        variant="contained"
+                        sx={{marginLeft: '10px', height: '100%'}}
+                        onClick={handleQuickPlayClick}
+                    >
+                        QuickPlay
+                    </Button>
                 </Grid>
                 <Grid item>
                     <Button

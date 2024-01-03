@@ -12,6 +12,11 @@ export const joinLobby = async (code: string): Promise<string> => {
     return result.data;
 }
 
+export const quickPlay = async (): Promise<string> => {
+    const result = await axios.post(`${mantleUrl}/lobby/join/quickPlay`);
+    return result.data;
+}
+
 export const setReady = async (uuid: string): Promise<void> => {
     await axios.patch(`${mantleUrl}/lobbyUser/ready/${uuid}`);
 }
@@ -55,7 +60,6 @@ export const sendInviteFriends = async (inviteFriends: InviteFriends): Promise<v
     await axios.post(`${mantleUrl}/lobby/${inviteFriends.lobbyId}/invite/friends`, inviteFriends.friendIds);
 }
 
-
 export const kickLobbyUser = async (lobbyId: string, userId: string): Promise<void> => {
     await axios.post(`${mantleUrl}/lobbyUser/${lobbyId}/kick/${userId}`)
 }
@@ -63,3 +67,4 @@ export const kickLobbyUser = async (lobbyId: string, userId: string): Promise<vo
 export const banLobbyUser = async (lobbyId: string, userId: string): Promise<void> => {
     await axios.post(`${mantleUrl}/lobbyUser/${lobbyId}/ban/${userId}`)
 }
+
