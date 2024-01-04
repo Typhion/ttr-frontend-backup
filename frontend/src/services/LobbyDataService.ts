@@ -21,6 +21,10 @@ export const leaveLobby = async (lobbyId: string): Promise<void> => {
     await axios.delete(`${mantleUrl}/lobby/leave/${lobbyId}`);
 }
 
+export const disbandLobby = async (lobbyId: string): Promise<void> => {
+    await axios.delete(`${mantleUrl}/lobby/disband/${lobbyId}`);
+}
+
 export const setReady = async (uuid: string): Promise<void> => {
     await axios.patch(`${mantleUrl}/lobbyUser/ready/${uuid}`);
 }

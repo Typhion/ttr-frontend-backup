@@ -25,6 +25,7 @@ import StartGameButton from "./StartGameButton.tsx";
 import CopyLobbyCode from "./CopyLobbyCode.tsx";
 import TogglePrivateLobby from "./TogglePrivateLobby.tsx";
 import LeaveButton from "./LeaveButton.tsx";
+import DisbandButton from "./DisbandButton.tsx";
 
 
 function LobbyContent({lobbyId}: { lobbyId: string }) {
@@ -38,6 +39,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
     const [copied, setCopied] = useState(false);
     const [isSettingsDialogOpen, setSettingsDialogOpen] = useState(false);
     const [isInviteDialogOpen, setInviteDialogOpen] = useState(false);
+
     const handleInviteDialogOpen = () => setInviteDialogOpen(true);
     const handleInviteDialogClose = () => setInviteDialogOpen(false);
 
@@ -52,7 +54,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
     if (isLoading) return <Loader>Loading Lobby Details...</Loader>;
 
     if (isError || !lobbyState) {
-        return <Alert severity="error">Unable to load this lobby's details.</Alert>;
+        return <Alert severity="error">This lobby doesn't exist (Anymore).</Alert>;
     }
 
     const handleKickLobbyUser = (lobbyId: string, userId: string) => {
@@ -101,9 +103,13 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
             />
             {lobbyState.lobbyUsersDto.some(
                 (player) => player.applicationUserDto.id === loggedInUserId && !player.isHost
-            ) && (
-                <LeaveButton lobbyId={lobbyId}/>
-                )}
+            ) ? (
+                    <LeaveButton lobbyId={lobbyId}/>
+                ) :
+                (
+                    <DisbandButton lobbyId={lobbyId}/>
+                )
+            }
             <Box
                 sx={{
                     display: 'flex',

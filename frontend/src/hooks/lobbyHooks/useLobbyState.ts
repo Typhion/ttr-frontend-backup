@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { getLobbyState } from "../../services/LobbyDataService.ts";
+import {useQuery} from "@tanstack/react-query";
+import {getLobbyState} from "../../services/LobbyDataService.ts";
 import {useNavigate} from "react-router-dom";
 import {AxiosError, HttpStatusCode} from "axios";
 
@@ -24,7 +24,8 @@ export function useLobbyState(uuid: string) {
                     navigate("/");
                     return null
                 } else {
-                    console.log("Error occured")
+                    navigate("/lobby/disbanded");
+                    return null
                 }
             }
         },

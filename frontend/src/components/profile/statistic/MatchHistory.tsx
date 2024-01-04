@@ -12,6 +12,8 @@ type MatchHistoryProps = {
     matchData: Match[];
 };
 
+
+//TODO: change this to be modern react syntax
 const MatchHistory: React.FC<MatchHistoryProps> = ({ matchData }) => {
     return (
         <Box>
