@@ -17,7 +17,7 @@ export default function ProfilePage() {
     return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }} >
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
+                <Tabs value={value} onChange={handleChange} aria-label="profile tabs" centered>
                     <Tab label="Profile" {...a11yProps(0)} />
                     <Tab label="Friends" {...a11yProps(1)} />
                     <Tab label="Achievements" {...a11yProps(2)} />
@@ -46,11 +46,11 @@ interface TabPanelProps {
     value: number;
 }
 
-function CustomTabPanel(props: TabPanelProps) {
+export function CustomTabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
 
     return (
-        <div
+        <Box
             role="tabpanel"
             hidden={value !== index}
             id={`simple-tabpanel-${index}`}
@@ -62,11 +62,11 @@ function CustomTabPanel(props: TabPanelProps) {
                     {children}
                 </Box>
             )}
-        </div>
+        </Box>
     );
 }
 
-function a11yProps(index: number) {
+export function a11yProps(index: number) {
     return {
         id: `simple-tab-${index}`,
         'aria-controls': `simple-tabpanel-${index}`,
