@@ -1,7 +1,12 @@
-import {ApplicationUserDto} from "./LobbyState.ts";
-
 export type ApplicationUserPageDto = {
-    applicationUsers: ApplicationUserDto[];
+    applicationUsers: ApplicationUserListDto[];
     totalPages: number;
     totalUsers: number;
+}
+
+export type ApplicationUserListDto = {
+    id: string;
+    username: string;
+    email: string;
+    isBanned: boolean;
 }
