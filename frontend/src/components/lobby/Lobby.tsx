@@ -24,7 +24,7 @@ import ColorSetter from "./ColorSetter.tsx";
 import StartGameButton from "./StartGameButton.tsx";
 import CopyLobbyCode from "./CopyLobbyCode.tsx";
 import TogglePrivateLobby from "./TogglePrivateLobby.tsx";
-
+import LeaveButton from "./LeaveButton.tsx";
 
 
 function LobbyContent({lobbyId}: { lobbyId: string }) {
@@ -96,6 +96,11 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                 onClose={handleInviteDialogClose}
                 lobbyId={lobbyId}
             />
+            {lobbyState.lobbyUsersDto.some(
+                (player) => player.applicationUserDto.id === loggedInUserId && !player.isHost
+            ) && (
+                <LeaveButton lobbyId={lobbyId}/>
+                )}
             <Box
                 sx={{
                     display: 'flex',
@@ -228,7 +233,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                                         loggedInUserId={loggedInUserId}/>}
                     <StartGameButton lobbyState={lobbyState} predicate={(player) => player.isHost}
                                      predicate1={(player) => player.isHost && player.applicationUserDto.id === loggedInUserId}
-                                    lobbyId={lobbyId}/>
+                                     lobbyId={lobbyId}/>
                     <Box sx={{
                         width: '33.33%', display: 'flex',
                         justifyContent: 'center',
