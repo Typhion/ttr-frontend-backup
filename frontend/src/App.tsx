@@ -14,6 +14,7 @@ import Lobby from "./components/lobby/Lobby.tsx";
 import Friends from "./components/profile/Friends.tsx";
 import LobbyList from "./components/lobby/LobbyList.tsx";
 import Profile from "./components/profile/Profile.tsx";
+import LeaderBoard from "./components/leaderboard/LeaderBoard.tsx";
 import Users from "./components/admin/Users.tsx";
 import AdminRouteGuard from "./components/AdminRouteGuard.tsx";
 import AchievementPage from "./components/profile/achievement/AchievementPage.tsx";
@@ -38,6 +39,7 @@ function App() {
                             <Route path="/profile/friends" element={<RouteGuard component={<Friends/>}/>}/>
                             <Route path="/profile/:uuid" element={<RouteGuard component={<Profile/>}/>}/>
                             <Route path="/profile" element={<RouteGuard component={<Profile/>}/>}/>
+                            <Route path="/leaderboard" element={<RouteGuard component={<LeaderBoard/>}/>}/>
                             <Route path="/admin/users" element={<RouteGuard component={<AdminRouteGuard component={<Users/>}/>}/>}/>
                             <Route path="/profile/achievement" element={<RouteGuard component={<AchievementPage/>}/>}/>
                         </Routes>
