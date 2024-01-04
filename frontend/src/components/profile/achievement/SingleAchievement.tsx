@@ -1,7 +1,8 @@
 import {Achievement, Medal} from "../../../model/Achievement.ts";
 import Avatar from "@mui/material/Avatar";
 import AchievementIcons from "../../../assets/images/achievementIcons";
-import {Card, Typography, CardContent, CardHeader} from "@mui/material";
+import {Card, Typography, CardContent, CardHeader, Box} from "@mui/material";
+import Sparkle from 'react-sparkle'
 
 export default function SingleAchievement(props: Achievement) {
     const achievedMedals = props.achievementTiers
@@ -21,41 +22,57 @@ export default function SingleAchievement(props: Achievement) {
         {medal: Medal.NONE};
 
     const nextTier =
-        props.achievementTiers.find((tier) => tier.medal === getNextMedal(highestAchievedMedal))
+        props.achievementTiers.find((tier) => tier.medal === getNextMedal(highestAchievedMedal));
 
     const isGreyedOut = currentTier.medal === Medal.NONE;
 
-    return (
-            <Card sx={{
-                display: 'flex',
-                width: "100%",
-                backgroundColor: theme => isGreyedOut ? theme.palette.primary.dark : theme.palette.primary.light,
-                opacity: isGreyedOut ? 0.5 : 1,
-            }}>
-                <CardHeader
-                    avatar={currentTier.medal !== Medal.NONE ? (
-                        <Avatar sx={{
-                            width: "100%",
-                        }} src={AchievementIcons[currentTier.medal]}/>) : ("")}
-                    alt={currentTier.medal !== Medal.NONE ? currentTier.medal : "No Medal"}
-                    sx={{flex: '100%', width: "100%", height: "6%"}}
-                />
-                <CardContent sx={{flex: '1 0 auto', width: "75%"}}>
-                    <Typography component="div" variant="h5">
-                        {props.name}
-                    </Typography>
-                    <Typography variant="subtitle1" component="div" color={"black"}>
-                        {props.description}
-                    </Typography>
-                    <Typography variant="subtitle1" component="div" color={"black"}>
-                        {nextTier ? ("Next tier: " + nextTier.medal + " requires: " + nextTier.description) : ("Congratulations, you completed this achievement!")}
-                    </Typography>
-                </CardContent>
-                <CardContent sx={{flex: '1 0 auto', width: "100%"}}>
-                    {props.dateAchieved}
-                </CardContent>
-            </Card>
-    );
+    const sparkleColor = medalSparkleColors[currentTier.medal];
+
+    return <Box>
+        <div style={{position: 'absolute'}}>
+
+        </div>
+        <Card sx={{
+            display: 'flex',
+            width: "100%",
+            backgroundColor: theme => isGreyedOut ? theme.palette.primary.dark : medalColors[currentTier.medal],
+            opacity: isGreyedOut ? 0.5 : 1
+        }}>
+            <CardHeader
+                avatar={currentTier.medal !== Medal.NONE ? (
+                    <Avatar sx={{
+                        width: "100%",
+                    }} src={AchievementIcons[currentTier.medal]}/>) : ("")}
+                alt={currentTier.medal !== Medal.NONE ? currentTier.medal : "No Medal"}
+                sx={{flex: '100%', width: "100%", height: "6%"}}
+            />
+
+            <CardContent sx={{flex: '1 0 auto', width: "75%", position: "relative"}}>
+                <Typography component="div" variant="h5">
+                    {props.name}
+                </Typography>
+                <Typography variant="subtitle1" component="div" color={"black"}>
+                    {props.description}
+                </Typography>
+                <Typography variant="subtitle1" component="div" color={"black"}>
+                    {nextTier ? ("Next tier: " + nextTier.medal + " requires: " + nextTier.description) : ("Congratulations, you completed this achievement!")}
+                </Typography>
+
+                {!isGreyedOut ? (
+                    <Sparkle
+                        color={sparkleColor}
+                        count={50}
+                        flicker={false}
+                        flickerSpeed={"slowest"}
+                        fadeOutSpeed={5}
+                    />
+                ) : ("")}
+            </CardContent>
+            <CardContent sx={{flex: '1 0 auto', width: "100%"}}>
+                {props.dateAchieved}
+            </CardContent>
+        </Card>
+    </Box>
 }
 
 const medalOrder: Record<Medal, number> = {
@@ -64,6 +81,20 @@ const medalOrder: Record<Medal, number> = {
     'SILVER': 2,
     'GOLD': 3,
 };
+
+const medalColors: Record<Medal, string> = {
+    'NONE': '',
+    'BRONZE': '#CD7F32',
+    'SILVER': '#C0C0C0',
+    'GOLD': '#FFD700',
+};
+
+const medalSparkleColors: Record<Medal, string> = {
+    'NONE': '',
+    'BRONZE': '#FFA07A',
+    'SILVER': '#D3D3D3',
+    'GOLD': '#FFEC8B'
+}
 
 function compareMedals(medal1: Medal, medal2: Medal): number {
     return medalOrder[medal1] - medalOrder[medal2];
@@ -81,3 +112,4 @@ function getNextMedal(currentMedal: Medal): Medal | null {
         return null;
     }
 }
+
