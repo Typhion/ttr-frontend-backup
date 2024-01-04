@@ -1,6 +1,6 @@
 import './App.css'
-import {CssBaseline, ThemeProvider} from "@mui/material";
 import {defaultTheme} from "./assets/themes/defaultTheme.ts";
+import {CssBaseline, ThemeProvider} from "@mui/material";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {BrowserRouter} from "react-router-dom";
 import {Route, Routes} from "react-router-dom";
@@ -11,8 +11,9 @@ import {AuthHeader} from "./components/AuthHeader.tsx";
 import SecurityContextProvider from "./context/SecurityContextProvider.tsx";
 import Home from "./components/home/Home.tsx";
 import Lobby from "./components/lobby/Lobby.tsx";
-import Friends from "./components/profile/Friends.tsx";
+import Friends from "./components/profile/friend/Friends.tsx";
 import LobbyList from "./components/lobby/LobbyList.tsx";
+import ProfilePage from "./components/profile/ProfilePage.tsx";
 import Profile from "./components/profile/Profile.tsx";
 import LeaderBoard from "./components/leaderboard/LeaderBoard.tsx";
 import Users from "./components/admin/Users.tsx";
@@ -37,8 +38,8 @@ function App() {
                             <Route path="/lobby" element={<RouteGuard component={<LobbyList/>}/>}/>
                             <Route path="/game/:uuid" element={<RouteGuard component={<Game/>}/>}/>
                             <Route path="/profile/friends" element={<RouteGuard component={<Friends/>}/>}/>
-                            <Route path="/profile/:uuid" element={<RouteGuard component={<Profile/>}/>}/>
-                            <Route path="/profile" element={<RouteGuard component={<Profile/>}/>}/>
+                            <Route path="/profile/:uuid" element={<RouteGuard component={<ProfilePage/>}/>}/>
+                            <Route path="/profile" element={<RouteGuard component={<ProfilePage/>}/>}/>
                             <Route path="/leaderboard" element={<RouteGuard component={<LeaderBoard/>}/>}/>
                             <Route path="/admin/users" element={<RouteGuard component={<AdminRouteGuard component={<Users/>}/>}/>}/>
                             <Route path="/profile/achievement" element={<RouteGuard component={<AchievementPage/>}/>}/>

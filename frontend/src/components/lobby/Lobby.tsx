@@ -75,6 +75,9 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
         await refetch();
     }
 
+    const hostUserId: string = lobbyState?.lobbyUsersDto?.find(lud => lud.isHost)?.id ?? 'defaultUserId';
+    const loggedInLobbyUser = lobbyState.lobbyUsersDto.find(lud => lud.applicationUserDto.id === loggedInUserId)
+
     return (
         <Box>
             {lobbyState.lobbyUsersDto.some(
@@ -147,36 +150,35 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                             <Grid item xs={3} sx={{display: 'flex', alignItems: 'center'}}>
                                 {player.applicationUserDto.username}
                             </Grid>
-                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
+
+                                <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
                                 {player.ready ? (
                                     <DoneIcon sx={{marginLeft: '20px', color: 'green'}}/>
                                 ) : (
                                     <ClearIcon sx={{marginLeft: '20px', color: 'red'}}/>
                                 )}
                             </Grid>
-                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
-                                {player.applicationUserDto.id !== loggedInUserId &&
-                                    !player.isHost && (
-                                        <Box>
-                                            <PersonRemoveIcon
-                                                onClick={() => handleKickLobbyUser(lobbyId, player.id)}
-                                                style={{cursor: 'pointer'}}
-                                            />
-                                        </Box>
+                            <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                                {(hostUserId === loggedInLobbyUser?.id && !player.isHost) && (
+                                    <Box>
+                                        <PersonRemoveIcon
+                                            onClick={() => handleKickLobbyUser(lobbyId, player.id)}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                    </Box>
+                                )}
+                            </Grid>
+                            <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                                {(hostUserId === loggedInLobbyUser?.id && !player.isHost) && (
+                                    <Box>
+                                        <BlockIcon
+                                            onClick={() => handleBanLobbyUser(lobbyId, player.id)}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                    </Box>
+                                )}
+                            </Grid>
 
-                                    )}
-                            </Grid>
-                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
-                                {player.applicationUserDto.id !== loggedInUserId &&
-                                    !player.isHost && (
-                                        <Box>
-                                            <BlockIcon
-                                                onClick={() => handleBanLobbyUser(lobbyId, player.id)}
-                                                style={{cursor: 'pointer'}}
-                                            />
-                                        </Box>
-                                    )}
-                            </Grid>
                         </Grid>
                     ))}
                 </Box>

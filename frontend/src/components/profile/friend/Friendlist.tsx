@@ -1,12 +1,12 @@
 import {Alert, Box, IconButton, List, ListItem, ListItemText, Typography} from "@mui/material";
-import {useFriendlist} from "../../hooks/friendHooks/useFriendlist.ts";
-import Loader from "../general/Loader.tsx";
+import {useFriendlist} from "../../../hooks/friendHooks/useFriendlist.ts";
+import Loader from "../../general/Loader.tsx";
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
-import {useRemoveFriend} from "../../hooks/friendHooks/useRemoveFriend.ts";
-import {useFriendRequestList} from "../../hooks/friendHooks/useFriendRequestList.ts";
-import {useAcceptFriend} from "../../hooks/friendHooks/useAcceptFriend.ts";
-import {useDenyFriend} from "../../hooks/friendHooks/useDenyFriend.ts";
+import {useRemoveFriend} from "../../../hooks/friendHooks/useRemoveFriend.ts";
+import {useFriendRequestList} from "../../../hooks/friendHooks/useFriendRequestList.ts";
+import {useAcceptFriend} from "../../../hooks/friendHooks/useAcceptFriend.ts";
+import {useDenyFriend} from "../../../hooks/friendHooks/useDenyFriend.ts";
 
 export default function Friendlist() {
     const {isLoading: isLoading, isError: isError, data: friendlist, refetch} = useFriendlist();
@@ -45,7 +45,7 @@ export default function Friendlist() {
 
     return (
         <Box sx={{
-            mt: 3,
+            mt: 3
         }}>
             <Box sx={{mt: 3}}>
                 <Typography variant="h6">Your friend requests</Typography>

@@ -6,6 +6,7 @@ import {Box, Grid, TextField} from "@mui/material";
 import {useNavigate, useParams} from "react-router-dom";
 import {useJoinLobby} from "../../hooks/lobbyHooks/useJoinLobby.ts";
 import {useQuickPlay} from "../../hooks/lobbyHooks/useQuickPlay.ts";
+import otherImage from "../../assets/title-ticket-to-ride.png"
 
 export default function Home() {
     const {isAuthenticated} = useContext(SecurityContext);
@@ -41,15 +42,22 @@ export default function Home() {
 
     if (isAuthenticated()) {
         return (
-            <Grid container style={{justifyContent: 'center', alignItems: 'center'}} spacing={2}>
-                <Grid item>
-                    <Button
-                        variant="contained"
-                        sx={{height: '100%', marginBottom: '10%'}}
-                        onClick={handleGetLobbiesClick}
-                    >
-                        Lobbies
-                    </Button>
+            <Grid container style={{justifyContent: 'center', alignItems: 'center' }} spacing={2}>
+                <Grid  item style={{
+                   alignSelf: "center"
+                }}>
+                    <img
+                        style={{
+                            margin: "auto",
+                            width: "50%",
+                            justifyContent: "center",
+                            alignSelf: "center",
+                            display: "flex"
+                        }}
+                        alt="homepage"
+                        src={otherImage}
+
+                    />
                 </Grid>
                 <Grid container style={{justifyContent: 'center'}}>
                     <Grid item>
@@ -87,6 +95,15 @@ export default function Home() {
                         onClick={handleCreateLobbyClick}
                     >
                         Create Lobby
+                    </Button>
+                </Grid>
+                <Grid item>
+                    <Button
+                        variant="contained"
+                        sx={{height: '100%', marginBottom: '10%'}}
+                        onClick={handleGetLobbiesClick}
+                    >
+                        Lobbies
                     </Button>
                 </Grid>
             </Grid>

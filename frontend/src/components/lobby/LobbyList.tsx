@@ -1,121 +1,104 @@
-import {useNavigate} from "react-router-dom";
 import SecurityContext from "../../context/SecurityContext.ts";
-import {useContext, useState} from "react";
-import {useJoinLobby} from "../../hooks/lobbyHooks/useJoinLobby.ts";
+import React, {useContext, useState} from "react";
 import {usePublicLobbies} from "../../hooks/lobbyHooks/usePublicLobbies.ts";
-import {Box, Grid, Switch} from "@mui/material";
+import {Box, Grid, Paper, ToggleButton, ToggleButtonGroup} from "@mui/material";
 import Button from "@mui/material/Button";
-import PublicIcon from '@mui/icons-material/Public';
-import LockIcon from '@mui/icons-material/Lock';
 import {useStartedLobbies} from "../../hooks/lobbyHooks/useStartedLobbies.ts";
-import {LobbyState} from "../../model/LobbyState.ts";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import LobbyListItem from "./lobbyListItem.tsx";
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 export default function LobbyList() {
-    const {isAuthenticated, loggedInUserId} = useContext(SecurityContext);
-    const navigate = useNavigate();
+    const { isAuthenticated } = useContext(SecurityContext);
     const [viewPublicLobbies, setViewPublicLobbies] = useState(true);
     const publicLobbies = usePublicLobbies();
     const startedLobbies = useStartedLobbies();
 
-    const joinLobby = useJoinLobby((uuid) => {
-        navigate(`/lobby/${uuid}`);
-    });
-
-    const handleJoinLobbyClick = (lobby: LobbyState) => {
-        if (lobby.code) {
-            joinLobby.mutate(lobby.code);
-        } else {
-            const uuid = lobby.gameId
-            if (uuid) {
-                navigate(`/game/${uuid}`);
-            }
+    const handleToggleView = (_: React.MouseEvent<HTMLElement>, newValue: boolean) => {
+        if (newValue != null) {
+            setViewPublicLobbies(newValue);
         }
-    };
-
-    const handleToggleView = () => {
-        setViewPublicLobbies((prev) => !prev);
     };
 
     if (isAuthenticated()) {
         const currentLobbies = viewPublicLobbies ? publicLobbies : startedLobbies;
         return (
-            <Grid container style={{justifyContent: 'center', alignItems: 'center'}} spacing={2}>
-                <Grid item>
-                    <Button
-                        variant="contained"
-                        sx={{height: '100%', marginBottom: '10%', marginLeft: '1vw'}}
-                        onClick={() => currentLobbies.refetch()}
-                    >
-                        Refresh
-                    </Button>
-                    <Switch
-                        checked={viewPublicLobbies}
-                        onChange={handleToggleView}
-                        color="primary"
-                        onClick={() => currentLobbies.refetch()}
-                    />
-                    {viewPublicLobbies ? <label>Open Lobbies</label> : <label>Started Lobbies</label>}
-                </Grid>
-                <Grid container style={{justifyContent: 'center'}}>
-                    <Box sx={{
-                        border: '1px solid black',
-                        marginBottom: '10px',
-                        padding: '10px',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        minWidth: '60vw',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
+            <Box>
+                <Grid container sx={{
+                    width: "80%",
+                    margin: "auto",
+                    justifyContent: 'center',
+                }}>
+                    <Grid item xs={1} sx={{
+                        justifyContent: "left",
+                        display: "flex"
                     }}>
-                        <strong>Lobby</strong> <strong>Host</strong> <strong>Access</strong>
-                        <strong>Code</strong> <strong>Join</strong>
-                    </Box>
-                    {currentLobbies.data && currentLobbies.data?.map((lobby, index) => (
-                        <Box key={lobby.code || index}>
-                            <Box sx={{
-                                border: '1px solid black',
-                                marginBottom: '10px',
-                                padding: '10px',
-                                display: 'flex',
-                                flexDirection: 'row',
-                                minWidth: '60vw',
-                                justifyContent: 'space-between',
-                                alignItems: 'center'
-                            }}>
-                                <Box>
-                                    {lobby.lobbyUsersDto.length}/{lobby.maxSize}
-                                </Box>
-                                <Box>
-                                    {lobby.lobbyUsersDto.map((user) => (
-                                        user.isHost && (
-                                            <Box key={user.applicationUserDto.username}>
-                                                {user.applicationUserDto.username}
-                                            </Box>
-                                        )
-                                    ))}
-                                </Box>
-                                <Box>
-                                    {lobby.isPublic ? <PublicIcon/> : <LockIcon/>}
-                                </Box>
-                                <Box>
-                                    {lobby.code}
-                                </Box>
-                                <Button
-                                    variant="contained"
-                                    onClick={() => handleJoinLobbyClick(lobby)}
-                                    disabled={lobby.lobbyUsersDto.length >= lobby.maxSize || lobby.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId)}
-                                    style={{
-                                        width: '120px',
-                                        backgroundColor: lobby.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId) ? 'rgba(255, 0, 0, 0.5)' : ''
-                                    }}
-                                >
-                                    {lobby.code ? (lobby.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId) ? 'BANNED' : 'Join Lobby') : 'Join Game'}
-                                </Button>
-                            </Box>
-                        </Box>
-                    ))}
+                        <Button
+                            variant="contained"
+                            sx={{ marginTop: '2%', marginBottom: '1%' }}
+                            onClick={() => currentLobbies.refetch()}
+                        >
+                            <RefreshIcon />
+                        </Button>
+                    </Grid>
+                    <Grid item xs={10} sx={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        display: "flex"
+                    }}>
+                        <ToggleButtonGroup
+                            value={viewPublicLobbies}
+                            exclusive
+                            color="success"
+                            onChange={handleToggleView}
+                            aria-label="view-type"
+                        >
+                            <ToggleButton
+                                value={true}
+                                aria-label="open-lobbies"
+                            >
+                                Open Lobbies
+                            </ToggleButton>
+                            <ToggleButton
+                                value={false}
+                                aria-label="started-lobbies"
+                            >
+                                Started Lobbies
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+                    </Grid>
+                    <Grid item xs={1}></Grid>
                 </Grid>
-            </Grid>
+                <TableContainer component={Paper} sx={{
+                    width: "80%",
+                    margin: "auto",
+                    justifyContent: 'center',
+                }}>
+                    <Table aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align="right">Max Size</TableCell>
+                                <TableCell align="right">Host</TableCell>
+                                <TableCell align="right">Access</TableCell>
+                                <TableCell align="right">Code</TableCell>
+                                <TableCell align="right">Join</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <>
+                                {currentLobbies.data && currentLobbies.data?.map((row, index) => (
+                                    <LobbyListItem key={index} props={row} />
+                                ))}
+                            </>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Box>
         );
     } else {
         return <Box>Please log in to view the rest of this page</Box>;
