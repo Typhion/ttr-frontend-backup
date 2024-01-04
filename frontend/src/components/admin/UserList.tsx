@@ -10,13 +10,26 @@ import {
 } from "@mui/material";
 import {useGetUserList} from "../../hooks/userHooks/useGetUserList.ts";
 import Loader from "../general/Loader.tsx";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import SearchIcon from '@mui/icons-material/Search';
+import {useBanUser} from "../../hooks/userHooks/useBanUser.ts";
+import BlockIcon from '@mui/icons-material/Block';
+import {useUnbanUser} from "../../hooks/userHooks/useUnbanUser.ts";
+import RestoreIcon from '@mui/icons-material/Restore';
+import Button from "@mui/material/Button";
+import SecurityContext from "../../context/SecurityContext.ts";
 
 export default function UserList() {
+    const {loggedInUserId} = useContext(SecurityContext);
     const [page, setPage] = useState({pageNumber: 0, size: 5, nameFilter: ""});
     const [nameFilter, setNameFilter] = useState("");
-    const {isLoading: isLoading, isError: isError, data: userPage} = useGetUserList(page);
+    const {isLoading: isLoading, isError: isError, data: userPage, refetch} = useGetUserList(page);
+    const banUser = useBanUser(() => {
+        refetch();
+    });
+    const unbanUser = useUnbanUser(() => {
+        refetch();
+    });
 
     if (isLoading) return <Loader>Loading User List...</Loader>;
 
@@ -48,6 +61,14 @@ export default function UserList() {
         }
     };
 
+    const handleBanUser = (userId: string) => {
+        banUser.mutate(userId);
+    }
+
+    const handleUnbanUser = (userId: string) => {
+        unbanUser.mutate(userId);
+    }
+
     return (
         <Box sx={{width: '60%'}}>
             {!userPage ? (
@@ -62,6 +83,7 @@ export default function UserList() {
                                     <TableCell>ID</TableCell>
                                     <TableCell align="right">Username</TableCell>
                                     <TableCell align="right">Email</TableCell>
+                                    <TableCell align="right">Ban</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -75,6 +97,11 @@ export default function UserList() {
                                         </TableCell>
                                         <TableCell align="right">{user.username}</TableCell>
                                         <TableCell align="right">{user.email}</TableCell>
+                                        {user.id === loggedInUserId ? (<TableCell align="right"></TableCell>) :
+                                        <TableCell align="right">{user.isBanned ? (<Button color="success" variant="contained" onClick={() => handleUnbanUser(user.id)} startIcon={<RestoreIcon/>}>Unban</Button>)
+                                            : (<Button color="error" variant="contained" onClick={() => handleBanUser(user.id)} startIcon={<BlockIcon/>}>Ban</Button>)}
+                                        </TableCell>
+                                        }
                                     </TableRow>
                                 ))}
                                 {Array.apply(null, Array(page.size - userPage.applicationUsers.length)).map((_, index) => (
@@ -85,6 +112,7 @@ export default function UserList() {
                                         <TableCell component="th" scope="row">
                                             -
                                         </TableCell>
+                                        <TableCell align="right">-</TableCell>
                                         <TableCell align="right">-</TableCell>
                                         <TableCell align="right">-</TableCell>
                                     </TableRow>

@@ -5,7 +5,8 @@ export function useGetUserList(page: Page) {
     const {
         isLoading,
         isError,
-        data: userPage
+        data: userPage,
+        refetch
     } = useQuery({
         queryKey: ['userList', page],
         queryFn: () => getUserList(page),
@@ -14,6 +15,7 @@ export function useGetUserList(page: Page) {
     return {
         isLoading,
         isError,
-        data: userPage
+        data: userPage,
+        refetch
     };
 }

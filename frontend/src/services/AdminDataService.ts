@@ -12,3 +12,11 @@ export const getUserList = async (page: Page): Promise<ApplicationUserPageDto> =
     const result = await axios.get(`${mantleUrl}/applicationUser/admin/users?page=${page.pageNumber}&size=${page.size}&nameFilter=${page.nameFilter}`);
     return result.data;
 }
+
+export const banUser = async (userId: string) => {
+    await axios.post(`${mantleUrl}/applicationUser/admin/ban/${userId}`);
+}
+
+export const unbanUser = async (userId: string) => {
+    await axios.post(`${mantleUrl}/applicationUser/admin/unban/${userId}`);
+}
