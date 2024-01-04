@@ -10,12 +10,13 @@ import PlayerWagonCards from "./board/PlayerWagonCards.tsx";
 import PlayerIcon from "./board/PlayerIcon.tsx";
 import PlayerInformation from "./board/PlayerInformation";
 import {usePickRandomWagonCard} from "../../hooks/gameHooks/usePickRandomWagonCard.ts";
-import {useContext, useEffect, useState} from "react";
+import {ChangeEvent, useContext, useEffect, useState} from "react";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RouteCardsPile from "./board/RouteCardsPile";
 import PlayerRouteCards from "./board/PlayerRouteCards.tsx";
 import SecurityContext from "../../context/SecurityContext.ts";
 import Button from "@mui/material/Button";
+import EndGameDialog from "./endGame/EndGameDialog.tsx";
 
 function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defaultPlayerId: string, boardId: string }) {
     const navigate = useNavigate();
@@ -26,6 +27,7 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
     const {data: game} = useGame(gameId);
 
     const isPlayersTurn = gameState && game && game.players[gameState.playerTurnIndex] === playerId;
+    const [openDialog, setOpenDialog] = useState(false);
 
     useEffect(() => {
         if (gameState && game) {
@@ -36,6 +38,13 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
             })
         }
     }, [gameState]);
+
+    useEffect(() => {
+        if (gameState && gameState.gameIsDone) {
+            setOpenDialog(true);
+        }
+    }, [gameState?.gameIsDone]);
+
 
     useEffect(() => {
         if (isPlayersTurn !== undefined && isPlayersTurn) {
@@ -64,6 +73,13 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
     const handleGoBack = () => {
         navigate(`/`);
     };
+
+    const handleDialogClose = (_: ChangeEvent, reason: string) => {
+        if (reason !== 'backdropClick') {
+            setOpenDialog(false);
+        }
+    };
+
 
     return (
         <Grid container>
@@ -95,6 +111,9 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
                                   gameId={gameId} myTurn={isPlayersTurn}/>
             </Grid>
             <Grid item xs={8}>
+                {gameState.gameIsDone && (
+                    <EndGameDialog open={openDialog} onClose={() => handleDialogClose} gameId={gameId}/>
+                )}
                 <Board
                     boardUuid={boardId}
                     playerUuid={playerId}
