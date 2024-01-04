@@ -14,7 +14,7 @@ import Lobby from "./components/lobby/Lobby.tsx";
 import Friends from "./components/profile/friend/Friends.tsx";
 import LobbyList from "./components/lobby/LobbyList.tsx";
 import ProfilePage from "./components/profile/ProfilePage.tsx";
-import Profile from "./components/profile/Profile.tsx";
+import LobbyDisbanded from "./components/lobby/LobbyDisbanded.tsx";
 import LeaderBoard from "./components/leaderboard/LeaderBoard.tsx";
 import Users from "./components/admin/Users.tsx";
 import AdminRouteGuard from "./components/AdminRouteGuard.tsx";
@@ -36,6 +36,7 @@ function App() {
                             <Route path="/:lobbyCode?" element={<RouteGuard component={<Home />} />} />
                             <Route path="/lobby/:uuid" element={<RouteGuard component={<Lobby/>}/>}/>
                             <Route path="/lobby" element={<RouteGuard component={<LobbyList/>}/>}/>
+                            <Route path="/lobby/disbanded" element={<RouteGuard component={<LobbyDisbanded/>}/>}/>
                             <Route path="/game/:uuid" element={<RouteGuard component={<Game/>}/>}/>
                             <Route path="/profile/friends" element={<RouteGuard component={<Friends/>}/>}/>
                             <Route path="/profile/:uuid" element={<RouteGuard component={<ProfilePage/>}/>}/>

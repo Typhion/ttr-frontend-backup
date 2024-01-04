@@ -8,6 +8,7 @@ export type LobbyState = {
     gameInitDto: GameInitDto;
     isOpen: boolean;
     gameId: string;
+    disbanded: boolean;
 }
 
 export type LobbyUserDto = {
