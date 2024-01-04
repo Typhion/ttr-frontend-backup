@@ -12,6 +12,7 @@ export type GameState = {
     cities: City[];
     connectionTiles: ConnectionTile[];
     connections: Connection[];
+    gameIsDone: boolean;
 }
 
 
