@@ -63,6 +63,11 @@ export type InviteMail = {
     email: string;
 }
 
+export type InviteUsername = {
+    lobbyId: string;
+    username: string;
+}
+
 export type InviteFriends = {
     lobbyId: string;
     friendIds: string[];
