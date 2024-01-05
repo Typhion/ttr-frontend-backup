@@ -1,67 +1,73 @@
-import { Box, Card, CardContent, Typography, Divider } from "@mui/material";
+import {Box, CardContent, Typography, Paper, Card} from "@mui/material";
+import {useGetMatchHistory} from "../../../hooks/userHooks/useGetMatchHistory.ts";
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
+import TableBody from "@mui/material/TableBody";
+import TableHead from "@mui/material/TableHead";
+import Table from "@mui/material/Table";
+import Ticket from "../../../assets/images/tickets/ticket.png";
 
-type Match = {
-    result: string;
-    date: string;
-    opponents: string[];
-    gameType: "Normal" | "Custom";
-    outcome: "Win" | "Loss" | "Draw";
-};
-
-type MatchHistoryProps = {
-    matchData: Match[];
-};
-
-
-//TODO: change this to be modern react syntax
-const MatchHistory: React.FC<MatchHistoryProps> = ({ matchData }) => {
+export default function MatchHistory() {
+    const matchHistory = useGetMatchHistory();
     return (
         <Box>
-            <Card sx={{ border: '1px solid black', borderRadius: '5px' }}>
+            <Paper elevation={3} sx={{ m: 2, border: '1px solid black', borderRadius: '5px', overflowX: "auto", bgcolor: 'primary.light' }}>
                 <CardContent>
-                    <Typography variant="h5">Match History</Typography>
-                    <Divider sx={{ my: 2 }} />
+                    <Typography variant="h5" gutterBottom>
+                        Match History
+                    </Typography>
 
-                    {matchData.map((match, index) => (
-                        <Box key={index}>
-                            <Typography variant="body1">
-                                <strong>Match {index + 1}:</strong> {match.result}
-                            </Typography>
-                            <Typography variant="body2">
-                                Date: {match.date}
-                            </Typography>
-                            <Typography variant="body2">
-                                {match.opponents.length > 1 ? "Opponents:" : "Opponent:"} {match.opponents.join(", ")}
-                            </Typography>
-                            <Typography variant="body2">Game Type: {match.gameType}</Typography>
-                            <Typography variant="body2">Outcome: {match.outcome}</Typography>
-                            <Divider sx={{ my: 1 }} />
-                        </Box>
-                    ))}
+                    {matchHistory.data ? matchHistory.data.map((match, index) => (
+                        <Card key={index} sx={{
+                            mb: 2,
+                            p: 2,
+                            borderRadius: '5px',
+                            bgcolor: match.gameWon ? 'secondary.main' : 'rgba(255, 182, 193, 0.3)', // light red for defeat
+                            position: 'relative'
+                        }}>
+                            <Box sx={{ position: 'absolute', top: 16, right: 16, display: 'flex', alignItems: 'center' }}>
+                                <Typography variant="h6">
+                                    {((match.score + (match.gameWon ? (match.opponents.length + 1) * 10 : 0)) > 0) ? '+ ' + (match.score + (match.gameWon ? (match.opponents.length + 1) * 10 : 0)) : '+ 0' }
+                                </Typography>
+                                <img src={Ticket} alt="ticket" width="40" height="40" style={{ marginLeft: '5px' }}/>
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', ml: 2 }}>
+                                <Typography variant="subtitle1" sx={{ color: match.gameWon ? 'green' : 'red', display: 'inline' }}>
+                                    <strong>{match.gameWon ? "Victory" : "Defeat"}</strong>
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: 'grey', display: 'inline', ml: 1 }}>
+                                    ({new Date(match.date).toLocaleDateString('en-GB')})
+                                </Typography>
+                            </Box>
+                            <Table size="small" sx={{ mt: 1, maxWidth: 'fit-content' }}>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Player</TableCell>
+                                        <TableCell>Score</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {[...match.opponents, { applicationUser: { username: "You", isGameWinner: match.gameWon }, score: match.score }]
+                                        .sort((a, b) => b.score - a.score)
+                                        .map((player, playerIndex) => (
+                                            <TableRow key={playerIndex}>
+                                                <TableCell sx={{ color: player.applicationUser.isGameWinner ? 'green' : 'inherit' }}>
+                                                    <strong>{player.applicationUser.username === "You" ? "You" : player.applicationUser.username}</strong>
+                                                </TableCell>
+                                                <TableCell>{player.score} points</TableCell>
+                                            </TableRow>
+                                        ))}
+                                </TableBody>
+                            </Table>
+                        </Card>
+                    )) : (
+                        <Typography variant="body1">
+                            You haven't played any matches yet.
+                        </Typography>
+                    )}
                 </CardContent>
-            </Card>
+            </Paper>
         </Box>
     );
 };
 
-// Hardcoded match data
-const hardcodedMatchData: Match[] = [
-    {
-        result: "Victory",
-        date: "2023-01-01",
-        opponents: ["Player A", "Player B"],
-        gameType: "Normal",
-        outcome: "Win",
-    },
-    {
-        result: "Defeat",
-        date: "2023-01-05",
-        opponents: ["Player C", "Player D", "Player E"],
-        gameType: "Custom",
-        outcome: "Loss",
-    },
-];
-
-export default function Stats() {
-    return <MatchHistory matchData={hardcodedMatchData} />;
-}

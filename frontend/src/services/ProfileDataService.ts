@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Avatar, Profile} from "../model/Profile.ts";
+import {Avatar, MatchHistory, Profile} from "../model/Profile.ts";
 import {Achievement} from "../model/Achievement.ts";
 const mantleUrl = import.meta.env.VITE_MANTLE_URL
 
@@ -38,5 +38,10 @@ export const changeUsername = async (newUsername: string): Promise<void> => {
 
 export const checkIfUsernameExists = async (username: string): Promise<boolean> => {
     const result = await axios.get(`${mantleUrl}/applicationUser/exists/${username}`);
+    return result.data;
+}
+
+export const getMatchHistory = async (): Promise<MatchHistory[]> => {
+    const result = await axios.get(`${mantleUrl}/applicationUser/matchHistory`);
     return result.data;
 }
