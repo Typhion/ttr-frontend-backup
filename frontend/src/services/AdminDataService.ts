@@ -14,9 +14,9 @@ export const getUserList = async (page: Page): Promise<ApplicationUserPageDto> =
 }
 
 export const banUser = async (userId: string) => {
-    await axios.post(`${mantleUrl}/applicationUser/admin/ban/${userId}`);
+    await axios.patch(`${mantleUrl}/applicationUser/admin/ban/${userId}`);
 }
 
 export const unbanUser = async (userId: string) => {
-    await axios.post(`${mantleUrl}/applicationUser/admin/unban/${userId}`);
+    await axios.patch(`${mantleUrl}/applicationUser/admin/unban/${userId}`);
 }
