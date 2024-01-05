@@ -6,11 +6,14 @@ import { getAvatarImage } from "../../model/Profile.ts";
 import PersonIcon from "@mui/icons-material/Person";
 import { useGetUnlockedAvatars } from "../../hooks/userHooks/useGetUnlockedAvatars.ts";
 import { useChangeAvatar } from "../../hooks/userHooks/useChangeAvatar.ts";
+import EditProfileDialog from "./EditProfileDialog.tsx";
+import {useState} from "react";
 
 const Profile = () => {
     const { uuid } = useParams<{ uuid: string }>();
     const { isLoading, isError, data: profile, refetch } = useProfile(uuid);
     const { isLoading: isLoadingAvatars, isError: isErrorAvatars, data: unlockedAvatars } = useGetUnlockedAvatars();
+    const [isEditProfileDialogOpen, setEditProfileDialogOpen] = useState(false);
     const changeAvatar = useChangeAvatar(() => {
         refetch();
     });
@@ -20,6 +23,9 @@ const Profile = () => {
     if (isError || isErrorAvatars) {
         return <Alert severity="error">Unable to load profile.</Alert>;
     }
+
+    const handleEditProfileDialogOpen = () => setEditProfileDialogOpen(true);
+    const handleEditProfileDialogClose = () => setEditProfileDialogOpen(false);
 
     const handleAvatarChange = (avatarId: string) => {
         changeAvatar.mutate(avatarId);
@@ -43,9 +49,14 @@ const Profile = () => {
                             )}
                         </Avatar>
                         <Typography variant="h4" sx={{ mb: 1 }}>{profile?.username}</Typography>
-                        <Button variant="outlined" onClick={() => console.log("Edit Profile")}>Edit Profile</Button>
+                        <Button variant="outlined" onClick={handleEditProfileDialogOpen}>Edit Profile</Button>
                     </CardContent>
                 </Card>
+                {profile != null && (<EditProfileDialog
+                    isOpen={isEditProfileDialogOpen}
+                    onClose={handleEditProfileDialogClose}
+                    oldUsername={profile.username}
+                    refetch={refetch}/>)}
             </Box>
 
             <Grid item xs={12} marginTop={2}>

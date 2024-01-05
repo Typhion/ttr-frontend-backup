@@ -31,3 +31,12 @@ export const getPlayerAvatar = async (playerId: string): Promise<Avatar> => {
     const result = await axios.get(`${mantleUrl}/applicationUser/profile/${playerId}/avatar`);
     return result.data;
 }
+
+export const changeUsername = async (newUsername: string): Promise<void> => {
+    await axios.patch(`${mantleUrl}/applicationUser/profile/edit/username/${newUsername}`);
+}
+
+export const checkIfUsernameExists = async (username: string): Promise<boolean> => {
+    const result = await axios.get(`${mantleUrl}/applicationUser/exists/${username}`);
+    return result.data;
+}
