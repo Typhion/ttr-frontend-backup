@@ -8,6 +8,7 @@ import AvatarYellow from "../assets/images/avatars/yellowpfp.png";
 interface AvatarImages {
     [key: string]: string;
 }
+
 const avatarImages: AvatarImages = {
     bluepfp: AvatarBlue,
     greenpfp: AvatarGreen,
@@ -33,6 +34,29 @@ export type Avatar = {
     id: string;
     name: string;
     image: string;
+}
+
+export type MatchHistory = {
+    id: string;
+    applicationUser: EndGamePlayerDto;
+    gameWon: boolean;
+    score: number;
+    date: string;
+    opponents: EndGameOpponentDto[];
+
+}
+
+export type EndGamePlayerDto = {
+    username: string;
+    score: number;
+    isGameWinner: boolean;
+}
+
+export type EndGameOpponentDto = {
+    id: string;
+    applicationUser: EndGamePlayerDto;
+    score: number;
+    isGameWinner: boolean;
 }
 
 export function getAvatarImage(imageId: string | undefined): string | null {
