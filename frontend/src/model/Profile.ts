@@ -22,6 +22,7 @@ export type Profile = {
     username: string;
     stats: ProfileStats;
     avatar: Avatar;
+    lobbyBanner: LobbyBanner;
 }
 
 export type ProfileStats = {
@@ -34,6 +35,12 @@ export type Avatar = {
     id: string;
     name: string;
     image: string;
+}
+
+export type LobbyBanner = {
+    id: string;
+    name: string;
+    styling: string;
 }
 
 export type MatchHistory = {

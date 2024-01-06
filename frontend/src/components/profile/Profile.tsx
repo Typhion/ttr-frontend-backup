@@ -11,6 +11,8 @@ import {useAddFriend} from "../../hooks/friendHooks/useAddFriend.ts";
 import {useFriendlist} from "../../hooks/friendHooks/useFriendlist.ts";
 import {useFriendRequestList} from "../../hooks/friendHooks/useFriendRequestList.ts";
 import {useAcceptFriend} from "../../hooks/friendHooks/useAcceptFriend.ts";
+import {useGetUnlockedLobbyBanners} from "../../hooks/userHooks/useGetUnlockedLobbyBanners.ts";
+import {useChangeLobbyBanner} from "../../hooks/userHooks/useChangeLobbyBanner.ts";
 
 interface ProfileProps {
     uuid: string | undefined;
@@ -19,15 +21,24 @@ interface ProfileProps {
 const Profile = ({uuid}: ProfileProps) => {
     const {isLoading, isError, data: profile, refetch} = useProfile(uuid);
     const {isLoading: isLoadingAvatars, isError: isErrorAvatars, data: unlockedAvatars} = useGetUnlockedAvatars();
+    const {
+        isLoading: isLoadingLobbyBanners,
+        isError: isErrorLobbyBanners,
+        data: unlockedBanners,
+    } = useGetUnlockedLobbyBanners();
     const [isEditProfileDialogOpen, setEditProfileDialogOpen] = useState(false);
     const changeAvatar = useChangeAvatar(() => {
+        refetch();
+    });
+    const changeBanner = useChangeLobbyBanner(() => {
         refetch();
     });
     const addFriend = useAddFriend(
         () => {
             refetch();
         },
-        () => {}
+        () => {
+        }
     );
     const acceptFriend = useAcceptFriend(() => {
             refetch();
@@ -36,11 +47,17 @@ const Profile = ({uuid}: ProfileProps) => {
         }
     );
     const {isLoading: isFlLoading, isError: isFlError, data: friendlist, refetch: flrefetch} = useFriendlist();
-    const {isLoading: isReqLoading, isError: isReqError, data: friendReqList, refetch: reqRefetch} = useFriendRequestList();
+    const {
+        isLoading: isReqLoading,
+        isError: isReqError,
+        data: friendReqList,
+        refetch: reqRefetch
+    } = useFriendRequestList();
 
-    if (isLoading || isLoadingAvatars || isFlLoading || isReqLoading) return <Loader>Loading profile...</Loader>;
+    if (isLoading || isLoadingAvatars || isLoadingLobbyBanners || isFlLoading || isReqLoading) return <Loader>Loading
+        profile...</Loader>;
 
-    if (isError || isErrorAvatars || isFlError || isReqError) {
+    if (isError || isErrorAvatars || isErrorLobbyBanners || isFlError || isReqError) {
         return <Alert severity="error">Unable to load profile.</Alert>;
     }
 
@@ -50,6 +67,9 @@ const Profile = ({uuid}: ProfileProps) => {
     const handleAvatarChange = (avatarId: string) => {
         changeAvatar.mutate(avatarId);
     };
+    const handleBannerChange = (bannerId: string) => {
+        changeBanner.mutate(bannerId);
+    }
     const handleAddFriend = () => {
         if (profile?.username) {
             addFriend.mutate(profile.username);
@@ -105,7 +125,15 @@ const Profile = ({uuid}: ProfileProps) => {
                                 <PersonIcon sx={{fontSize: '200%'}}/>
                             )}
                         </Avatar>
-                        <Typography variant="h4" sx={{ mb: 1 }}>{profile?.username}</Typography>
+                        <Typography
+                            variant="h4"
+                            sx={{
+                                mb: 1,
+                                ...(profile?.lobbyBanner?.styling ? JSON.parse(profile.lobbyBanner.styling) : {})
+                            }}
+                        >
+                            {profile?.username}
+                        </Typography>
                         {uuid === undefined ? (
                             <Button variant="outlined" onClick={handleEditProfileDialogOpen}>Edit Profile</Button>
                         ) : (
@@ -124,30 +152,59 @@ const Profile = ({uuid}: ProfileProps) => {
             </Box>
 
             {uuid === undefined && (
-                <Grid item xs={12} marginTop={2}>
-                    <Card sx={{border: '1px solid black', borderRadius: '5px'}}>
-                        <CardContent>
-                            <Typography variant="h5">Unlocked Avatars</Typography>
-                            <Grid container spacing={2}>
-                                {unlockedAvatars && unlockedAvatars.map((avatar, index) => (
-                                    <Grid item key={index}>
-                                        <Avatar
-                                            sx={{width: 75, height: 75, cursor: 'pointer'}}
-                                            onClick={() => handleAvatarChange(avatar.id)}
-                                        >
-                                            {getAvatarImage(avatar.image) ? (
-                                                <Avatar src={getAvatarImage(avatar.image)!} alt="Profile"
-                                                        sx={{width: '100%', height: '100%'}}/>
-                                            ) : (
-                                                <PersonIcon sx={{fontSize: '200%'}}/>
-                                            )}
-                                        </Avatar>
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        </CardContent>
-                    </Card>
-                </Grid>
+                <>
+                    <Grid item xs={12} marginTop={2}>
+                        <Card sx={{border: '1px solid black', borderRadius: '5px'}}>
+                            <CardContent>
+                                <Typography variant="h5">Unlocked Avatars</Typography>
+                                <Grid container spacing={2}>
+                                    {unlockedAvatars && unlockedAvatars.map((avatar, index) => (
+                                        <Grid item key={index}>
+                                            <Avatar
+                                                sx={{width: 75, height: 75, cursor: 'pointer'}}
+                                                onClick={() => handleAvatarChange(avatar.id)}
+                                            >
+                                                {getAvatarImage(avatar.image) ? (
+                                                    <Avatar src={getAvatarImage(avatar.image)!} alt="Profile"
+                                                            sx={{width: '100%', height: '100%'}}/>
+                                                ) : (
+                                                    <PersonIcon sx={{fontSize: '200%'}}/>
+                                                )}
+                                            </Avatar>
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    <Grid item xs={12} marginTop={2}>
+                        <Card sx={{border: '1px solid black', borderRadius: '5px'}}>
+                            <CardContent>
+                                <Typography variant="h5">Unlocked Banners</Typography>
+                                <Grid container spacing={2}>
+                                    {unlockedBanners && unlockedBanners.map((banner, index) => (
+                                        <Grid item key={index}>
+                                            <Box
+                                                sx={{
+                                                    ...JSON.parse(banner.styling),
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    height: 75
+                                                }}
+                                                onClick={() => handleBannerChange(banner.id)}
+                                            >
+                                                <Typography variant="subtitle1">{profile?.username}</Typography>
+                                            </Box>
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                </>
             )}
         </Box>
     );
