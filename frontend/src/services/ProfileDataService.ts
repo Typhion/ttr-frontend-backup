@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Avatar, MatchHistory, Profile} from "../model/Profile.ts";
+import {Avatar, LobbyBanner, MatchHistory, Profile} from "../model/Profile.ts";
 import {Achievement} from "../model/Achievement.ts";
 const mantleUrl = import.meta.env.VITE_MANTLE_URL
 
@@ -18,8 +18,17 @@ export const getUnlockedAvatars = async (): Promise<Avatar[]> => {
     return result.data;
 }
 
+export const getUnlockedLobbyBanners = async (): Promise<LobbyBanner[]> => {
+    const result = await axios.get(`${mantleUrl}/applicationUser/profile/unlockedLobbyBanners`);
+    return result.data;
+}
+
 export const changeAvatar = async (avatarId: string): Promise<void> => {
     await axios.patch(`${mantleUrl}/applicationUser/profile/avatar/${avatarId}`);
+}
+
+export const changeLobbyBanner = async (lobbyBannerId: string): Promise<void> => {
+    await axios.patch(`${mantleUrl}/applicationUser/profile/lobbyBanner/${lobbyBannerId}`);
 }
 
 export const getPlayerAchievements = async (): Promise<Achievement[]> => {
@@ -29,6 +38,11 @@ export const getPlayerAchievements = async (): Promise<Achievement[]> => {
 
 export const getPlayerAvatar = async (playerId: string): Promise<Avatar> => {
     const result = await axios.get(`${mantleUrl}/applicationUser/profile/${playerId}/avatar`);
+    return result.data;
+}
+
+export const getPlayerLobbyBanner = async (playerId: string): Promise<LobbyBanner> => {
+    const result = await axios.get(`${mantleUrl}/applicationUser/profile/${playerId}/lobbyBanner`);
     return result.data;
 }
 
