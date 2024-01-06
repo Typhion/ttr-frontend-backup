@@ -39,7 +39,7 @@ export default function ProfilePage() {
             </CustomTabPanel>
             {isOwnProfile && (
                 <CustomTabPanel value={currentTab} index={1}>
-                    <Friends/>
+                    <Friends setCurrentTab={setCurrentTab}/>
                 </CustomTabPanel>
             )}
             {isOwnProfile && (

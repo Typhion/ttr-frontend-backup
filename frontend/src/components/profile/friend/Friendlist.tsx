@@ -9,7 +9,11 @@ import {useAcceptFriend} from "../../../hooks/friendHooks/useAcceptFriend.ts";
 import {useDenyFriend} from "../../../hooks/friendHooks/useDenyFriend.ts";
 import { Link } from 'react-router-dom';
 
-export default function Friendlist() {
+interface FriendlistProps {
+    setCurrentTab: (number: number) => void;
+}
+
+export default function Friendlist({setCurrentTab}: FriendlistProps) {
     const {isLoading: isLoading, isError: isError, data: friendlist, refetch} = useFriendlist();
     const {isLoading: isReqLoading, isError: isReqError, data: friendReqList, refetch: reqRefetch} = useFriendRequestList();
 
@@ -56,7 +60,7 @@ export default function Friendlist() {
                     <List>
                         {friendReqList.map((friend, index) => (
                             <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Link to={`/profile/${friend.id}`} style={{ color: 'inherit' }}>
+                                <Link onClick={() => setCurrentTab(0)} to={`/profile/${friend.id}`} style={{ color: 'inherit' }}>
                                     <ListItemText primary={friend.username} />
                                 </Link>
                                 <Box>
@@ -82,7 +86,7 @@ export default function Friendlist() {
                     <List>
                         {friendlist.map((friend, index) => (
                             <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Link to={`/profile/${friend.id}`} style={{ color: 'inherit' }}>
+                                <Link onClick={() => setCurrentTab(0)} to={`/profile/${friend.id}`} style={{ color: 'inherit' }}>
                                     <ListItemText primary={friend.username} />
                                 </Link>
                                 <IconButton onClick={() => handleRemoveFriend(friend.id)} edge="end" aria-label="delete"
