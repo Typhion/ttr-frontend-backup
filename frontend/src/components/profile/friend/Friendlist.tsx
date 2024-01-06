@@ -7,6 +7,7 @@ import {useRemoveFriend} from "../../../hooks/friendHooks/useRemoveFriend.ts";
 import {useFriendRequestList} from "../../../hooks/friendHooks/useFriendRequestList.ts";
 import {useAcceptFriend} from "../../../hooks/friendHooks/useAcceptFriend.ts";
 import {useDenyFriend} from "../../../hooks/friendHooks/useDenyFriend.ts";
+import { Link } from 'react-router-dom';
 
 export default function Friendlist() {
     const {isLoading: isLoading, isError: isError, data: friendlist, refetch} = useFriendlist();
@@ -54,16 +55,20 @@ export default function Friendlist() {
                 ) : (
                     <List>
                         {friendReqList.map((friend, index) => (
-                            <ListItem key={index} sx={{display: 'flex', justifyContent: 'space-between'}}>
-                                <ListItemText primary={friend.username}/>
-                                <IconButton onClick={() => handleAcceptFriend(friend.id)} edge="end" aria-label="accept"
-                                            sx={{color: 'green'}}>
-                                    <DoneIcon/>
-                                </IconButton>
-                                <IconButton onClick={() => handleDenyFriend(friend.id)} edge="end" aria-label="deny"
-                                            sx={{color: 'red'}}>
-                                    <CloseIcon/>
-                                </IconButton>
+                            <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Link to={`/profile/${friend.id}`} style={{ color: 'inherit' }}>
+                                    <ListItemText primary={friend.username} />
+                                </Link>
+                                <Box>
+                                    <IconButton onClick={() => handleAcceptFriend(friend.id)} edge="end" aria-label="accept"
+                                                sx={{ color: 'green' }}>
+                                        <DoneIcon />
+                                    </IconButton>
+                                    <IconButton onClick={() => handleDenyFriend(friend.id)} edge="end" aria-label="deny"
+                                                sx={{ color: 'red' }}>
+                                        <CloseIcon />
+                                    </IconButton>
+                                </Box>
                             </ListItem>
                         ))}
                     </List>
@@ -76,11 +81,13 @@ export default function Friendlist() {
                 ) : (
                     <List>
                         {friendlist.map((friend, index) => (
-                            <ListItem key={index} sx={{display: 'flex', justifyContent: 'space-between'}}>
-                                <ListItemText primary={friend.username}/>
+                            <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Link to={`/profile/${friend.id}`} style={{ color: 'inherit' }}>
+                                    <ListItemText primary={friend.username} />
+                                </Link>
                                 <IconButton onClick={() => handleRemoveFriend(friend.id)} edge="end" aria-label="delete"
-                                            sx={{color: 'red'}}>
-                                    <CloseIcon/>
+                                            sx={{ color: 'red' }}>
+                                    <CloseIcon />
                                 </IconButton>
                             </ListItem>
                         ))}

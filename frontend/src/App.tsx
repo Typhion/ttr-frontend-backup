@@ -11,14 +11,12 @@ import {AuthHeader} from "./components/AuthHeader.tsx";
 import SecurityContextProvider from "./context/SecurityContextProvider.tsx";
 import Home from "./components/home/Home.tsx";
 import Lobby from "./components/lobby/Lobby.tsx";
-import Friends from "./components/profile/friend/Friends.tsx";
 import LobbyList from "./components/lobby/LobbyList.tsx";
 import ProfilePage from "./components/profile/ProfilePage.tsx";
 import LobbyDisbanded from "./components/lobby/LobbyDisbanded.tsx";
 import LeaderBoard from "./components/leaderboard/LeaderBoard.tsx";
 import Users from "./components/admin/Users.tsx";
 import AdminRouteGuard from "./components/AdminRouteGuard.tsx";
-import AchievementPage from "./components/profile/achievement/AchievementPage.tsx";
 import {useState} from "react";
 import Navigation from "./components/Navigation.tsx";
 
@@ -43,12 +41,10 @@ function App() {
                             <Route path="/lobby" element={<RouteGuard component={<LobbyList/>}/>}/>
                             <Route path="/lobby/disbanded" element={<RouteGuard component={<LobbyDisbanded/>}/>}/>
                             <Route path="/game/:uuid" element={<RouteGuard component={<Game/>}/>}/>
-                            <Route path="/profile/friends" element={<RouteGuard component={<Friends/>}/>}/>
                             <Route path="/profile/:uuid" element={<RouteGuard component={<ProfilePage/>}/>}/>
                             <Route path="/profile" element={<RouteGuard component={<ProfilePage/>}/>}/>
                             <Route path="/leaderboard" element={<RouteGuard component={<LeaderBoard/>}/>}/>
                             <Route path="/admin/users" element={<RouteGuard component={<AdminRouteGuard component={<Users/>}/>}/>}/>
-                            <Route path="/profile/achievement" element={<RouteGuard component={<AchievementPage/>}/>}/>
                         </Routes>
                     </ThemeProvider>
                 </BrowserRouter>

@@ -1,43 +1,59 @@
 import {Box} from "@mui/material";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import React, {SyntheticEvent, useState} from "react";
+import React, {SyntheticEvent, useContext, useEffect, useState} from "react";
 import Friends from "./friend/Friends.tsx";
 import AchievementPage from "./achievement/AchievementPage.tsx";
 import Profile from "./Profile.tsx";
 import MatchHistory from "./statistic/MatchHistory.tsx";
+import {useParams} from "react-router-dom";
+import SecurityContext from "../../context/SecurityContext.ts";
 
 export default function ProfilePage() {
-    const [value, setValue] = useState(0);
+    const { uuid } = useParams<{ uuid: string }>();
+    const { loggedInUserId } = useContext(SecurityContext);
+    const [currentTab, setCurrentTab] = useState(0);
+
+    useEffect(() => {
+        setCurrentTab(0);
+    }, [uuid]);
 
     const handleChange = (_: SyntheticEvent, newValue: number) => {
-        setValue(newValue);
+        setCurrentTab(newValue);
     };
 
+    const isOwnProfile = uuid === loggedInUserId || uuid === undefined;
+
     return (
-        <Box sx={{width: '100%'}}>
-            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
-                <Tabs value={value} onChange={handleChange} aria-label="profile tabs" centered>
+        <Box sx={{ width: '100%' }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs value={currentTab} onChange={handleChange} aria-label="profile tabs" centered>
                     <Tab label="Profile" {...a11yProps(0)} />
-                    <Tab label="Friends" {...a11yProps(1)} />
-                    <Tab label="Achievements" {...a11yProps(2)} />
-                    <Tab label="Match History" {...a11yProps(3)} />
+                    {isOwnProfile && <Tab label="Friends" {...a11yProps(1)} />}
+                    {isOwnProfile && <Tab label="Achievements" {...a11yProps(2)} />}
+                    {isOwnProfile && <Tab label="Match History" {...a11yProps(3)} />}
                 </Tabs>
             </Box>
-            <CustomTabPanel value={value} index={0}>
-                <Profile/>
+            <CustomTabPanel value={currentTab} index={0}>
+                <Profile uuid={isOwnProfile ? undefined : uuid}/>
             </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-                <Friends/>
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
+            {isOwnProfile && (
+                <CustomTabPanel value={currentTab} index={1}>
+                    <Friends/>
+                </CustomTabPanel>
+            )}
+            {isOwnProfile && (
+            <CustomTabPanel value={currentTab} index={2}>
                 <AchievementPage/>
             </CustomTabPanel>
-            <CustomTabPanel value={value} index={3}>
-                <MatchHistory/>
-            </CustomTabPanel>
+            )}
+            {isOwnProfile && (
+                <CustomTabPanel value={currentTab} index={3}>
+                    <MatchHistory/>
+                </CustomTabPanel>
+            )}
         </Box>
-    )
+    );
 }
 
 interface TabPanelProps {
