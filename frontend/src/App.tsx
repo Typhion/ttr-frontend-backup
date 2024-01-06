@@ -19,6 +19,7 @@ import Users from "./components/admin/Users.tsx";
 import AdminRouteGuard from "./components/AdminRouteGuard.tsx";
 import {useState} from "react";
 import Navigation from "./components/Navigation.tsx";
+import About from "./components/about/About.tsx";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
 const queryClient = new QueryClient()
@@ -45,6 +46,7 @@ function App() {
                             <Route path="/profile" element={<RouteGuard component={<ProfilePage/>}/>}/>
                             <Route path="/leaderboard" element={<RouteGuard component={<LeaderBoard/>}/>}/>
                             <Route path="/admin/users" element={<RouteGuard component={<AdminRouteGuard component={<Users/>}/>}/>}/>
+                            <Route path="/about" element={<About />}/>
                         </Routes>
                     </ThemeProvider>
                 </BrowserRouter>
