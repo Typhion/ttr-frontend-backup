@@ -9,6 +9,7 @@ import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import LogoutIcon from '@mui/icons-material/Logout';
 import InfoIcon from '@mui/icons-material/Info';
+import GavelIcon from '@mui/icons-material/Gavel';
 
 interface NavigationProps {
     isOpen: boolean
@@ -29,6 +30,7 @@ export default function Navigation({ isOpen, onClose }: NavigationProps) {
         { label: 'Leaderboard', link: '/leaderboard', icon: <LeaderboardIcon /> },
         ...(isAuthenticated() ? [{ label: 'My Profile', link: '/profile', icon: <AccountCircleIcon /> }] : []),
         ...(isAdmin() ? [{ label: 'Admin Panel', link: '/admin/users', icon: <AdminPanelSettingsIcon /> }] : []),
+        { label: 'Rules', link: '/rules', icon: <GavelIcon /> },
         { label: 'About', link: '/about', icon: <InfoIcon /> },
         ...(isAuthenticated() ? [{ label: 'Logout', action: handleLogout, icon: <LogoutIcon /> }] : [])
     ];
