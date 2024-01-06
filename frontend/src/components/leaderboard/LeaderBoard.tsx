@@ -6,11 +6,17 @@ import {useTopLeaderBoard} from "../../hooks/leaderboardHooks/useTopLeaderBoard.
 import {useContext} from "react";
 import SecurityContext from "../../context/SecurityContext.ts";
 import {useOwnLeaderBoard} from "../../hooks/leaderboardHooks/useOwnLeaderBoard.ts";
+import {useNavigate} from "react-router-dom";
 
 export default function LeaderBoard() {
     const {loggedInUserId} = useContext(SecurityContext);
     const topLeaderBoard = useTopLeaderBoard();
     const ownLeaderBoard = useOwnLeaderBoard();
+    const navigate = useNavigate();
+
+    const navigateToProfile = (userId: string) => {
+        navigate(`/profile/${userId}`);
+    };
 
     return (
         <Box>
@@ -27,7 +33,9 @@ export default function LeaderBoard() {
                                 width: '50%',
                                 margin: 'auto',
                                 backgroundColor: user.id === loggedInUserId ? 'primary.main' : 'background.paper',
-                            }}>
+                                cursor: 'pointer'
+                            }}
+                                  onClick={() => navigateToProfile(user.id)}>
                                 <CardContent>
                                     <Grid container spacing={2}>
                                         <Grid item xs={5}>
