@@ -19,18 +19,23 @@ import LeaderBoard from "./components/leaderboard/LeaderBoard.tsx";
 import Users from "./components/admin/Users.tsx";
 import AdminRouteGuard from "./components/AdminRouteGuard.tsx";
 import AchievementPage from "./components/profile/achievement/AchievementPage.tsx";
+import {useState} from "react";
+import Navigation from "./components/Navigation.tsx";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
 const queryClient = new QueryClient()
 
 function App() {
+    const [drawerOpen, setDrawerOpen] = useState(false);
+
     return (
         <QueryClientProvider client={queryClient}>
             <SecurityContextProvider>
                 <BrowserRouter>
                     <ThemeProvider theme={defaultTheme}>
                         <CssBaseline/> {/* Reset CSS */}
-                        <AuthHeader/>
+                        <AuthHeader onOpenDrawer={() => setDrawerOpen(!drawerOpen)}/>
+                        <Navigation isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}></Navigation>
                         <Routes>
                             <Route path="/" element={<RouteGuard component={<Home/>}/>}/>
                             <Route path="/:lobbyCode?" element={<RouteGuard component={<Home />} />} />

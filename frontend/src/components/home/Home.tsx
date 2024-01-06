@@ -82,7 +82,7 @@ export default function Home() {
                 <Grid item>
                     <Button
                         variant="contained"
-                        sx={{marginLeft: '10px', height: '100%'}}
+                        sx={{marginLeft: '10px'}}
                         onClick={handleQuickPlayClick}
                     >
                         QuickPlay
@@ -100,7 +100,7 @@ export default function Home() {
                 <Grid item>
                     <Button
                         variant="contained"
-                        sx={{height: '100%', marginBottom: '10%'}}
+                        sx={{height: '100%'}}
                         onClick={handleGetLobbiesClick}
                     >
                         Lobbies

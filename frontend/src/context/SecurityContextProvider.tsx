@@ -20,10 +20,13 @@ const keycloak: Keycloak = new Keycloak(keycloakConfig)
 export default function SecurityContextProvider({children}: IWithChildren) {
     const [loggedInUser, setLoggedInUser] = useState<string | undefined>(undefined)
     const [loggedInUserId, setLoggedInUserId] = useState<string | undefined>(undefined)
-    const createAccount = useCreateAccount()
+    const [isLoading, setIsLoading] = useState(true);
+    const createAccount = useCreateAccount();
 
     useEffect(() => {
-        keycloak.init({ onLoad: 'check-sso' })
+        keycloak.init({ onLoad: 'check-sso' }).then(() => {
+            setIsLoading(false);
+        })
     }, [])
 
     keycloak.onAuthSuccess = () => {
@@ -31,6 +34,7 @@ export default function SecurityContextProvider({children}: IWithChildren) {
         createAccount.mutate()
         setLoggedInUser(keycloak.idTokenParsed?.name)
         setLoggedInUserId(keycloak.idTokenParsed?.sub)
+        setIsLoading(false);
     }
 
     keycloak.onAuthLogout = () => {
@@ -39,6 +43,7 @@ export default function SecurityContextProvider({children}: IWithChildren) {
 
     keycloak.onAuthError = () => {
         removeAccessTokenFromAuthHeader()
+        setIsLoading(false);
     }
 
     keycloak.onTokenExpired = () => {
@@ -72,6 +77,7 @@ export default function SecurityContextProvider({children}: IWithChildren) {
         <SecurityContext.Provider
             value={{
                 isAuthenticated,
+                isLoading,
                 loggedInUser,
                 loggedInUserId,
                 login,
