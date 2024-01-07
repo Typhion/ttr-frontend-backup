@@ -5,7 +5,8 @@ export function useCurrentPlayer(uuid: string) {
     const {
         isLoading,
         isError,
-        data: currentPlayer
+        data: currentPlayer,
+        refetch
     } = useQuery({
         queryKey: ['currentPlayer', uuid],
         queryFn: () => getCurrentPlayer(uuid),
@@ -16,6 +17,7 @@ export function useCurrentPlayer(uuid: string) {
     return {
         isLoading,
         isError,
-        data: currentPlayer
+        data: currentPlayer,
+        refetch
     };
 }

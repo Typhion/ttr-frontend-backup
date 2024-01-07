@@ -55,25 +55,25 @@ export default function StartedLobbyListItem({props}: { props: LobbyState }) {
                 </Typography>
             )
         ))}</TableCell>
-        <TableCell align="right" style={{ alignItems: 'center' }}>
+        <TableCell align="right" style={{alignItems: 'center'}}>
             {isCurrentPlayer ? (
-                <Typography style={{ fontWeight: 'bold', color: 'green' }}>
-                    Your Turn
-                </Typography>
-            ) : (
                 <>
-                    <Box style={{ marginRight: '8px' }}>{currentPlayer.data?.username}</Box>
-                    {currentPlayer.data?.secondsLeft && currentPlayer.data?.secondsLeft > 0 ? (
-                        <>
-                            {currentPlayer.data?.secondsLeft} seconds left
-                        </>
-                    ) : (
-                        'Turn ended'
-                    )}
+                    <Typography style={{fontWeight: 'bold', color: 'green'}}>
+                        Your Turn
+                    </Typography>
+
                 </>
+            ) : <Box style={{marginRight: '8px'}}>{currentPlayer.data?.username}</Box>}
+            {currentPlayer.data?.secondsLeft && currentPlayer.data?.secondsLeft > 0 ? (
+                <>
+                    {currentPlayer.data?.secondsLeft} seconds left
+                </>
+            ) : (
+                'Turn ended'
             )}
         </TableCell>
-        <TableCell align="right"><Button
+        <TableCell align="right">
+            <Button
             variant="contained"
             onClick={() => handleJoinLobbyClick(props)}
             disabled={props.lobbyUsersDto.length >= props.maxSize || props.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId)}
@@ -82,7 +82,7 @@ export default function StartedLobbyListItem({props}: { props: LobbyState }) {
                 backgroundColor: props.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId) ? 'rgba(255, 0, 0, 0.5)' : ''
             }}
         >
-            {props.code ? (props.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId) ? 'BANNED' : 'Join Lobby') : 'Join Game'}
+            {(props.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId) ? 'BANNED' : 'Join Game')}
         </Button></TableCell>
     </TableRow>
 }
