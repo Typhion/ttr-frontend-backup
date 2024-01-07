@@ -55,12 +55,23 @@ export default function StartedLobbyListItem({props}: { props: LobbyState }) {
                 </Typography>
             )
         ))}</TableCell>
-        <TableCell align="right" style={{alignItems: 'center'}}>
+        <TableCell align="right" style={{ alignItems: 'center' }}>
             {isCurrentPlayer ? (
-                <Typography style={{fontWeight: 'bold', color: 'green'}}>
+                <Typography style={{ fontWeight: 'bold', color: 'green' }}>
                     Your Turn
                 </Typography>
-            ) : <Box style={{marginRight: '8px'}}>{currentPlayer.data?.username}</Box>}
+            ) : (
+                <>
+                    <Box style={{ marginRight: '8px' }}>{currentPlayer.data?.username}</Box>
+                    {currentPlayer.data?.secondsLeft && currentPlayer.data?.secondsLeft > 0 ? (
+                        <>
+                            {currentPlayer.data?.secondsLeft} seconds left
+                        </>
+                    ) : (
+                        'Turn ended'
+                    )}
+                </>
+            )}
         </TableCell>
         <TableCell align="right"><Button
             variant="contained"
