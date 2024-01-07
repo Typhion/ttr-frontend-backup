@@ -62,7 +62,7 @@ export default function OpenLobbyListItem({props}: { props: LobbyState }) {
                 backgroundColor: props.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId) ? 'rgba(255, 0, 0, 0.5)' : ''
             }}
         >
-            {props.code ? (props.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId) ? 'BANNED' : 'Join Lobby') : 'Join Game'}
+            {props.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId) ? 'BANNED' : 'Join Lobby'}
         </Button></TableCell>
     </TableRow>
 }

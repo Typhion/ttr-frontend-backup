@@ -19,6 +19,7 @@ export type GameState = {
 export type CurrentPlayer = {
     applicationUserId: string;
     username: string;
+    secondsLeft: number;
 };
 
 export type PlayerState = {

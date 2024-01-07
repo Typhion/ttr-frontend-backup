@@ -2,6 +2,7 @@ import {PlayerState} from "../../../model/GameState.ts";
 import {Alert, Avatar, Badge, Box, Typography} from "@mui/material";
 import {useGetPlayerAvatar} from "../../../hooks/userHooks/useGetPlayerAvatar.ts";
 import Loader from "../../general/Loader.tsx";
+import PersonIcon from "@mui/icons-material/Person";
 
 interface PlayerIconProps {
     playerState: PlayerState;
@@ -27,7 +28,10 @@ export default function PlayerIcon({playerState}: PlayerIconProps) {
             height: '6vw',
         }}>
             <Avatar sx={{width: '100%', height: '100%'}}>
+                {playerAvatar.image  ? (
                 <img src={avatarImage} alt={`Avatar of ${playerState.username}`} style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
+                ): (
+                    <PersonIcon sx={{fontSize: '200%'}}/>)}
             </Avatar>
             <Badge
                 anchorOrigin={{vertical: 'top', horizontal: 'right'}}
