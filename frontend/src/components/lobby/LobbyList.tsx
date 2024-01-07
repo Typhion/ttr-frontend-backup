@@ -10,8 +10,9 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import LobbyListItem from "./lobbyListItem.tsx";
+import StartedLobbyListItem from "./StartedLobbyListItem.tsx";
 import RefreshIcon from '@mui/icons-material/Refresh';
+import OpenLobbyListItem from "./OpenLobbyListItem.tsx";
 
 export default function LobbyList() {
     const { isAuthenticated } = useContext(SecurityContext);
@@ -91,9 +92,13 @@ export default function LobbyList() {
                         </TableHead>
                         <TableBody>
                             <>
-                                {currentLobbies.data && currentLobbies.data?.map((row, index) => (
-                                    <LobbyListItem key={index} props={row}/>
-                                ))}
+                                {currentLobbies.data && currentLobbies.data?.map((row, index) => {
+                                    if (currentLobbies === publicLobbies) {
+                                        return <OpenLobbyListItem key={index} props={row} />;
+                                    } else {
+                                        return <StartedLobbyListItem key={index} props={row} />;
+                                    }
+                                })}
                             </>
                         </TableBody>
                     </Table>
