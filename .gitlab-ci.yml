@@ -1,0 +1,52 @@
+default:
+  image: $CI_REGISTRY/$CI_$CI_PROJECT_NAMESPACE/ttr-gitlab-image:83545647
+  services:
+    - docker:24.0.7-dind
+
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  GCR_REGISTRY_IMAGE: gcr.io/ip2-ticket-to-ride-project/frontend
+  TAR_FILE_NAME: ttr-frontend-image.tar
+
+stages:
+  - build-image
+#  - quality
+  - publish-image
+#  - deploy
+
+build-image:
+  stage: build-image
+  script:
+    - docker build . -t $GCR_REGISTRY_IMAGE:latest
+    - docker save -o $TAR_FILE_NAME $GCR_REGISTRY_IMAGE:latest
+  artifacts:
+    expire_in: 1 hours
+    paths:
+      - $TAR_FILE_NAME
+
+#linting:
+#  stage: quality
+#  script:
+#    - echo "Linting the application..."
+#    - cd ./frontend
+#    - npm run lint
+#  allow_failure: true
+#  rules:
+#    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+#    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+publish-image:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  stage: publish-image
+  script:
+    - docker load -q -i $TAR_FILE_NAME
+    - echo $GCP_SA_KEY | base64 -d | docker login -u _json_key --password-stdin https://gcr.io
+    - docker push $GCR_REGISTRY_IMAGE:latest
+
+#deploy-job:
+#  stage: deploy
+#  rules:
+#    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+#    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+#      when: never

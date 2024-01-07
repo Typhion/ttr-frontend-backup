@@ -6,6 +6,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MenuIcon from "@mui/icons-material/Menu";
 import {useNavigate} from "react-router-dom";
 import {useGetUserCredits} from "../hooks/userHooks/useGetUserCredits.ts";
+import logoImage from "../assets/images/logo.png";
+import ticketImage from "../assets/images/tickets/ticket.png";
 
 type HeaderProps = {
     onOpenDrawer: () => void
@@ -42,7 +44,7 @@ export function AuthHeader({onOpenDrawer}: HeaderProps) {
                 </IconButton>
                 <IconButton onClick={handleNavHome}>
                     <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                        <img src="/src/assets/images/logo.png" alt="logo" style={{width: '50px', height: '50px'}}/>
+                        <img src={logoImage} alt="logo" style={{width: '50px', height: '50px'}}/>
                         <Typography variant="h6">
                             TTR
                         </Typography>
@@ -56,7 +58,7 @@ export function AuthHeader({onOpenDrawer}: HeaderProps) {
                                 <Typography variant="h6">
                                     {userCredits}
                                 </Typography>
-                                <img src="/src/assets/images//tickets/ticket.png" alt="ticket" style={{width: '50px', height: '50px'}}/>
+                                <img src={ticketImage} alt="ticket" style={{width: '50px', height: '50px'}}/>
                             </Box>
                         </IconButton>)}
                     {isAuthenticated() &&
