@@ -157,29 +157,29 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                                 {player.applicationUserDto.username}
                             </Grid>
 
-                                <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
+                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
                                 {player.ready ? (
                                     <DoneIcon sx={{marginLeft: '20px', color: 'green'}}/>
                                 ) : (
                                     <ClearIcon sx={{marginLeft: '20px', color: 'red'}}/>
                                 )}
                             </Grid>
-                            <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
                                 {(hostUserId === loggedInLobbyUser?.id && !player.isHost) && (
                                     <Box>
                                         <PersonRemoveIcon
                                             onClick={() => handleKickLobbyUser(lobbyId, player.id)}
-                                            style={{ cursor: 'pointer' }}
+                                            style={{cursor: 'pointer'}}
                                         />
                                     </Box>
                                 )}
                             </Grid>
-                            <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
                                 {(hostUserId === loggedInLobbyUser?.id && !player.isHost) && (
                                     <Box>
                                         <BlockIcon
                                             onClick={() => handleBanLobbyUser(lobbyId, player.id)}
-                                            style={{ cursor: 'pointer' }}
+                                            style={{cursor: 'pointer'}}
                                         />
                                     </Box>
                                 )}
@@ -239,9 +239,17 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
                                         lobbyId={lobbyId}
                                         refetch={refetch}
                                         loggedInUserId={loggedInUserId}/>}
-                    <StartGameButton lobbyState={lobbyState} predicate={(player) => player.isHost}
-                                     predicate1={(player) => player.isHost && player.applicationUserDto.id === loggedInUserId}
-                                     lobbyId={lobbyId}/>
+                    {
+                        lobbyState.lobbyUsersDto.some(
+                            (player) => player.applicationUserDto.id === loggedInUserId && player.isHost
+                        ) && (
+                            <StartGameButton lobbyState={lobbyState} predicate={(player) => player.isHost}
+                                               predicate1={(player) => player.isHost &&
+                                                   player.applicationUserDto.id === loggedInUserId &&
+                                                   lobbyState.lobbyUsersDto.length >= 2 &&
+                                                   lobbyState.lobbyUsersDto.length <= 5}
+                                               lobbyId={lobbyId}/>
+                        )}
                     <Box sx={{
                         width: '33.33%', display: 'flex',
                         justifyContent: 'center',
