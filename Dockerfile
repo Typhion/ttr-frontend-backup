@@ -1,8 +1,4 @@
-FROM node:20.10.0-alpine AS builder
-
-# Install Git
-RUN apk add --no-cache git
-RUN apk add --no-cache openssh
+FROM node:20.10.0-alpine AS build
 
 WORKDIR /Frontend
 
@@ -16,11 +12,14 @@ RUN npm run build
 
 FROM nginx:alpine
 
-COPY --from=builder /Frontend/dist /usr/share/nginx/html
-COPY --from=builder /Frontend/nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /usr/share/nginx/html
 
-EXPOSE 5173
+COPY --from=build /Frontend/dist /usr/share/nginx/html
+
+#RUN rm /etc/nginx/conf.d/default.conf
+
+#COPY --from=build /Frontend/nginx.conf /etc/nginx/nginx.d
+
+EXPOSE 80
+
 CMD ["nginx", "-g", "daemon off;"]
-
-# docker build -t registry.gitlab.com/kdg-ti/integratieproject-2/teams-23-24/team13/frontend:1.0 .
-# docker push registry.gitlab.com/kdg-ti/integratieproject-2/teams-23-24/team13/frontend:1.0
