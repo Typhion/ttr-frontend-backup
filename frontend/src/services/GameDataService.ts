@@ -1,6 +1,6 @@
 import {Game} from "../model/Game.ts";
 import axios from "axios";
-import {GameState} from "../model/GameState.ts";
+import {CurrentPlayer, GameState} from "../model/GameState.ts";
 import {GameInitDto} from "../model/LobbyState.ts";
 import {EndGameScore, EndGameStats, GameLeaderBoard} from "../model/EndGame.ts";
 
@@ -11,6 +11,11 @@ export const getGame = async (uuid: string): Promise<Game> => {
 
 export const getGameState = async (uuid: string, playerId: string): Promise<GameState> => {
     const response = await axios.get<GameState>(`/game/${uuid}/state/${playerId}`);
+    return response.data;
+}
+
+export const getCurrentPlayer = async (uuid: string): Promise<CurrentPlayer> => {
+    const response = await axios.get<CurrentPlayer>(`/game/${uuid}/currentPlayer`);
     return response.data;
 }
 

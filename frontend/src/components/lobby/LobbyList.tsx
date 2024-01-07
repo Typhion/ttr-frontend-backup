@@ -85,14 +85,14 @@ export default function LobbyList() {
                                 <TableCell align="right">Max Size</TableCell>
                                 <TableCell align="right">Host</TableCell>
                                 <TableCell align="right">Access</TableCell>
-                                <TableCell align="right">Code</TableCell>
+                                <TableCell align="right">{currentLobbies == publicLobbies ? 'Code' : 'Player turn'}</TableCell>
                                 <TableCell align="right">Join</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             <>
                                 {currentLobbies.data && currentLobbies.data?.map((row, index) => (
-                                    <LobbyListItem key={index} props={row} />
+                                    <LobbyListItem key={index} props={row}/>
                                 ))}
                             </>
                         </TableBody>
