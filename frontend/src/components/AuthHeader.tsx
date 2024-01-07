@@ -28,6 +28,9 @@ export function AuthHeader({onOpenDrawer}: HeaderProps) {
     const handleNavProfile = () => {
         navigate(`/profile`);
     }
+    const handleNavShop = () => {
+        navigate(`/shop`);
+    }
 
     const location = useLocation();
     const excludePattern = /^\/game\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/; // Regex for UUID
@@ -53,7 +56,7 @@ export function AuthHeader({onOpenDrawer}: HeaderProps) {
 
                 <Stack direction="row" sx={{justifySelf: 'end'}}>
                     {isAuthenticated() && !isLoading && userCredits != undefined && userCredits >= 0 && (
-                        <IconButton>
+                        <IconButton onClick={handleNavShop}>
                             <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                                 <Typography variant="h6">
                                     {userCredits}
