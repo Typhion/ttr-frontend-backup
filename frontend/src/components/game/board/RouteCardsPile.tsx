@@ -77,6 +77,7 @@ export default function RouteCardsPile({
                 </Card>
 
             </Badge>
+            {myTurn && (
             <RouteCardDialog
                 open={isDialogOpen}
                 onClose={() => handleCloseDialog}
@@ -85,6 +86,7 @@ export default function RouteCardsPile({
                 boardId={boardId}
                 gameId={gameId}
             />
+            )}
         </>
     );
 }
