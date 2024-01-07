@@ -1,7 +1,7 @@
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import {LobbyState} from "../../model/LobbyState.ts";
-import {Typography} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
 import {useJoinLobby} from "../../hooks/lobbyHooks/useJoinLobby.ts";
 import {useNavigate} from "react-router-dom";
@@ -9,6 +9,7 @@ import {useContext} from "react";
 import SecurityContext from "../../context/SecurityContext.ts";
 import PublicIcon from "@mui/icons-material/Public";
 import LockIcon from "@mui/icons-material/Lock";
+import {useCurrentPlayer} from "../../hooks/gameHooks/useCurrentPlayer.ts";
 
 export default function LobbyListItem({props}: { props: LobbyState }) {
     const {loggedInUserId} = useContext(SecurityContext);
@@ -17,6 +18,9 @@ export default function LobbyListItem({props}: { props: LobbyState }) {
     const joinLobby = useJoinLobby((uuid) => {
         navigate(`/lobby/${uuid}`);
     });
+    const currentPlayer = useCurrentPlayer(props.gameId);
+
+    const isCurrentPlayer = currentPlayer.data?.applicationUserId === loggedInUserId;
 
     const handleJoinLobbyClick = (lobby: LobbyState) => {
         if (lobby.code) {
@@ -28,6 +32,7 @@ export default function LobbyListItem({props}: { props: LobbyState }) {
             }
         }
     };
+
 
     return <TableRow>
         <TableCell align="right">
@@ -49,7 +54,20 @@ export default function LobbyListItem({props}: { props: LobbyState }) {
                 </Typography>
             )
         ))}</TableCell>
-        <TableCell align="right">{props.code}</TableCell>
+        {props.code ? (
+            <TableCell align="right">
+                {props.code}
+            </TableCell>
+        ) : (
+            <TableCell align="right" style={{ alignItems: 'center' }}>
+                {isCurrentPlayer ? (
+                    <Typography style={{ fontWeight: 'bold', color: 'green' }}>
+                        Your Turn
+                    </Typography>
+                ): <Box style={{ marginRight: '8px' }}>{currentPlayer.data?.username}</Box>}
+
+            </TableCell>
+        )}
         <TableCell align="right"><Button
             variant="contained"
             onClick={() => handleJoinLobbyClick(props)}

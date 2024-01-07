@@ -16,6 +16,11 @@ export type GameState = {
 }
 
 
+export type CurrentPlayer = {
+    applicationUserId: string;
+    username: string;
+};
+
 export type PlayerState = {
     score: number;
     wagonAmount: number;
