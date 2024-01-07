@@ -2,6 +2,7 @@ import Button from "@mui/material/Button";
 import {Box, Card, CardActions, CardContent, CardMedia, Typography} from "@mui/material";
 import { ShopItem } from "../../model/Shop.ts";
 import { getAvatarImage } from "../../model/Profile.ts";
+import ticketImage from "../../assets/images/tickets/ticket.png";
 
 interface ShopItemCardProps {
     item: ShopItem;
@@ -24,7 +25,7 @@ export default function ShopItemCard({ item, credits, onBuy }: ShopItemCardProps
         return (
             <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '10px 0' }}>
                 <Typography variant="h6" style={{ marginRight: '10px' }}>{item.price}</Typography>
-                <img src="/src/assets/images//tickets/ticket.png" alt="Ticket" style={{ width: '50px', height: '50px' }} />
+                <img src={ticketImage} alt="Ticket" style={{ width: '50px', height: '50px' }} />
             </Box>
         );
     };
