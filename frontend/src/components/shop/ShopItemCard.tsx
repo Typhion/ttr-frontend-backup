@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import {Box, Card, CardActions, CardContent, CardMedia, Typography} from "@mui/material";
 import { ShopItem } from "../../model/Shop.ts";
 import { getAvatarImage } from "../../model/Profile.ts";
-import ticketImage from "../assets/images/tickets/ticket.png";
+import ticketImage from "../../assets/images/tickets/ticket.png";
 
 interface ShopItemCardProps {
     item: ShopItem;
