@@ -30,7 +30,7 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
     const isPlayersTurn = gameState && game && game.players[gameState.playerTurnIndex] === playerId;
     const [openDialog, setOpenDialog] = useState(false);
     const [secondsLeft, setSecondsLeft] = useState(120);
-    const currentPlayer = useCurrentPlayer(gameId);
+    const {data: currentPlayer, refetch} = useCurrentPlayer(gameId);
 
     useEffect(() => {
         if (gameState && game) {
@@ -43,7 +43,8 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
     }, [gameState]);
 
     useEffect(() => {
-        setSecondsLeft(currentPlayer.data?.secondsLeft === 0 ? 120 : currentPlayer.data?.secondsLeft ?? 120);
+        refetch();
+        setSecondsLeft(currentPlayer?.secondsLeft === 0 ? 120 : currentPlayer?.secondsLeft ?? 120);
 
         let intervalId: number | undefined;
 
@@ -63,7 +64,7 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
             }
         };
 
-    }, [isPlayersTurn, currentPlayer.data?.secondsLeft]);
+    }, [isPlayersTurn, currentPlayer?.secondsLeft]);
 
     useEffect(() => {
         if (gameState && gameState.gameIsDone) {
