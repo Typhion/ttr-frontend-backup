@@ -7,3 +7,7 @@ export const getShopCosmetics = async (): Promise<ShopItem[]> => {
     const result = await axios.get(`${mantleUrl}/shop/`);
     return result.data;
 }
+
+export const purchaseCosmetic = async (id: string): Promise<void> => {
+    await axios.patch(`${mantleUrl}/shop/purchase/${id}`);
+}

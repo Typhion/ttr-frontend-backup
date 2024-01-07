@@ -3,11 +3,17 @@ import Loader from "../general/Loader.tsx";
 import {Alert, Grid} from "@mui/material";
 import {useGetUserCredits} from "../../hooks/userHooks/useGetUserCredits.ts";
 import ShopItemCard from "./ShopItemCard.tsx";
+import {usePurchaseShopCosmetic} from "../../hooks/shopHooks/usePurchaseShopCosmetic.ts";
 
 
 export default function Shop() {
-    const { isLoading, isError, data: shopCosmetics } = useGetShopCosmetics();
-    const { isLoading: isLoadingCredits, isError: isErrorCredits, data: credits } = useGetUserCredits();
+    const { isLoading, isError, data: shopCosmetics, refetch } = useGetShopCosmetics();
+    const { isLoading: isLoadingCredits, isError: isErrorCredits, data: credits, refetch: refetchCredits } = useGetUserCredits();
+    const purchaseItem = usePurchaseShopCosmetic(
+        () => {
+            refetch();
+            refetchCredits();
+        });
 
     if (isLoading || isLoadingCredits) return <Loader>Loading shop...</Loader>;
 
@@ -16,7 +22,7 @@ export default function Shop() {
     }
 
     const handleBuy = (itemId: string) => {
-        console.log(itemId);
+        purchaseItem.mutate(itemId);
     };
 
     return (
