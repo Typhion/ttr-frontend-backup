@@ -82,7 +82,7 @@ export default function StartedLobbyListItem({props}: { props: LobbyState }) {
                 backgroundColor: props.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId) ? 'rgba(255, 0, 0, 0.5)' : ''
             }}
         >
-            {(props.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId) ? 'BANNED' : 'Join Game')}
+            {props.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId) ? 'BANNED' : 'Join Game'}
         </Button></TableCell>
     </TableRow>
 }
