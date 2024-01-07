@@ -1,3 +1,4 @@
+import './i18n/i18n';
 import './App.css'
 import {defaultTheme} from "./assets/themes/defaultTheme.ts";
 import {CssBaseline, ThemeProvider} from "@mui/material";

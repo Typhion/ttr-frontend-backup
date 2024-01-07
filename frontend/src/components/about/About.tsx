@@ -1,52 +1,91 @@
-import { Box, Typography, Container, Paper, Divider, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { useTranslation } from 'react-i18next';
+import {
+    Box,
+    Typography,
+    Container,
+    Paper,
+    Divider,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    IconButton
+} from "@mui/material";
 import ComputerIcon from '@mui/icons-material/Computer';
 import PeopleIcon from '@mui/icons-material/People';
 import GamesIcon from '@mui/icons-material/Games';
 
 export default function About() {
+    const { t, i18n } = useTranslation();
+
+    const changeLanguage = (language: string) => {
+        i18n.changeLanguage(language);
+    };
+
     return (
         <Container maxWidth="md">
             <Box sx={{ my: 4 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                    <IconButton onClick={() => changeLanguage('en')} size="large">
+                        EN
+                    </IconButton>
+                    <IconButton onClick={() => changeLanguage('fr')} size="large">
+                        FR
+                    </IconButton>
+                    <IconButton onClick={() => changeLanguage('nl')} size="large">
+                        NL
+                    </IconButton>
+                </Box>
+
                 <Typography variant="h3" component="h1" gutterBottom>
-                    About Ticket to Ride Online
+                    {t('header')}
                 </Typography>
                 <Paper elevation={3} sx={{ p: 3 }}>
                     <Typography variant="h5" component="h2" gutterBottom>
-                        Welcome to the World of Online Board Gaming!
+                        {t('welcomeTitle')}
                     </Typography>
                     <Typography paragraph>
-                        Ticket to Ride Online brings the excitement of the classic board game to your screen, allowing you to compete with players from around the world. Dive into a thrilling journey where strategy and luck play a vital role in connecting cities and reaching your destinations.
+                        {t('welcomeDescription')}
                     </Typography>
                     <Divider sx={{ my: 2 }} />
                     <Typography variant="h6" gutterBottom>
-                        Why Play Ticket to Ride Online?
+                        {t('whyPlayHeader')}
                     </Typography>
                     <List>
                         <ListItem>
                             <ListItemIcon>
                                 <ComputerIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Accessible Anytime, Anywhere" secondary="Play from the comfort of your home or on-the-go, with seamless online experiences." />
+                            <ListItemText
+                                primary={t('accessibleAnytime')}
+                                secondary={t('accessibleDescription')}
+                            />
                         </ListItem>
                         <ListItem>
                             <ListItemIcon>
                                 <PeopleIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Connect with Friends and Family" secondary="Invite friends or family members to join you in a game, or make new connections with players worldwide." />
+                            <ListItemText
+                                primary={t('connectWithFriends')}
+                                secondary={t('connectDescription')}
+                            />
                         </ListItem>
                         <ListItem>
                             <ListItemIcon>
                                 <GamesIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Engaging and Strategic Gameplay" secondary="Enjoy the classic gameplay with added online features, enhancing your gaming experience." />
+                            <ListItemText
+                                primary={t('engagingGameplay')}
+                                secondary={t('gameplayDescription')}
+                            />
                         </ListItem>
                     </List>
                     <Divider sx={{ my: 2 }} />
                     <Typography variant="h6" gutterBottom>
-                        Join the Community
+                        {t('joinCommunityHeader')}
                     </Typography>
                     <Typography paragraph>
-                        Become a part of a growing community of board game enthusiasts. Share tips, strategies, and fun moments as you embark on this digital rail adventure!
+                        {t('communityDescription')}
                     </Typography>
                 </Paper>
             </Box>
