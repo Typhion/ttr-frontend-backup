@@ -17,6 +17,7 @@ import PlayerRouteCards from "./board/PlayerRouteCards.tsx";
 import SecurityContext from "../../context/SecurityContext.ts";
 import Button from "@mui/material/Button";
 import EndGameDialog from "./endGame/EndGameDialog.tsx";
+import {useCurrentPlayer} from "../../hooks/gameHooks/useCurrentPlayer.ts";
 
 function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defaultPlayerId: string, boardId: string }) {
     const navigate = useNavigate();
@@ -28,6 +29,8 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
 
     const isPlayersTurn = gameState && game && game.players[gameState.playerTurnIndex] === playerId;
     const [openDialog, setOpenDialog] = useState(false);
+    const [secondsLeft, setSecondsLeft] = useState(120);
+    const {data: currentPlayer, refetch} = useCurrentPlayer(gameId);
 
     useEffect(() => {
         if (gameState && game) {
@@ -38,6 +41,30 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
             })
         }
     }, [gameState]);
+
+    useEffect(() => {
+        refetch();
+        setSecondsLeft(currentPlayer?.secondsLeft === 0 ? 120 : currentPlayer?.secondsLeft ?? 120);
+
+        let intervalId: number | undefined;
+
+        if (isPlayersTurn) {
+            // Clear existing interval before creating a new one
+            window.clearInterval(intervalId);
+
+            // Update the timer every second
+            intervalId = window.setInterval(() => {
+                setSecondsLeft((prevSeconds) => Math.max(prevSeconds - 1, 0));
+            }, 1000);
+        }
+
+        return () => {
+            if (intervalId !== undefined) {
+                window.clearInterval(intervalId);
+            }
+        };
+
+    }, [isPlayersTurn, currentPlayer?.secondsLeft]);
 
     useEffect(() => {
         if (gameState && gameState.gameIsDone) {
@@ -140,6 +167,14 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
                     >
                         Go Back to Home
                     </Button>
+                    {isPlayersTurn && (
+                        <Typography variant="body2" sx={{ color: secondsLeft > 0 ? 'primary.main' : 'error.main', fontWeight: 'bold', marginTop: 1 }}>
+                            {secondsLeft > 0
+                                ? `Time left: ${Math.floor(secondsLeft / 60)}:${(secondsLeft % 60).toString().padStart(2, '0')}`
+                                : 'Your turn is already over'}
+                        </Typography>
+                    )}
+
 
                     <Typography variant="body2" sx={{
                         fontWeight: 'bold'
@@ -188,8 +223,7 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
                                           onClick={() => console.log("clicked wagon cards")}/>
                     </Grid>
                     <Grid item xs={2}>
-                        <PlayerInformation
-                            playerState={gameState.players.find(player => player.playerId === playerId)!}/>
+                        <PlayerInformation playerState={gameState.players.find((player) => player.playerId === playerId)!} />
                     </Grid>
                 </Grid>
             </Grid>
