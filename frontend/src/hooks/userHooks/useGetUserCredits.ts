@@ -3,6 +3,8 @@ import {getUserCredits} from "../../services/CreditDataService.ts";
 
 export function useGetUserCredits() {
     const {
+        isLoading,
+        isError,
         data: userCredits,
         refetch
     } = useQuery({
@@ -11,6 +13,8 @@ export function useGetUserCredits() {
     });
 
     return {
+        isLoading,
+        isError,
         data: userCredits,
         refetch
     };

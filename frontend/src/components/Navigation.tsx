@@ -10,6 +10,7 @@ import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import LogoutIcon from '@mui/icons-material/Logout';
 import InfoIcon from '@mui/icons-material/Info';
 import GavelIcon from '@mui/icons-material/Gavel';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 interface NavigationProps {
     isOpen: boolean
@@ -28,10 +29,11 @@ export default function Navigation({ isOpen, onClose }: NavigationProps) {
         { label: 'Home', link: '/', icon: <HomeIcon /> },
         { label: 'Lobbies', link: '/lobby', icon: <SportsEsportsIcon /> },
         { label: 'Leaderboard', link: '/leaderboard', icon: <LeaderboardIcon /> },
-        ...(isAuthenticated() ? [{ label: 'My Profile', link: '/profile', icon: <AccountCircleIcon /> }] : []),
-        ...(isAdmin() ? [{ label: 'Admin Panel', link: '/admin/users', icon: <AdminPanelSettingsIcon /> }] : []),
+        { label: 'Shop', link: '/shop', icon: <ShoppingCartIcon /> },
         { label: 'Rules', link: '/rules', icon: <GavelIcon /> },
         { label: 'About', link: '/about', icon: <InfoIcon /> },
+        ...(isAuthenticated() ? [{ label: 'My Profile', link: '/profile', icon: <AccountCircleIcon /> }] : []),
+        ...(isAdmin() ? [{ label: 'Admin Panel', link: '/admin/users', icon: <AdminPanelSettingsIcon /> }] : []),
         ...(isAuthenticated() ? [{ label: 'Logout', action: handleLogout, icon: <LogoutIcon /> }] : [])
     ];
 
