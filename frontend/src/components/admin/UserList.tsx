@@ -104,7 +104,7 @@ export default function UserList() {
                                         }
                                     </TableRow>
                                 ))}
-                                {Array.apply(null, Array(page.size - userPage.applicationUsers.length)).map((_, index) => (
+                                {[...Array(page.size - userPage.applicationUsers.length)].map((_, index) => (
                                     <TableRow
                                         key={index}
                                         sx={{'&:last-child td, &:last-child th': {border: 0}}}

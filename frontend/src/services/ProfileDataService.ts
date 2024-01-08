@@ -13,6 +13,16 @@ export const getProfile = async (playerId: string | undefined): Promise<Profile>
     return result.data;
 }
 
+export const getProfileForHeader = async (playerId: string | undefined): Promise<Profile | undefined> => {
+    let result;
+    if (!playerId || playerId === "" || playerId === "noProfileHeaderValue") {
+        return undefined;
+    } else {
+        result = await axios.get(`${mantleUrl}/applicationUser/profile/${playerId}`);
+    }
+    return result.data;
+}
+
 export const getUnlockedAvatars = async (): Promise<Avatar[]> => {
     const result = await axios.get(`${mantleUrl}/applicationUser/profile/unlockedAvatars`);
     return result.data;

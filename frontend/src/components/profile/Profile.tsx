@@ -192,7 +192,8 @@ const Profile = ({uuid}: ProfileProps) => {
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     alignItems: 'center',
-                                                    height: 75
+                                                    height: 75,
+                                                    minWidth: 100,
                                                 }}
                                                 onClick={() => handleBannerChange(banner.id)}
                                             >

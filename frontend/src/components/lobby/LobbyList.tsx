@@ -1,7 +1,7 @@
 import SecurityContext from "../../context/SecurityContext.ts";
 import React, {useContext, useState} from "react";
 import {usePublicLobbies} from "../../hooks/lobbyHooks/usePublicLobbies.ts";
-import {Box, Grid, Paper, ToggleButton, ToggleButtonGroup} from "@mui/material";
+import {Box, Grid, Paper, ToggleButton, ToggleButtonGroup, Tooltip} from "@mui/material";
 import Button from "@mui/material/Button";
 import {useStartedLobbies} from "../../hooks/lobbyHooks/useStartedLobbies.ts";
 import Table from '@mui/material/Table';
@@ -15,7 +15,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import OpenLobbyListItem from "./OpenLobbyListItem.tsx";
 
 export default function LobbyList() {
-    const { isAuthenticated } = useContext(SecurityContext);
+    const {isAuthenticated} = useContext(SecurityContext);
     const [viewPublicLobbies, setViewPublicLobbies] = useState(true);
     const publicLobbies = usePublicLobbies();
     const startedLobbies = useStartedLobbies();
@@ -39,13 +39,15 @@ export default function LobbyList() {
                         justifyContent: "left",
                         display: "flex"
                     }}>
-                        <Button
-                            variant="contained"
-                            sx={{ marginTop: '2%', marginBottom: '1%' }}
-                            onClick={() => currentLobbies.refetch()}
-                        >
-                            <RefreshIcon />
-                        </Button>
+                        <Tooltip title="Refresh lobbies" placement="top">
+                            <Button
+                                variant="contained"
+                                sx={{marginTop: '2%', marginBottom: '1%'}}
+                                onClick={() => currentLobbies.refetch()}
+                            >
+                                <RefreshIcon/>
+                            </Button>
+                        </Tooltip>
                     </Grid>
                     <Grid item xs={10} sx={{
                         justifyContent: 'center',
@@ -86,7 +88,8 @@ export default function LobbyList() {
                                 <TableCell align="right">Max Size</TableCell>
                                 <TableCell align="right">Host</TableCell>
                                 <TableCell align="right">Access</TableCell>
-                                <TableCell align="right">{currentLobbies == publicLobbies ? 'Code' : 'Player turn'}</TableCell>
+                                <TableCell
+                                    align="right">{currentLobbies == publicLobbies ? 'Code' : 'Player turn'}</TableCell>
                                 <TableCell align="right">Join</TableCell>
                             </TableRow>
                         </TableHead>
@@ -94,9 +97,9 @@ export default function LobbyList() {
                             <>
                                 {currentLobbies.data && currentLobbies.data?.map((row, index) => {
                                     if (currentLobbies === publicLobbies) {
-                                        return <OpenLobbyListItem key={index} props={row} />;
+                                        return <OpenLobbyListItem key={index} props={row}/>;
                                     } else {
-                                        return <StartedLobbyListItem key={index} props={row} />;
+                                        return <StartedLobbyListItem key={index} props={row}/>;
                                     }
                                 })}
                             </>

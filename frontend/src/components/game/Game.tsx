@@ -1,6 +1,6 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useGame} from "../../hooks/gameHooks/useGame.ts";
-import {Alert, Grid, Typography} from "@mui/material";
+import {Alert, Box, Divider, Grid, Typography} from "@mui/material";
 import Loader from "../general/Loader.tsx";
 import Board from "./board/Board.tsx";
 import WagonCardPile from "./board/WagonCardPile.tsx";
@@ -158,8 +158,9 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
             </Grid>
             <Grid item xs={2}>
                 {/* Right Column */}
-                <Grid container direction="column" alignItems="center" justifyContent="space-evenly"
-                      style={{height: '80vh'}}>
+                <Grid container direction="row" alignItems="center" justifyContent="space-evenly"
+                      style={{height: '80vh', overflowY: 'scroll', overflowX: 'hidden'}}>
+                    <Grid container direction="column" alignItems="center" justifyContent="space-evenly">
                     <Button
                         variant="contained"
                         color="primary"
@@ -171,43 +172,52 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
                         Go Back to Home
                     </Button>
                     {isPlayersTurn && !gameState.gameIsDone && (
-                        <Typography variant="body2" sx={{ color: secondsLeft > 0 ? 'primary.main' : 'error.main', fontWeight: 'bold', marginTop: 1 }}>
+                        <Typography variant="body2" sx={{
+                            color: secondsLeft > 0 ? 'primary.main' : 'error.main',
+                            fontWeight: 'bold',
+                            marginTop: 1
+                        }}>
                             {secondsLeft > 0
                                 ? `Time left: ${Math.floor(secondsLeft / 60)}:${(secondsLeft % 60).toString().padStart(2, '0')}`
                                 : 'Your turn is already over'}
                         </Typography>
                     )}
-
+                    </Grid>
 
                     <Typography variant="body2" sx={{
                         fontWeight: 'bold'
                     }}>{`Turn ${gameState.turn}`}</Typography>
 
-                    {gameState.players.map((playerState, index) => (
-                        <Grid item key={index} container alignItems="center">
-                            <Grid item xs={2}/>
-                            <Grid item xs={2}
-                                  sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                {gameState.playerTurnIndex === index && (
-                                    <ArrowForwardIosIcon sx={{marginRight: 1}}/>
+                        {gameState.players.map((playerState, index) => (
+                            <Grid item key={index} container alignItems="center">
+                                <Grid item xs={1}
+                                      sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                    {gameState.playerTurnIndex === index && (
+                                        <ArrowForwardIosIcon sx={{marginRight: 1}}/>
+                                    )}
+                                </Grid>
+                                <Grid item xs={11} sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}>
+                                    <Box sx={{marginRight: '67%'}}>
+                                        {gameState.players[index].applicationUserId === loggedInUserId ? (
+                                            <Typography variant="body2" sx={{
+                                                color: 'green',
+                                                fontWeight: 'bold',
+                                                marginBottom: 1,
+                                            }}>You</Typography>
+                                        ) : gameState.players[index].username}
+                                    </Box>
+                                    <PlayerIcon playerState={playerState}/>
+                                </Grid>
+                                {index < gameState.players.length - 1 && (
+                                    <Divider sx={{width: '100%', margin: '0.5rem 0'}}/>
                                 )}
                             </Grid>
-                            <Grid item xs={4} sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center'
-                            }}>
-                                {gameState.players[index].applicationUserId === loggedInUserId ? (
-                                    <Typography variant="body2" sx={{
-                                        color: 'green',
-                                        fontWeight: 'bold',
-                                        marginBottom: 1
-                                    }}>You</Typography>
-                                ) : gameState.players[index].username}
-                                <PlayerIcon playerState={playerState}/>
-                            </Grid>
-                        </Grid>
-                    ))}
+                        ))}
                 </Grid>
             </Grid>
             <Grid item xs={12} sx={{
@@ -226,7 +236,8 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
                                           onClick={() => console.log("clicked wagon cards")}/>
                     </Grid>
                     <Grid item xs={2}>
-                        <PlayerInformation playerState={gameState.players.find((player) => player.playerId === playerId)!} />
+                        <PlayerInformation
+                            playerState={gameState.players.find((player) => player.playerId === playerId)!}/>
                     </Grid>
                 </Grid>
             </Grid>
