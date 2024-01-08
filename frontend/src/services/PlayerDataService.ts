@@ -90,6 +90,7 @@ export const pickStationConnection = async (stationConnection : StationConnectio
 }
 
 export const getStationConnections = async (stationId: string): Promise<ConnectionForStation[]> => {
+    if (!stationId) return Promise.resolve([]);
     const result = await axios.get<ConnectionForStation[]>(`/station/${stationId}/connections`);
     return result.data;
 }
