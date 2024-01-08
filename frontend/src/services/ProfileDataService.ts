@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Avatar, LobbyBanner, MatchHistory, Profile} from "../model/Profile.ts";
+import {Avatar, LobbyBanner, MatchHistoryPageDto, Profile} from "../model/Profile.ts";
 import {Achievement} from "../model/Achievement.ts";
 const mantleUrl = import.meta.env.VITE_MANTLE_URL
 
@@ -55,7 +55,12 @@ export const checkIfUsernameExists = async (username: string): Promise<boolean> 
     return result.data;
 }
 
-export const getMatchHistory = async (): Promise<MatchHistory[]> => {
-    const result = await axios.get(`${mantleUrl}/applicationUser/matchHistory`);
+export type MatchHistoryPage = {
+    pageNumber: number,
+    size: number
+}
+
+export const getMatchHistory = async (matchHistoryPage: MatchHistoryPage): Promise<MatchHistoryPageDto> => {
+    const result = await axios.get(`${mantleUrl}/applicationUser/matchHistory?page=${matchHistoryPage.pageNumber}&size=${matchHistoryPage.size}`);
     return result.data;
 }

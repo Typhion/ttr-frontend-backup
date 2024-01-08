@@ -167,7 +167,7 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
                     >
                         Go Back to Home
                     </Button>
-                    {isPlayersTurn && (
+                    {isPlayersTurn && !gameState.gameIsDone && (
                         <Typography variant="body2" sx={{ color: secondsLeft > 0 ? 'primary.main' : 'error.main', fontWeight: 'bold', marginTop: 1 }}>
                             {secondsLeft > 0
                                 ? `Time left: ${Math.floor(secondsLeft / 60)}:${(secondsLeft % 60).toString().padStart(2, '0')}`
