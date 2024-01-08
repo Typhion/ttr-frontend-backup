@@ -1,7 +1,7 @@
 import {useMutation} from "@tanstack/react-query";
 import {quickPlay} from "../../services/LobbyDataService.ts";
 
-export function useQuickPlay(onSuccess: (uuid: String) => void) {
+export function useQuickPlay(onSuccess: (uuid: string) => void) {
     return useMutation({
         mutationFn: quickPlay,
         onSuccess: (uuid) => {

@@ -10,6 +10,7 @@ interface ConnectionTileProps {
     myTurn: boolean;
     playerColor: string;
     playerState: PlayerState;
+    gameEnding: boolean;
 }
 
 
@@ -22,7 +23,7 @@ export default function ConnectionTileNode({
                                                isConnectionHovered,
                                                myTurn,
                                                playerColor,
-                                               playerState
+                                               playerState,
                                            }: ConnectionTileProps) {
     const [isHovered, setHovered] = useState(false);
 

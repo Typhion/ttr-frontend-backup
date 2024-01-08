@@ -13,6 +13,7 @@ export type GameState = {
     connectionTiles: ConnectionTile[];
     connections: Connection[];
     gameIsDone: boolean;
+    lastTurn: boolean;
 }
 
 
@@ -79,4 +80,16 @@ export type Connection = {
     connectionType: string;
     connectionTiles: string[];
     playerColor: string;
+}
+
+export type ConnectionForStation = {
+    connectionId: string,
+    beginCityName: string,
+    endCityName: string
+}
+
+export interface Station {
+    stationId: string,
+    gamePlayerId: string,
+    applicationUserId: string,
 }
