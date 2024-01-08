@@ -68,7 +68,7 @@ export default function ConnectionNode({
                                           connectionId={connection.id}
                                           playerId={playerId}
                                           isOpen={isConnectionDialogOpen}
-                            // @ts-ignore
+                            // @ts-expect-error needs to receive a ChangeEvent but doesn't use it
                                           onClose={handleConnectionDialogClose}
                                           onSubmit={handleConnectionDialogSubmit}/>
                     ) : (
@@ -77,7 +77,7 @@ export default function ConnectionNode({
                                       playerId={playerId}
                                       gameId={gameId}
                                       isOpen={isConnectionDialogOpen}
-                            // @ts-ignore
+                            // @ts-expect-error needs to receive a ChangeEvent but doesn't use it
                                       onClose={handleConnectionDialogClose}
                                       onSubmit={handleConnectionDialogSubmit}/>
 

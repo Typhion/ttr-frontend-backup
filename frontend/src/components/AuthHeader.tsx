@@ -1,21 +1,24 @@
-import {AppBar, Box, IconButton, Stack, Toolbar, Typography} from '@mui/material'
+import {AppBar, Avatar, Box, IconButton, Stack, Toolbar, Typography} from '@mui/material'
 import {useContext, useEffect} from 'react'
 import SecurityContext from '../context/SecurityContext.ts'
 import {useLocation} from "react-router-dom";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MenuIcon from "@mui/icons-material/Menu";
 import {useNavigate} from "react-router-dom";
 import {useGetUserCredits} from "../hooks/userHooks/useGetUserCredits.ts";
 import logoImage from "../assets/images/logo.png";
 import ticketImage from "../assets/images/tickets/ticket.png";
+import {getAvatarImage} from "../model/Profile.ts";
+import {useProfileForHeader} from "../hooks/userHooks/useProfileForHeader.ts";
+import PersonIcon from "@mui/icons-material/Person";
 
 type HeaderProps = {
     onOpenDrawer: () => void
 }
 
 export function AuthHeader({onOpenDrawer}: HeaderProps) {
-    const {isAuthenticated, isLoading} = useContext(SecurityContext)
+    const {isAuthenticated, isLoading, loggedInUserId} = useContext(SecurityContext)
     const {data: userCredits, refetch} = useGetUserCredits();
+    const {data: profile} = useProfileForHeader(loggedInUserId);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -30,6 +33,11 @@ export function AuthHeader({onOpenDrawer}: HeaderProps) {
     }
     const handleNavShop = () => {
         navigate(`/shop`);
+    }
+
+    let avatarImage: string | null = null;
+    if (profile?.avatar?.image) {
+        avatarImage = getAvatarImage(profile.avatar.image);
     }
 
     const location = useLocation();
@@ -66,8 +74,13 @@ export function AuthHeader({onOpenDrawer}: HeaderProps) {
                         </IconButton>)}
                     {isAuthenticated() &&
                         <IconButton size='large' onClick={handleNavProfile}>
-                            <AccountCircleIcon
-                                sx={{fontSize: 'inherit'}}/>
+                            <Avatar sx={{width: 40, height: 40}}>
+                                {avatarImage ? (
+                                    <Avatar src={avatarImage} alt="Profile_Header" sx={{width: '100%', height: '100%'}}/>
+                                ) : (
+                                    <PersonIcon sx={{fontSize: 'inherit'}}/>
+                                )}
+                            </Avatar>
                         </IconButton>}
                 </Stack>
             </Toolbar>

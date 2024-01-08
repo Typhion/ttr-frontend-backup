@@ -1,5 +1,5 @@
 import {useState, useEffect, ChangeEvent} from 'react';
-import {Badge, Card, CardMedia} from '@mui/material';
+import {Badge, Card, CardMedia, Tooltip} from '@mui/material';
 import RouteCardDialog from './RandomRouteCardsDialog';
 import CardRoute from '../../../assets/images/cards/card-route.png';
 import {TempRouteCard} from '../../../model/GameState';
@@ -67,25 +67,26 @@ export default function RouteCardsPile({
                 }}
                 showZero
             >
-                <Card
-                    onClick={() => {
-                        if (myTurn && tempWagonCards?.length === 0) handleCardClick();
-                    }}
-                    sx={{cursor: myTurn && tempWagonCards?.length === 0 ? 'pointer' : 'default'}}
-                >
-                    <CardMedia component="img" image={CardRoute} alt="Card"/>
-                </Card>
-
+                <Tooltip title="Pick 3 random route cards to choose from" placement="right">
+                    <Card
+                        onClick={() => {
+                            if (myTurn && tempWagonCards?.length === 0) handleCardClick();
+                        }}
+                        sx={{cursor: myTurn && tempWagonCards?.length === 0 ? 'pointer' : 'default'}}
+                    >
+                        <CardMedia component="img" image={CardRoute} alt="Card"/>
+                    </Card>
+                </Tooltip>
             </Badge>
             {myTurn && (
-            <RouteCardDialog
-                open={isDialogOpen}
-                onClose={() => handleCloseDialog}
-                routes={routes}
-                playerId={playerId}
-                boardId={boardId}
-                gameId={gameId}
-            />
+                <RouteCardDialog
+                    open={isDialogOpen}
+                    onClose={() => handleCloseDialog}
+                    routes={routes}
+                    playerId={playerId}
+                    boardId={boardId}
+                    gameId={gameId}
+                />
             )}
         </>
     );

@@ -89,7 +89,7 @@ export default function Board({
             />
             <Box sx={{position: 'absolute', height: imageSize.height, width: imageSize.width}}>
                 <LastTurnDialog isOpen={isLastTurnDialogOpen}
-                    // @ts-ignore .
+                    // @ts-expect-error needs to receive a ChangeEvent but doesn't use it
                                 onClose={handleLastTurnDialogClose}/>
                 {cities.map((city) => (
                     <CityNode
@@ -104,21 +104,21 @@ export default function Board({
                     />
                 ))}
                 {connections && connections.map((connection) => (
-                    <Box key={connection.id} sx={{position: 'absolute'}}>
-                        <ConnectionNode
-                            connection={connection}
-                            boardId={boardUuid}
-                            playerId={playerUuid}
-                            connectionTiles={connectionTiles}
-                            key={connection.id}
-                            imageSize={imageSize}
-                            gameId={gameId}
-                            myTurn={myTurn}
-                            playerState={playerState}
-                            tempWagonCards={tempWagonCards}
-                            gameEnding={gameEnding}
-                        />
-                    </Box>
+                        <Box key={connection.id} sx={{position: 'absolute'}}>
+                            <ConnectionNode
+                                connection={connection}
+                                boardId={boardUuid}
+                                playerId={playerUuid}
+                                connectionTiles={connectionTiles}
+                                key={connection.id}
+                                imageSize={imageSize}
+                                gameId={gameId}
+                                myTurn={myTurn}
+                                playerState={playerState}
+                                tempWagonCards={tempWagonCards}
+                                gameEnding={gameEnding}
+                            />
+                        </Box>
                 ))}
             </Box>
         </Box>

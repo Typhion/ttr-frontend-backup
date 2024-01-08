@@ -1,5 +1,5 @@
 import CardImages from "../../../assets/images/cards/index.ts";
-import {Card, CardMedia} from "@mui/material";
+import {Card, CardMedia, Tooltip} from "@mui/material";
 
 interface FaceUpWagonCardProps {
     cardColor: string;
@@ -12,17 +12,18 @@ export default function FaceUpWagonCard({cardColor, onClick, myTurn}: FaceUpWago
 
     if (color in CardImages) {
         return (
-            <Card
-                onClick={myTurn ? onClick : undefined}
-                sx={{ width: '100%', cursor: myTurn ? 'pointer' : 'default' }}
-            >
-                <CardMedia
-                    component="img"
-                    image={CardImages[color]}
-                    alt="FaceUpWagonCard"
-                />
-            </Card>
-
+            <Tooltip title={"Pick " + cardColor.toLowerCase() + " card"} placement="right">
+                <Card
+                    onClick={myTurn ? onClick : undefined}
+                    sx={{width: '100%', cursor: myTurn ? 'pointer' : 'default'}}
+                >
+                    <CardMedia
+                        component="img"
+                        image={CardImages[color]}
+                        alt="FaceUpWagonCard"
+                    />
+                </Card>
+            </Tooltip>
         )
     }
 }
