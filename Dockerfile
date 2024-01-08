@@ -16,9 +16,7 @@ WORKDIR /usr/share/nginx/html
 
 COPY --from=build /Frontend/dist /usr/share/nginx/html
 
-#RUN rm /etc/nginx/conf.d/default.conf
-
-#COPY --from=build /Frontend/nginx.conf /etc/nginx/nginx.d
+COPY --from=build /Frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
