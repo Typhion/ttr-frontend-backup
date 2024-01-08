@@ -1,6 +1,7 @@
 import axios from "axios";
 import {ConnectionPick} from "../components/game/board/ConnectionDialog.tsx";
 import {StationCreate} from "../components/game/board/CreateStationDialog.tsx";
+import {ConnectionForStation, Station} from "../model/GameState.ts";
 
 export type RandomWagonCardPick = {
     playerId: string;
@@ -24,12 +25,12 @@ export type PlayerCardsForStations = {
 }
 
 export const getPlayerCardsForStation = async (playerId: string): Promise<PlayerCardsForStations> => {
-    const result = await axios.get(`/player/create/station/player/${playerId}`);
+    const result = await axios.get(`/station/create/station/player/${playerId}`);
     return result.data;
 }
 
 export const createStation = async (stationCreate: StationCreate): Promise<void> => {
-    await axios.post(`/player/create/station`, stationCreate);
+    await axios.post(`/station/create/station`, stationCreate);
 }
 
 export type RouteCardPick = {
@@ -74,4 +75,46 @@ export type EndTurn = {
 
 export const endTurn = async (endTurn: EndTurn): Promise<void> => {
     await axios.post(`/turn/end/${endTurn.gameId}/player/${endTurn.playerId}`);
+}
+
+export type StationConnection = {
+    stationId: string;
+    connectionId: string;
+    boardId: string;
+    playerId: string;
+}
+
+export const pickStationConnection = async (stationConnection : StationConnection): Promise<void> => {
+    const result = await axios.post(`/station/pick/connection`, stationConnection);
+    return result.data;
+}
+
+export const getStationConnections = async (stationId: string): Promise<ConnectionForStation[]> => {
+    const result = await axios.get<ConnectionForStation[]>(`/station/${stationId}/connections`);
+    return result.data;
+}
+
+export type getStationForCityAndPlayerProps = {
+    cityId: string,
+    playerId: string
+}
+
+export const getStationForCityAndPlayer = async ({cityId, playerId}: getStationForCityAndPlayerProps): Promise<Station> => {
+    const result = await axios.get<Station>(`/station/city/${cityId}/player/${playerId}`);
+    return result.data;
+}
+
+export const getStationForCity = async (cityId: string): Promise<Station> => {
+    const result = await axios.get<Station>(`/station/city/${cityId}`);
+    return result.data;
+}
+
+
+export type StationWithColor= {
+    stationId: string,
+    gamePlayerColor: string,
+}
+export const getOwnerColorByStation = async (stationId: string | null) : Promise<StationWithColor> => {
+    const result = await axios.get<StationWithColor>(`/station/${stationId}/owner`);
+    return result.data;
 }

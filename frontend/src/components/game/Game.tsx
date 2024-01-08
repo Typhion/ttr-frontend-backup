@@ -108,6 +108,8 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
     };
 
 
+    const gameEnding = gameState.lastTurn;
+
     return (
         <Grid container>
             <Grid item xs={2} sx={{
@@ -151,6 +153,7 @@ function GameContent({gameId, defaultPlayerId, boardId}: { gameId: string, defau
                     myTurn={isPlayersTurn}
                     playerState={gameState.players.find(player => player.playerId === playerId)!}
                     tempWagonCards={gameState.privateGameState.tempWagonCards}
+                    gameEnding={gameEnding}
                 />
             </Grid>
             <Grid item xs={2}>

@@ -1,10 +1,14 @@
 import {City} from "../../../model/GameState.ts";
 import {Box} from "@mui/material";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {useCreateStation} from "../../../hooks/gameHooks/useCreateStation.ts";
 import CreateStationDialog, {StationCreate} from "./CreateStationDialog.tsx";
-import TrainIcon from '@mui/icons-material/Train';
 import {useGameState} from "../../../hooks/gameHooks/useGameState.ts";
+import AddConnectionToStationDialog from "./AddConnectionToStationDialog.tsx";
+import Loader from "../../general/Loader.tsx";
+import StationIconHover from "./stationIconHover.tsx";
+import {useStationForCity} from "../../../hooks/gameHooks/useStationForCity.ts";
+import SecurityContext from "../../../context/SecurityContext.ts";
 
 interface CityNodeProps {
     city: City;
@@ -19,15 +23,35 @@ interface CityNodeProps {
 const originalSize = {width: 1328, height: 863};
 
 export default function CityNode({city, imageSize, boardUuid, playerId, gameId, myTurn, tempWagonCards}: CityNodeProps) {
+    const {loggedInUserId} = useContext(SecurityContext);
     const [isHovered, setHovered] = useState(false);
+
+    const {data: station, isError: isStationError, isLoading: isStationLoading, refetch} = useStationForCity(city.id)
+
+
     const [isCreateStationDialogOpen, setIsCreateStationDialogOpen] = useState(false);
+    const [isAddConnectionToStationDialogueOpen, setIsAddConnectionToStationDialogueOpen] = useState(false);
     const {refetch: refetchStations} = useGameState(gameId, playerId, true);
     const createStationMutation = useCreateStation(
         () => {
             setIsCreateStationDialogOpen(false);
             refetchStations();
+            refetch();
         },
     );
+
+    if (isStationLoading) return <Loader>Loading Game Details...</Loader>;
+
+    if (isStationError) return;
+
+    const handleCityClick = () => {
+        if (myTurn && tempWagonCards?.length === 0 && city.hasStation) {
+                setIsAddConnectionToStationDialogueOpen(true);
+
+        } else if (myTurn && tempWagonCards?.length === 0 && !city.hasStation) {
+            setIsCreateStationDialogOpen(true);
+        }
+    };
 
     const handleStationDialogSubmit = (stationCreate: StationCreate) => {
         createStationMutation.mutate(stationCreate);
@@ -43,6 +67,7 @@ export default function CityNode({city, imageSize, boardUuid, playerId, gameId, 
 
     const nodeSizePercent = 2; // 1% of the image's width
     const nodeSize = imageSize.width * (nodeSizePercent / 100);
+
 
     const cityStyle = {
         position: 'absolute',
@@ -64,22 +89,50 @@ export default function CityNode({city, imageSize, boardUuid, playerId, gameId, 
         <Box>
             <Box sx={{
                 ...cityStyle,
-                pointerEvents: myTurn && tempWagonCards?.length === 0 ? (city.hasStation ? 'none' : 'auto') : 'none',
+                pointerEvents: myTurn && station?.applicationUserId === loggedInUserId && tempWagonCards?.length === 0
+                    ? 'auto'
+                    : 'none',
             }}
-                 onMouseEnter={() => myTurn && setHovered(true)}
-                 onMouseLeave={() => myTurn && setHovered(false)}
-                 onClick={() => myTurn && tempWagonCards?.length === 0 && !city.hasStation && setIsCreateStationDialogOpen(true)}
+                 onMouseEnter={() => myTurn && station?.applicationUserId === loggedInUserId && setHovered(true)}
+                 onMouseLeave={() => myTurn && station?.applicationUserId === loggedInUserId && setHovered(false)}
+                 onClick={handleCityClick}
             >
-                {city.hasStation && <TrainIcon/>}
+                {city.hasStation && station?.stationId && <StationIconHover stationId={station.stationId} />}
             </Box>
-            <CreateStationDialog
-                isOpen={isCreateStationDialogOpen}
-                onSubmit={handleStationDialogSubmit}
-                onClose={() => setIsCreateStationDialogOpen(false)}
-                playerId={playerId}
-                cityId={city.id}
-                boardId={boardUuid}/>
+            {city.hasStation && station ? (
+                <AddConnectionToStationDialog
+                    isOpen={isAddConnectionToStationDialogueOpen}
+                    onClose={() => setIsAddConnectionToStationDialogueOpen(false)}
+                    playerId={playerId}
+                    cityId={city.id}
+                    boardId={boardUuid}
+                />
+            ) : (
+                <Box sx={{
+                    ...cityStyle,
+                    pointerEvents: myTurn && tempWagonCards?.length === 0
+                        ? 'auto'
+                        : 'none',
+                }}
+                     onMouseEnter={() => myTurn && setHovered(true)}
+                     onMouseLeave={() => myTurn && setHovered(false)}
+                     onClick={() => myTurn && tempWagonCards?.length === 0 && setIsCreateStationDialogOpen(true)}
+                >
+                    {city.hasStation && station?.stationId && <StationIconHover stationId={station.stationId} />}
+                </Box>
+            )}
+            {!city.hasStation && (
+                <CreateStationDialog
+                    isOpen={isCreateStationDialogOpen}
+                    onSubmit={handleStationDialogSubmit}
+                    onClose={() => setIsCreateStationDialogOpen(false)}
+                    playerId={playerId}
+                    cityId={city.id}
+                    boardId={boardUuid}
+                />
+            )}
         </Box>
-
     );
 }
+
+

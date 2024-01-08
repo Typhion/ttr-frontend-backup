@@ -15,6 +15,7 @@ interface ConnectionNodeProps {
     myTurn: boolean;
     playerState: PlayerState;
     tempWagonCards?: string[];
+    gameEnding: boolean;
 }
 
 export default function ConnectionNode({
@@ -26,7 +27,8 @@ export default function ConnectionNode({
                                            myTurn,
                                            gameId,
                                            playerState,
-                                           tempWagonCards
+                                           tempWagonCards,
+                                           gameEnding
                                        }: ConnectionNodeProps) {
     const [connectionHoverStates, setConnectionHoverStates] = useState<{ [key: string]: boolean }>({});
     const [isConnectionDialogOpen, setIsConnectionDialogOpen] = useState(false);
@@ -84,7 +86,7 @@ export default function ConnectionNode({
             )}
             <Box
                 sx={{
-                   pointerEvents: myTurn && tempWagonCards?.length === 0 ? 'auto' : 'none'
+                    pointerEvents: myTurn && tempWagonCards?.length === 0 ? 'auto' : 'none'
                 }}
                 onClick={handleConnectionClick}
                 onMouseEnter={() => handleConnectionHover(connection.id, true)}
@@ -105,6 +107,7 @@ export default function ConnectionNode({
                                 myTurn={myTurn}
                                 playerColor={connection.playerColor}
                                 playerState={playerState}
+                                gameEnding={gameEnding}
                             />
                         );
                     }
