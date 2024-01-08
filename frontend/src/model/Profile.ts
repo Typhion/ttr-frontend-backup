@@ -72,3 +72,9 @@ export function getAvatarImage(imageId: string | undefined): string | null {
     }
     return avatarImages[imageId];
 }
+
+export type MatchHistoryPageDto = {
+    matchHistoryDtos: MatchHistory[];
+    totalPages: number;
+    totalMatchHistories: number;
+}

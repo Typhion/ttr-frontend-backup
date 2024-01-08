@@ -1,4 +1,4 @@
-import {Box, CardContent, Typography, Paper, Card} from "@mui/material";
+import {Box, CardContent, Typography, Paper, Card, Pagination, Alert} from "@mui/material";
 import {useGetMatchHistory} from "../../../hooks/userHooks/useGetMatchHistory.ts";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -6,9 +6,23 @@ import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import Table from "@mui/material/Table";
 import Ticket from "../../../assets/images/tickets/ticket.png";
+import {useState} from "react";
+import Loader from "../../general/Loader.tsx";
 
 export default function MatchHistory() {
-    const matchHistory = useGetMatchHistory();
+    const [page, setPage] = useState({pageNumber: 0, size: 5});
+    const {isLoading, isError, data: matchHistory} = useGetMatchHistory(page);
+
+    if (isLoading) return <Loader>Loading Match Histories...</Loader>;
+
+    if (isError) {
+        return <Alert severity="error">Unable to load match histories.</Alert>;
+    }
+
+    const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+        setPage({pageNumber: value - 1, size: page.size});
+    };
+
     return (
         <Box>
             <Paper elevation={3} sx={{ m: 2, border: '1px solid black', borderRadius: '5px', overflowX: "auto", bgcolor: 'primary.light' }}>
@@ -16,8 +30,14 @@ export default function MatchHistory() {
                     <Typography variant="h5" gutterBottom>
                         Match History
                     </Typography>
-
-                    {matchHistory.data ? matchHistory.data.map((match, index) => (
+                    {matchHistory && matchHistory.matchHistoryDtos.length !== 0 && (
+                        <Pagination count={matchHistory.totalPages}
+                                    shape="rounded"
+                                    onChange={handlePageChange}
+                                    sx={{ mb: 2 }}
+                        />
+                    )}
+                    {matchHistory && matchHistory.matchHistoryDtos.length !== 0 ? matchHistory.matchHistoryDtos.map((match, index) => (
                         <Card key={index} sx={{
                             mb: 2,
                             p: 2,
@@ -69,5 +89,5 @@ export default function MatchHistory() {
             </Paper>
         </Box>
     );
-};
+}
 

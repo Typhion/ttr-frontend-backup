@@ -1,14 +1,15 @@
 import {useQuery} from "@tanstack/react-query";
-import {getMatchHistory} from "../../services/ProfileDataService.ts";
+import {getMatchHistory, MatchHistoryPage} from "../../services/ProfileDataService.ts";
 
-export function useGetMatchHistory() {
+export function useGetMatchHistory(matchHistoryPage: MatchHistoryPage) {
     const {
         isLoading,
         isError,
-        data: matchHistory,
+        data: matchHistory
     } = useQuery({
-        queryKey: ['matchHistory'],
-        queryFn: () => getMatchHistory()
+        queryKey: ['matchHistory', matchHistoryPage],
+        queryFn: () => getMatchHistory(matchHistoryPage),
+        keepPreviousData: true,
     });
 
     return {
