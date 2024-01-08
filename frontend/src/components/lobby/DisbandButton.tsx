@@ -16,7 +16,7 @@ export default function DisbandButton({lobbyId} : DisbandButtonProps) {
     }
 
     return (
-        <Button variant="contained" color="error" onClick={handleDisbandClick}>
+        <Button fullWidth variant="contained" color="error" onClick={handleDisbandClick}>
             Disband Lobby
         </Button>
     );

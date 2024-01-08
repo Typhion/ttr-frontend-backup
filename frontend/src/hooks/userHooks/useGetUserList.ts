@@ -10,6 +10,7 @@ export function useGetUserList(page: Page) {
     } = useQuery({
         queryKey: ['userList', page],
         queryFn: () => getUserList(page),
+        keepPreviousData: true,
     });
 
     return {

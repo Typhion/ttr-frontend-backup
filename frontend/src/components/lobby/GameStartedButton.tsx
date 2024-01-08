@@ -8,6 +8,7 @@ export default function GameStartedButton(props: { onClick: () => void }) {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
+            textAlign: "center"
         }}
     >
         <Typography>De game is al gestart, klik hier om de game te joinen</Typography>

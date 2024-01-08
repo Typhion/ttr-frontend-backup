@@ -18,7 +18,7 @@ export default function LeaveButton({lobbyId} : LeaveButtonProps) {
     }
 
     return (
-        <Button variant="contained" color="error" onClick={handleLeaveClick}>
+        <Button fullWidth variant="contained" color="error" onClick={handleLeaveClick}>
             Leave Lobby
         </Button>
     );

@@ -17,7 +17,7 @@ export default function Shop() {
 
     if (isLoading || isLoadingCredits) return <Loader>Loading shop...</Loader>;
 
-    if (isError || isErrorCredits || !shopCosmetics || !credits) {
+    if (isError || isErrorCredits || !shopCosmetics || (credits! <= -1)) {
         return <Alert severity="error">Unable to load shop.</Alert>;
     }
 
@@ -29,7 +29,7 @@ export default function Shop() {
         <Grid container spacing={2} p={5}>
             {shopCosmetics.map((item) => (
                 <Grid item xs={12} md={3} lg={2} key={item.avatar?.id || item.lobbyBanner?.id}>
-                    <ShopItemCard item={item} credits={credits} onBuy={handleBuy} />
+                    <ShopItemCard item={item} credits={credits!} onBuy={handleBuy} />
                 </Grid>
             ))}
         </Grid>
