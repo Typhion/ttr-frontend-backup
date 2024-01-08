@@ -9,9 +9,10 @@ type ToggleReadyButtonType = {
     lobbyId: string;
     refetch: () => Promise<QueryObserverResult<LobbyState | null | undefined, unknown>>,
     loggedInUserId: string | undefined;
+    readyCheck: boolean;
 }
 
-export default function ToggleReadyButton({lobbyState, lobbyId, refetch, loggedInUserId}: ToggleReadyButtonType) {
+export default function ToggleReadyButton({lobbyState, lobbyId, refetch, loggedInUserId, readyCheck}: ToggleReadyButtonType) {
     const setReady = useSetReady()
 
     const handleOnReadyClick = () => {
@@ -32,7 +33,7 @@ export default function ToggleReadyButton({lobbyState, lobbyId, refetch, loggedI
                 sx={{
                     width: '10%',
                     margin: 'auto',
-                    backgroundColor: 'green',
+                    backgroundColor: readyCheck ? 'green' : 'red',
                     color: 'white',
                 }}
                 onClick={handleOnReadyClick}

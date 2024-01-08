@@ -33,15 +33,17 @@ export default function StartGameButton(props: StartGameButtonType) {
     }
 
     return <Box sx={{
-        width: "33.33%", display: "flex",
+        width: "100%", display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        height: "100%"
     }}>
         {props.lobbyState.lobbyUsersDto.some(props.predicate) && (
             <Button
                 variant="contained"
                 sx={{
-                    width: "25%",
+                    height: "70px",
+                    width: "100%",
                     marginLeft: "10px",
                     backgroundColor: "green",
                     color: "white",

@@ -4,6 +4,7 @@ import {useState} from "react";
 import {LobbyState} from "../../model/LobbyState.ts";
 import {QueryObserverResult} from "@tanstack/react-query";
 import {useSetColor} from "../../hooks/lobbyHooks/useSetColor.ts";
+import {defaultTheme} from "../../assets/themes/defaultTheme.ts";
 
 type ToggleReadyButtonType = {
     lobbyState: LobbyState;
@@ -31,16 +32,20 @@ export default function ColorSetter({lobbyState, lobbyId, refetch, loggedInUserI
         ) && !lobbyState.gameId && (
             <Box
                 sx={{
-                    marginBottom: '20px',
+                    width: "100%",
+                    marginBottom: '2px',
                     display: 'flex',
                     alignItems: 'center',
-                    fontSize: '32px',
-                    padding: '5px',
+                    fontSize: '25px',
                     justifyContent: 'center',
-                    width: '40vw',
+                    maxWidth: '40vw',
+                    border: defaultTheme.palette.primary.main,
+                    borderRadius: "3px",
+                    borderStyle:  "solid",
+                    borderWidth: "1px",
+                    padding: "4px"
                 }}
             >
-                <span style={{minWidth: '5%'}}>Color:</span>
                 <input
                     type="color"
                     value={userColor || lobbyState.lobbyUsersDto.find(
@@ -58,7 +63,6 @@ export default function ColorSetter({lobbyState, lobbyId, refetch, loggedInUserI
                         outline: 'none',
                     }}
                 />
-                -
                 <Button
                     variant="contained"
                     sx={{

@@ -1,19 +1,16 @@
 import Button from "@mui/material/Button";
-import {useCreateLobby} from "../../hooks/lobbyHooks/useCreateLobby.ts";
 import {useContext, useState} from "react";
 import SecurityContext from "../../context/SecurityContext.ts";
 import {Box, Grid, TextField} from "@mui/material";
 import {useNavigate, useParams} from "react-router-dom";
 import {useJoinLobby} from "../../hooks/lobbyHooks/useJoinLobby.ts";
 import {useQuickPlay} from "../../hooks/lobbyHooks/useQuickPlay.ts";
-import otherImage from "../../assets/title-ticket-to-ride.png"
+import otherImage from "../../assets/title-ticket-to-ride.png";
+import {defaultTheme} from "../../assets/themes/defaultTheme.ts";
 
 export default function Home() {
     const {isAuthenticated} = useContext(SecurityContext);
     const navigate = useNavigate();
-    const createLobby = useCreateLobby((uuid) => {
-        navigate(`/lobby/${uuid}`);
-    });
     const joinLobby = useJoinLobby((uuid) => {
         navigate(`/lobby/${uuid}`);
     });
@@ -21,12 +18,8 @@ export default function Home() {
         navigate(`/lobby/${uuid}`);
     });
 
-    const { lobbyCode: paramLobbyCode } = useParams();
+    const {lobbyCode: paramLobbyCode} = useParams();
     const [lobbyCode, setLobbyCode] = useState(paramLobbyCode || "");
-
-    const handleCreateLobbyClick = () => {
-        createLobby.mutate();
-    };
 
     const handleJoinLobbyClick = () => {
         joinLobby.mutate(lobbyCode);
@@ -34,79 +27,86 @@ export default function Home() {
 
     const handleQuickPlayClick = () => {
         quickPlay.mutate();
-    }
-
-    const handleGetLobbiesClick = () => {
-        navigate(`/lobby`);
-    }
+    };
 
     if (isAuthenticated()) {
         return (
-            <Grid container style={{justifyContent: 'center', alignItems: 'center' }} spacing={2}>
-                <Grid  item style={{
-                   alignSelf: "center"
-                }}>
+            <Box sx={{width: "100%", justifyContent: "center"}}>
+            <Grid
+                container
+                direction={"column"}
+                style={{
+                    justifySelf: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    width: "100%"
+                }}
+            >
+                <Grid item style={{marginBottom: "1vh"}}>
                     <img
                         style={{
                             margin: "auto",
                             width: "50%",
-                            justifyContent: "center",
-                            alignSelf: "center",
-                            display: "flex"
+                            display: "block",
                         }}
                         alt="homepage"
                         src={otherImage}
-
                     />
                 </Grid>
-                <Grid container style={{justifyContent: 'center'}}>
-                    <Grid item>
-                        <TextField
-                            label="Enter Lobby Code"
-                            variant="outlined"
-                            sx={{height: '100%'}}
-                            value={lobbyCode}
-                            onChange={(e) => setLobbyCode(e.target.value)}
-                        />
+                <Grid direction={"row"} container sx={{ width: "100%", justifyContent: "center", paddingTop: "15vh" }}>
+                    <Grid xs={6} item style={{ width: "100%", display: "flex" }}>
+                            <TextField
+                                label="Enter Lobby Code"
+                                variant="outlined"
+                                sx={{
+                                    width: "100%"
+                                }}
+                                InputProps={{ sx: { borderBottomRightRadius: 0, borderTopRightRadius: 0 } }}
+                                value={lobbyCode}
+                                onChange={(e) => setLobbyCode(e.target.value)}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{
+                                    width: "25%",
+                                    height: "100%",
+                                    textTransform: "none",
+                                    fontSize: "1rem",
+                                    fontWeight: "bold",
+                                    borderRadius: "0 3px 3px 0",
+                                    boxShadow: "0",
+                                }}
+                                onClick={handleJoinLobbyClick}
+                            >
+                                Join
+                            </Button>
                     </Grid>
-                    <Grid item>
+                </Grid>
+                <Grid item sx={{ width: "100%", justifyContent: "center", display: "flex", paddingTop: "5vh" }}>
+                    <Grid xs={6} item style={{ display: "flex" }}>
                         <Button
                             variant="contained"
-                            sx={{marginLeft: '10px', height: '100%'}}
-                            onClick={handleJoinLobbyClick}
+                            color="primary"
+                            sx={{
+                                width: "100%",
+                                textTransform: "none",
+                                fontSize: "1.5rem",
+                                fontWeight: "bold",
+                                display: 'inherit',
+                                color: defaultTheme.palette.text.primary,
+                            }}
+                            onClick={handleQuickPlayClick}
                         >
-                            Join
+                            QuickPlay
                         </Button>
                     </Grid>
                 </Grid>
-                <Grid item>
-                    <Button
-                        variant="contained"
-                        sx={{marginLeft: '10px'}}
-                        onClick={handleQuickPlayClick}
-                    >
-                        QuickPlay
-                    </Button>
-                </Grid>
-                <Grid item>
-                    <Button
-                        variant="contained"
-                        sx={{height: '100%'}}
-                        onClick={handleCreateLobbyClick}
-                    >
-                        Create Lobby
-                    </Button>
-                </Grid>
-                <Grid item>
-                    <Button
-                        variant="contained"
-                        sx={{height: '100%'}}
-                        onClick={handleGetLobbiesClick}
-                    >
-                        Lobbies
-                    </Button>
-                </Grid>
+
             </Grid>
+            </Box>
+
         );
     } else {
         return <Box>Please log in to view the rest of this page</Box>;

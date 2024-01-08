@@ -13,17 +13,28 @@ import TableRow from '@mui/material/TableRow';
 import StartedLobbyListItem from "./StartedLobbyListItem.tsx";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import OpenLobbyListItem from "./OpenLobbyListItem.tsx";
+import {useCreateLobby} from "../../hooks/lobbyHooks/useCreateLobby.ts";
+import {useNavigate} from "react-router-dom";
+import AddIcon from '@mui/icons-material/Add';
 
 export default function LobbyList() {
-    const {isAuthenticated} = useContext(SecurityContext);
+    const navigate = useNavigate();
+    const { isAuthenticated } = useContext(SecurityContext);
     const [viewPublicLobbies, setViewPublicLobbies] = useState(true);
     const publicLobbies = usePublicLobbies();
     const startedLobbies = useStartedLobbies();
+    const createLobby = useCreateLobby((uuid) => {
+        navigate(`/lobby/${uuid}`);
+    });
 
     const handleToggleView = (_: React.MouseEvent<HTMLElement>, newValue: boolean) => {
         if (newValue != null) {
             setViewPublicLobbies(newValue);
         }
+    };
+
+    const handleCreateLobbyClick = () => {
+        createLobby.mutate();
     };
 
     if (isAuthenticated()) {
@@ -75,7 +86,18 @@ export default function LobbyList() {
                             </ToggleButton>
                         </ToggleButtonGroup>
                     </Grid>
-                    <Grid item xs={1}></Grid>
+                    <Grid item xs={1} sx={{
+                        justifyContent: "right",
+                        display: "flex"
+                    }}>
+                            <Button
+                                variant="contained"
+                                sx={{marginTop: '2%', marginBottom: '1%'}}
+                                onClick={handleCreateLobbyClick}
+                            >
+                                <AddIcon/>
+                            </Button>
+                    </Grid>
                 </Grid>
                 <TableContainer component={Paper} sx={{
                     width: "80%",

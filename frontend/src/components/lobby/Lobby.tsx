@@ -2,37 +2,29 @@ import Button from "@mui/material/Button";
 import {useNavigate, useParams} from "react-router-dom";
 import {
     Alert,
-    Box, Grid,
+    Box, Grid, Typography,
 } from "@mui/material";
 import Loader from "../general/Loader.tsx";
 import {useLobbyState} from "../../hooks/lobbyHooks/useLobbyState.ts";
 import SecurityContext from "../../context/SecurityContext.ts";
 import {useContext, useState} from "react";
-import DoneIcon from '@mui/icons-material/Done';
-import ClearIcon from '@mui/icons-material/Clear';
 import {useSetPublic} from "../../hooks/lobbyHooks/useSetPublic.ts";
 import SettingsDialog from "./SettingsDialog.tsx";
 import SettingsIcon from '@mui/icons-material/Settings';
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import {useKickLobbyUser} from "../../hooks/lobbyHooks/useKickLobbyUser.ts";
-import {useBanLobbyUser} from "../../hooks/lobbyHooks/useBanLobbyUser.ts";
-import BlockIcon from '@mui/icons-material/Block';
 import InviteFriendDialog from "./InviteFriendDialog.tsx";
 import GameStartedButton from "./GameStartedButton.tsx";
-import ToggleReadyButton from "./ToggleReadyButton.tsx";
 import ColorSetter from "./ColorSetter.tsx";
 import StartGameButton from "./StartGameButton.tsx";
 import CopyLobbyCode from "./CopyLobbyCode.tsx";
 import TogglePrivateLobby from "./TogglePrivateLobby.tsx";
 import LeaveButton from "./LeaveButton.tsx";
 import DisbandButton from "./DisbandButton.tsx";
+import LobbyPlayer from "./LobbyPlayer.tsx";
 
 
 function LobbyContent({lobbyId}: { lobbyId: string }) {
     const navigate = useNavigate();
     const setPublic = useSetPublic()
-    const kickLobbyUser = useKickLobbyUser();
-    const banLobbyUser = useBanLobbyUser();
     const {loggedInUserId} = useContext(SecurityContext)
     const {isLoading, isError, data: lobbyState, refetch} = useLobbyState(lobbyId);
 
@@ -57,13 +49,7 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
         return <Alert severity="error">This lobby doesn't exist (Anymore).</Alert>;
     }
 
-    const handleKickLobbyUser = (lobbyId: string, userId: string) => {
-        kickLobbyUser.mutate({lobbyId, userId})
-    }
 
-    const handleBanLobbyUser = (lobbyId: string, userId: string) => {
-        banLobbyUser.mutate({lobbyId, userId})
-    }
 
     const handleCopySuccess = () => {
         setCopied(true);
@@ -82,183 +68,142 @@ function LobbyContent({lobbyId}: { lobbyId: string }) {
 
     return (
         <Box>
-            {lobbyState.lobbyUsersDto.some(
-                (player) => player.applicationUserDto.id === loggedInUserId && player.isHost
-            ) && (
-                <Box>
-                    <Button onClick={handleSettingsDialogOpen}><SettingsIcon/></Button>
-                    <SettingsDialog
-                        open={isSettingsDialogOpen}
-                        onClose={handleSettingsDialogClose}
-                        lobbySettings={{lobbyId: lobbyId, settingDto: lobbyState.settingDto}}
-                    />
-                </Box>
-            )}
-            <Button onClick={handleInviteDialogOpen}>Invite Friend</Button>
-
-            <InviteFriendDialog
-                isOpen={isInviteDialogOpen}
-                onClose={handleInviteDialogClose}
-                lobbyId={lobbyId}
-            />
-            {lobbyState.lobbyUsersDto.some(
-                (player) => player.applicationUserDto.id === loggedInUserId && !player.isHost
-            ) ? (
-                    <LeaveButton lobbyId={lobbyId}/>
-                ) :
-                (
-                    <DisbandButton lobbyId={lobbyId}/>
-                )
-            }
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
-                <Box
-                    sx={{
-                        border: '2px solid black',
-                        padding: '5%',
-                        marginBottom: '20px',
-                        width: '70vw'
-                    }}
-                >
-                    {lobbyState.lobbyUsersDto.map((player) => (
-                        <Grid
-                            key={player.id}
-                            container
-                            sx={{
-                                border: '2px solid black',
-                                marginBottom: '15px',
-                                fontSize: '32px',
-                                width: '100%',
-                                padding: '5px',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
-                                <span style={{minWidth: '5%'}}>{player.isHost ? '👑' : ''}</span>
-                            </Grid>
-                            <Grid item xs={2} sx={{display: 'flex', alignItems: 'center'}}>
-                                <div
-                                    style={{
-                                        backgroundColor: player.color,
-                                        width: '20px',
-                                        height: '20px',
-                                        marginRight: '10px',
-                                        border: '1px solid black',
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={3} sx={{display: 'flex', alignItems: 'center'}}>
-                                {player.applicationUserDto.username}
-                            </Grid>
-
-                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
-                                {player.ready ? (
-                                    <DoneIcon sx={{marginLeft: '20px', color: 'green'}}/>
-                                ) : (
-                                    <ClearIcon sx={{marginLeft: '20px', color: 'red'}}/>
-                                )}
-                            </Grid>
-                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
-                                {(hostUserId === loggedInLobbyUser?.id && !player.isHost) && (
-                                    <Box>
-                                        <PersonRemoveIcon
-                                            onClick={() => handleKickLobbyUser(lobbyId, player.id)}
-                                            style={{cursor: 'pointer'}}
-                                        />
-                                    </Box>
-                                )}
-                            </Grid>
-                            <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
-                                {(hostUserId === loggedInLobbyUser?.id && !player.isHost) && (
-                                    <Box>
-                                        <BlockIcon
-                                            onClick={() => handleBanLobbyUser(lobbyId, player.id)}
-                                            style={{cursor: 'pointer'}}
-                                        />
-                                    </Box>
-                                )}
-                            </Grid>
-
-                        </Grid>
-                    ))}
-                </Box>
-
-                {<ColorSetter lobbyState={lobbyState}
-                              lobbyId={lobbyId}
-                              refetch={refetch}
-                              loggedInUserId={loggedInUserId}/>}
-
-                <Box
-                    sx={{
-                        width: '33.33%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
-                >
-                    {lobbyState.lobbyUsersDto.some(
-                        (player) => player.applicationUserDto.id === loggedInUserId && player.isHost
-                    ) && !lobbyState.gameId && (
-                        <TogglePrivateLobby lobbyState={lobbyState} onChange={handleToggleChange}/>
-                    )}
-                </Box>
-                <Box
-                    sx={{
-                        width: "33.33%",
+            <Grid container direction="row">
+                <Grid item key={lobbyId} xs={12} md={8} paddingLeft={2}>
+                    <Typography variant={"h2"}
+                                sx={{
+                                    textAlign: "center"
+                                }}
+                    >Players</Typography>
+                    {lobbyState.lobbyUsersDto
+                        .slice()
+                        .sort((a, b) => a.applicationUserDto.username.localeCompare(b.applicationUserDto.username))
+                        .map((player) => (
+                            <LobbyPlayer
+                                key={player.id}
+                                player={player}
+                                hostUserId={hostUserId}
+                                loggedInLobbyUserId={loggedInUserId!}
+                                loggedInLobbyUser={loggedInLobbyUser!}
+                                lobbyId={lobbyId}
+                                refetch={refetch}
+                                lobbyState={lobbyState}
+                            />
+                        ))}
+                </Grid>
+                <Grid item xs={12} md={4} px={2}>
+                    <Typography variant={"h2"} sx={{
+                        textAlign: "center"
+                    }}>Settings</Typography>
+                    <Box sx={{
                         display: "flex",
-                        justifyContent: "center",
+                        flexDirection: "column",
                         alignItems: "center",
-                    }}
-                >
-                    {lobbyState.lobbyUsersDto.some(
-                        (player) => player.applicationUserDto.id === loggedInUserId
-                    ) && !lobbyState.gameId && (
-                        <CopyLobbyCode lobbyCode={lobbyState.code} onCopy={handleCopySuccess} copied={copied}/>
-                    )}
-                </Box>
-                {lobbyState.gameId && (
-                    <GameStartedButton onClick={() => navigate(`/game/${lobbyState.gameId}`)}/>
-                )}
-                <Box
-                    sx={{
-                        display: 'flex',
-                        width: '100%',
-                        position: 'absolute',
-                        bottom: 10,
-                        left: 0,
-                        right: 0,
-                    }}
-                >
-                    {<ToggleReadyButton lobbyState={lobbyState}
-                                        lobbyId={lobbyId}
-                                        refetch={refetch}
-                                        loggedInUserId={loggedInUserId}/>}
+                        height: "100%",
+                        width: "100%"
+                    }}>
+                        <Box sx={{
+                            width: "100%",
+                            marginTop: "1vh",
+                        }}>
+                            {lobbyState.lobbyUsersDto.some(
+                                (player) => player.applicationUserDto.id === loggedInUserId && player.isHost
+                            ) && (
+                                <Box>
+                                    <Button sx={{
+                                        width: "100%"
+                                    }} variant={"outlined"} onClick={handleSettingsDialogOpen}><SettingsIcon/></Button>
+                                    <SettingsDialog
+                                        open={isSettingsDialogOpen}
+                                        onClose={handleSettingsDialogClose}
+                                        lobbySettings={{lobbyId: lobbyId, settingDto: lobbyState.settingDto}}
+                                    />
+                                </Box>
+                            )}
+                        </Box>
+                        <Box sx={{
+                            width: "100%",
+                            marginTop: "1vh",
+                        }}>
+                            {!lobbyState.gameId && (
+                                <Box>
+                                    <Button color="success" variant={"outlined"} sx={{ width: "100%" }} onClick={handleInviteDialogOpen}>
+                                        Invite Friend
+                                    </Button>
+                                    <InviteFriendDialog isOpen={isInviteDialogOpen} onClose={handleInviteDialogClose} lobbyId={lobbyId} />
+                                </Box>
+                            )}</Box>
+                        <Box sx={{
+                            width: "100%",
+                            marginTop: "1vh",
+                        }}>
+                            {lobbyState.lobbyUsersDto.some(
+                                (player) => player.applicationUserDto.id === loggedInUserId
+                            ) && !lobbyState.gameId && (
+                                <CopyLobbyCode lobbyCode={lobbyState.code} onCopy={handleCopySuccess} copied={copied}/>
+                            )}
+                        </Box>
+                        <Box sx={{
+                            width: "100%",
+                            marginTop: "1vh",
+                        }}>
+                            {<ColorSetter lobbyState={lobbyState}
+                                          lobbyId={lobbyId}
+                                          refetch={refetch}
+                                          loggedInUserId={loggedInUserId}/>}
+                        </Box>
+                        <Box sx={{
+                            width: "100%",
+                            marginTop: "1vh",
+                            display: "flex",
+                            justifyContent: "center",
+                        }}>
+                            {lobbyState.lobbyUsersDto.some(
+                                (player) => player.applicationUserDto.id === loggedInUserId && player.isHost
+                            ) && !lobbyState.gameId && (
+                                <TogglePrivateLobby lobbyState={lobbyState} onChange={handleToggleChange}/>
+                            )}
+                        </Box>
+                        <Box sx={{
+                            width: "100%",
+                            marginTop: "1vh",
+                        }}>
+                            {lobbyState.gameId && (
+                                <GameStartedButton onClick={() => navigate(`/game/${lobbyState.gameId}`)}/>
+                            )}
+                        </Box>
+                        <Box sx={{
+                            width: "100%"
+                        }}>
+                            {!lobbyState.gameId && lobbyState.lobbyUsersDto.some(
+                                (player) => player.applicationUserDto.id === loggedInUserId && !player.isHost
+                            ) ? (
+                                <LeaveButton lobbyId={lobbyId} />
+                            ) : !lobbyState.gameId && (
+                                <DisbandButton lobbyId={lobbyId} />
+                            )}
+                        </Box>
+                    </Box>
+                </Grid>
+            </Grid>
+            <Grid container px={2}>
+                <Grid item xs={12}> <Box sx={{
+                    width: "100%",
+                    marginTop: "20px"
+                }}>
                     {
                         lobbyState.lobbyUsersDto.some(
                             (player) => player.applicationUserDto.id === loggedInUserId && player.isHost
                         ) && (
                             <StartGameButton lobbyState={lobbyState} predicate={(player) => player.isHost}
-                                               predicate1={(player) => player.isHost &&
-                                                   player.applicationUserDto.id === loggedInUserId &&
-                                                   lobbyState.lobbyUsersDto.length >= 2 &&
-                                                   lobbyState.lobbyUsersDto.length <= 5}
-                                               lobbyId={lobbyId}/>
+                                             predicate1={(player) => player.isHost &&
+                                                 player.applicationUserDto.id === loggedInUserId &&
+                                                 lobbyState.lobbyUsersDto.length >= 2 &&
+                                                 lobbyState.lobbyUsersDto.length <= 5}
+                                             lobbyId={lobbyId}/>
                         )}
-                    <Box sx={{
-                        width: '33.33%', display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}>
-                        Europe
-                    </Box>
-                </Box>
-            </Box>
+                </Box></Grid>
+            </Grid>
         </Box>
     );
 }
