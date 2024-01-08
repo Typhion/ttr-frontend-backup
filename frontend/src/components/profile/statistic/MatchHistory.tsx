@@ -1,4 +1,4 @@
-import {Box, CardContent, Typography, Paper, Card, Pagination, Alert} from "@mui/material";
+import {Box, CardContent, Typography, Paper, Card, Pagination, Alert, TextField, MenuItem} from "@mui/material";
 import {useGetMatchHistory} from "../../../hooks/userHooks/useGetMatchHistory.ts";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -23,6 +23,12 @@ export default function MatchHistory() {
         setPage({pageNumber: value - 1, size: page.size});
     };
 
+    const handleChangeRowsPerPage = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+        setPage({pageNumber: 0, size: parseInt(event.target.value, 10)});
+    };
+
     return (
         <Box>
             <Paper elevation={3} sx={{ m: 2, border: '1px solid black', borderRadius: '5px', overflowX: "auto", bgcolor: 'primary.light' }}>
@@ -31,11 +37,44 @@ export default function MatchHistory() {
                         Match History
                     </Typography>
                     {matchHistory && matchHistory.matchHistoryDtos.length !== 0 && (
-                        <Pagination count={matchHistory.totalPages}
-                                    shape="rounded"
-                                    onChange={handlePageChange}
-                                    sx={{ mb: 2 }}
-                        />
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                '& .MuiTextField-root': { m: 1, width: '15ch',
+                                mb: 2 },
+                            }}
+                        >
+                            <Pagination count={matchHistory.totalPages}
+                                        shape="rounded"
+                                        onChange={handlePageChange}
+                                        sx={{ mt: 1.5 }}
+                            />
+                            <TextField
+                                select
+                                label="Rows per page"
+                                defaultValue={5}
+                                size="small"
+                                onChange={handleChangeRowsPerPage}
+                            >
+                                <MenuItem key={5} value={5}>
+                                    {5}
+                                </MenuItem>
+                                <MenuItem key={10} value={10}>
+                                    {10}
+                                </MenuItem>
+                                <MenuItem key={15} value={15}>
+                                    {15}
+                                </MenuItem>
+                                <MenuItem key={20} value={20}>
+                                    {20}
+                                </MenuItem>
+                                <MenuItem key={25} value={25}>
+                                    {25}
+                                </MenuItem>
+                            </TextField>
+                        </Box>
                     )}
                     {matchHistory && matchHistory.matchHistoryDtos.length !== 0 ? matchHistory.matchHistoryDtos.map((match, index) => (
                         <Card key={index} sx={{
