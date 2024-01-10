@@ -10,7 +10,7 @@ variables:
 
 stages:
   - build-image
-#  - quality
+  - quality
   - publish-image
   - deploy
 
@@ -25,16 +25,16 @@ build-image:
     paths:
       - $TAR_FILE_NAME
 
-#linting:
-#  stage: quality
-#  script:
-#    - echo "Linting the application..."
-#    - cd ./frontend
-#    - npm run lint
-#  allow_failure: true
-#  rules:
-#    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-#    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+linting:
+  stage: quality
+  script:
+    - echo "Linting the application..."
+    - cd ./frontend
+    - npm run lint
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 publish-image:
   rules:
