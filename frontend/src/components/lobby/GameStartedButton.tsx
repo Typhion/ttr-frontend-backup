@@ -11,7 +11,7 @@ export default function GameStartedButton(props: { onClick: () => void }) {
             textAlign: "center"
         }}
     >
-        <Typography>De game is al gestart, klik hier om de game te joinen</Typography>
+        <Typography>The game has already started, click here to join the game</Typography>
         <Button
             variant="contained"
             sx={{
