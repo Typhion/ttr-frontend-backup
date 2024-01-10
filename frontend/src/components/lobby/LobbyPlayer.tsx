@@ -97,7 +97,10 @@ export default function LobbyPlayer({
                         }}
                     />
                 </Grid>
-                <Grid item xs={2}>{player.applicationUserDto.id === loggedInLobbyUserId ? (
+                <Grid sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                }} item xs={2}>{player.applicationUserDto.id === loggedInLobbyUserId ? (
                     <ToggleReadyButton
                         readyCheck={player.ready}
                         lobbyState={lobbyState}
