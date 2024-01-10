@@ -4,6 +4,7 @@ import {useGetPlayerAvatar} from "../../../hooks/userHooks/useGetPlayerAvatar.ts
 import Loader from "../../general/Loader.tsx";
 import PersonIcon from "@mui/icons-material/Person";
 import TrainIcon from "@mui/icons-material/Train";
+import AvatarImages from "../../../assets/images/avatars/index.ts";
 
 interface PlayerIconProps {
     playerState: PlayerState;
@@ -16,7 +17,7 @@ export default function PlayerIcon({playerState}: PlayerIconProps) {
     if (isLoading) return <Loader>Loading Player Avatar...</Loader>;
     if (isError || !playerAvatar) return <Alert severity="error">Unable to load this player's avatar.</Alert>;
 
-    const avatarImage = `/src/assets/images/avatars/${playerAvatar.image}.png`;
+    const avatarImage = AvatarImages[playerAvatar.image];
 
     const carriageStyle = {
         display: "inline-block",
@@ -54,7 +55,7 @@ export default function PlayerIcon({playerState}: PlayerIconProps) {
                     }}
                 >
                     <Avatar sx={{width: '100%', height: '100%'}}>
-                        {playerAvatar.image ? (
+                        {playerAvatar.image && avatarImage ? (
                             <img src={avatarImage} alt={`Avatar of ${playerState.username}`}
                                  style={{width: '100%', height: '100%', borderRadius: '50%'}}/>
                         ) : (
