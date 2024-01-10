@@ -9,21 +9,10 @@ variables:
   TAR_FILE_NAME: ttr-frontend-image.tar
 
 stages:
-  - build-image
   - quality
+  - build-image
   - publish-image
   - deploy
-
-build-image:
-  stage: build-image
-  script:
-    - echo "Building the application..."
-    - docker build . -t $GCR_REGISTRY_IMAGE:latest
-    - docker save -o $TAR_FILE_NAME $GCR_REGISTRY_IMAGE:latest
-  artifacts:
-    expire_in: 1 hours
-    paths:
-      - $TAR_FILE_NAME
 
 linting:
   stage: quality
@@ -35,6 +24,17 @@ linting:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+build-image:
+  stage: build-image
+  script:
+    - echo "Building the application..."
+    - docker build . -t $GCR_REGISTRY_IMAGE:latest
+    - docker save -o $TAR_FILE_NAME $GCR_REGISTRY_IMAGE:latest
+  artifacts:
+    expire_in: 1 hours
+    paths:
+      - $TAR_FILE_NAME
 
 publish-image:
   rules:
