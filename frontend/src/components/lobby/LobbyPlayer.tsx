@@ -83,7 +83,7 @@ export default function LobbyPlayer({
                         <Avatar src={avatarImage!} alt={"playerAvatar" + player.id}/>
                     }/>
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={4}>
                     <Typography fontSize={20}>{player.applicationUserDto.username}</Typography>
                 </Grid>
                 <Grid item xs={1}>
@@ -97,7 +97,7 @@ export default function LobbyPlayer({
                         }}
                     />
                 </Grid>
-                <Grid item xs={1}>{player.applicationUserDto.id === loggedInLobbyUserId ? (
+                <Grid item xs={2}>{player.applicationUserDto.id === loggedInLobbyUserId ? (
                     <ToggleReadyButton
                         readyCheck={player.ready}
                         lobbyState={lobbyState}

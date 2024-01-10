@@ -21,7 +21,7 @@ export default function ToggleReadyButton({lobbyState, lobbyId, refetch, loggedI
     }
 
     return <Box sx={{
-        width: '33.33%', display: 'flex',
+        width: '55.33%', display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
     }}>
@@ -31,7 +31,7 @@ export default function ToggleReadyButton({lobbyState, lobbyId, refetch, loggedI
             <Button
                 variant="contained"
                 sx={{
-                    width: '10%',
+                    justifyContent: 'center',
                     margin: 'auto',
                     backgroundColor: readyCheck ? 'green' : 'red',
                     color: 'white',
@@ -39,7 +39,7 @@ export default function ToggleReadyButton({lobbyState, lobbyId, refetch, loggedI
                 onClick={handleOnReadyClick}
                 disabled={!!lobbyState.gameId}
             >
-                Ready
+                {readyCheck ? 'Ready' : 'Not Ready'}
             </Button>
         )}
     </Box>;
