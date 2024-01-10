@@ -9,21 +9,10 @@ variables:
   TAR_FILE_NAME: ttr-frontend-image.tar
 
 stages:
-  - quality
   - build-image
+  - quality
   - publish-image
   - deploy
-
-linting:
-  stage: quality
-  script:
-    - echo "Linting the application..."
-    - cd ./frontend
-    - npm run lint
-  allow_failure: true
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 build-image:
   stage: build-image
@@ -35,6 +24,17 @@ build-image:
     expire_in: 1 hours
     paths:
       - $TAR_FILE_NAME
+
+linting:
+  stage: quality
+  script:
+    - echo "Linting the application..."
+    - cd ./frontend
+    - npm run lint
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 publish-image:
   rules:
