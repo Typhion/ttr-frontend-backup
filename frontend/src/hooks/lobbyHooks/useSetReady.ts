@@ -1,8 +1,11 @@
 import {useMutation} from "@tanstack/react-query";
 import {setReady} from "../../services/LobbyDataService.ts";
 
-export function useSetReady() {
+export function useSetReady(onSuccess: () => void) {
     return useMutation({
-        mutationFn: ((uuid: string) => setReady(uuid))
+        mutationFn: ((uuid: string) => setReady(uuid)),
+        onSuccess: () => {
+            onSuccess();
+        }
     });
 }

@@ -76,7 +76,9 @@ export default function StartedLobbyListItem({props}: { props: LobbyState }) {
             <Button
             variant="contained"
             onClick={() => handleJoinLobbyClick(props)}
-            disabled={props.lobbyUsersDto.length >= props.maxSize || props.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId)}
+            disabled={props.lobbyUsersDto.length >= props.maxSize
+                && !props.lobbyUsersDto.some(appuser => appuser.applicationUserDto.id === loggedInUserId)
+                || props.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId)}
             style={{
                 width: '120px',
                 backgroundColor: props.bannedApplicationUsers.some(appuser => appuser.id === loggedInUserId) ? 'rgba(255, 0, 0, 0.5)' : ''
