@@ -13,11 +13,12 @@ type ToggleReadyButtonType = {
 }
 
 export default function ToggleReadyButton({lobbyState, lobbyId, refetch, loggedInUserId, readyCheck}: ToggleReadyButtonType) {
-    const setReady = useSetReady()
+    const setReady = useSetReady(() => {
+        refetch();
+    })
 
     const handleOnReadyClick = () => {
         setReady.mutate(lobbyId);
-        refetch();
     }
 
     return <Box sx={{
