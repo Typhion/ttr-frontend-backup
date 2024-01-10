@@ -65,6 +65,9 @@ function AddConnectionToStationDialogContent({
     return (
         <Dialog open={isOpen} onClose={onClose} maxWidth="md" fullWidth>
             <DialogTitle>Pick connection for your station</DialogTitle>
+            {Array.isArray(connectionsForStation) && connectionsForStation.length > 0 ? (
+                <Typography variant={'h5'} marginLeft={3}>Please keep in mind that this action is <strong>IRREVERSIBLE</strong> so choose wisely</Typography>
+            ) : <Typography variant={'h5'} marginLeft={3}>There are no available connections to be claimed for this station</Typography>}
             <DialogContent>
                 <Grid container spacing={1}>
                     {Array.isArray(connectionsForStation) && connectionsForStation && connectionsForStation.map((connection, index) => (
@@ -82,7 +85,9 @@ function AddConnectionToStationDialogContent({
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="inherit">Cancel</Button>
+                {Array.isArray(connectionsForStation) && connectionsForStation.length > 0 && (
                 <Button onClick={() => handleSubmit} variant="contained">Pick</Button>
+                    )}
             </DialogActions>
         </Dialog>
     );
