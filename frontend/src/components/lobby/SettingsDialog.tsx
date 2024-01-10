@@ -18,7 +18,7 @@ type SettingsDialogProps = {
 };
 
 const settingsSchema = z.object({
-    wagonAmount: z.number().min(1).max(60),
+    wagonAmount: z.number().min(5).max(60),
     jokerWagonCardAmount: z.number().min(1).max(30),
     normalWagonCardCount: z.number().min(3).max(30),
     maxSize: z.number().min(2).max(5),
